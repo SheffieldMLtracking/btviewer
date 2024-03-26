@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Compress(app)
 CORS(app)
 from glob import glob
-from retrodetect import getblockmaxedimage
+from retrodetect.image_processing import getblockmaxedimage
 import argparse
 import webbrowser
 import os
