@@ -1,4 +1,4 @@
-from btviewer import route
+from btviewer import app
 
 @app.route('/')
 def index():
