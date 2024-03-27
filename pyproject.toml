@@ -35,10 +35,11 @@ license = { file = "LICENSE" }
 keywords = ["bee", "flask app", "small animals", "tracking"]
 
 classifiers = [
-    "Development Status :: 4 - Beta",
-    "Programming Language :: Python :: 3",
+    "Development Status :: 3 - Alpha", "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Framework :: Flask"
+
 ]
 [project.optional-dependencies]
 test = [
