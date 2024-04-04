@@ -60,3 +60,7 @@ Repository = "https://github.com/SheffieldMLtracking/XXXX"
 [tool.pytest.ini_options]
 pythonpath = ['src']
 testpaths = ['tests']
+
+#the [project.scripts] heading defines the entry point to your application.
+[project.scripts]
+hello_cli = "hello_cli.__main__:main"

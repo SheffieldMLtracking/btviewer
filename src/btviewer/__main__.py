@@ -71,7 +71,7 @@ for pti in pathtoimgs:
 
 
 
-
+#1
 @app.route('/getindexoftime/<int:cam>/<string:dtstring>')
 def getindexoftime(cam, dtstring):
     fns = getimgfilelist(pathtoimgs[cam])
