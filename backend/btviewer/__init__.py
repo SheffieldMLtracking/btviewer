@@ -5,7 +5,7 @@ __version__ = version("btviewer")
 from flask import Flask
 app = Flask(__name__) # The Flask application instance is created as a global variable
 
-from btviewer.blueprints1 import bp as errors_bp #change accordingly afterwards
+from btviewer.blueprints import bp as errors_bp #change accordingly afterwards
 app.register_blueprint(errors_bp)
 
 
