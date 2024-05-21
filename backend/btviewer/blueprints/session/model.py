@@ -53,5 +53,5 @@ class Session:
                 yield path
 
     @classmethod
-    def list(cls) -> collections.abc.Collection:
+    def list(cls) -> tuple[Path]:
         return tuple(cls.iter_sessions())
