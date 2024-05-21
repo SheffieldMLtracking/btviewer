@@ -1,6 +1,6 @@
 # Backend API
 
-This is an API for image processing made using the [Flask web framework]() in the Python programming language.
+This is an API for image processing made using the [Flask web framework](https://flask.palletsprojects.com/en/3.0.x/) in the Python programming language.
 
 - https://flask.palletsprojects.com/en/3.0.x/tutorial/install/
 - https://flask.palletsprojects.com/en/3.0.x/patterns/packages/
