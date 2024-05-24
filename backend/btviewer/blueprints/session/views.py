@@ -1,6 +1,8 @@
-from .models import Session
+from pathlib import Path
 
 import flask
+
+from .models import Session
 
 app: flask.Flask = flask.current_app
 
@@ -27,3 +29,25 @@ def list_():
 
     # Return JSON response to browser
     return flask.jsonify(sessions)
+
+
+@blueprint.route("/<path:url>")
+def list_path(url: str):
+    """
+    List directory contents of any data subdirectory
+    """
+    url = Path(url)
+    parent_path = Session.root_directory().joinpath(url)
+
+    # Are we in a camera directory?
+    if len(url.parents) >= 4:
+        # Get photo files
+        file_paths = Session.iter_files(parent_path)
+        file_names = tuple(str(path.name) for path in file_paths)
+        return flask.jsonify(file_names)
+
+    else:
+        # Get subdirectory names
+        subdir_paths = Session.list_subdirectories(parent_path)
+        subdir_names = tuple(str(path.name) for path in subdir_paths)
+        return flask.jsonify(subdir_names)

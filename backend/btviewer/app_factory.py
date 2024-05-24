@@ -32,11 +32,11 @@ def register_blueprints(app: flask.Flask):
     """
 
     import btviewer.blueprints.session.views
-    import btviewer.blueprints.set.views
-    import btviewer.blueprints.label.views
-    import btviewer.blueprints.photo.views
+    # import btviewer.blueprints.set.views
+    # import btviewer.blueprints.label.views
+    # import btviewer.blueprints.photo.views
 
     app.register_blueprint(btviewer.blueprints.session.views.blueprint)
-    app.register_blueprint(btviewer.blueprints.set.views.blueprint)
-    app.register_blueprint(btviewer.blueprints.label.views.blueprint)
-    app.register_blueprint(btviewer.blueprints.photo.views.blueprint)
+    # app.register_blueprint(btviewer.blueprints.set.views.blueprint)
+    # app.register_blueprint(btviewer.blueprints.label.views.blueprint)
+    # app.register_blueprint(btviewer.blueprints.photo.views.blueprint)

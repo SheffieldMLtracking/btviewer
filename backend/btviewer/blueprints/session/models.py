@@ -47,14 +47,30 @@ class Session(StructureMixin):
         """
         return self.root_directory().joinpath(self.id)
 
+    @staticmethod
+    def iter_subdirectories(path: Path) -> Generator[Path, None, None]:
+        """
+        Iterate over the subdirectories in a parent directory
+        """
+        for path in path.iterdir():
+            if path.is_dir():
+                yield path
+
+    @staticmethod
+    def iter_files(path: Path) -> Generator[Path, None, None]:
+        """
+        Iterate over the
+        """
+        for child_path in path.iterdir():
+            if child_path.is_file():
+                yield child_path
+
     def iter_set_paths(self) -> Generator[Path, None, None]:
         """
         Get all the photo sets in this session by iterating over
         all the files in this directory.
         """
-        for path in self.path.iterdir():
-            if path.is_dir():
-                yield path
+        yield from self.list_subdirectories(self.path)
 
     @classmethod
     def iter_session_paths(cls) -> Generator[Path, None, None]:
