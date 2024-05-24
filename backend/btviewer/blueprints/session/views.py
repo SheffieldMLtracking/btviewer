@@ -23,9 +23,6 @@ def list_():
         "my_session_3"
     ]
     """
-
-    app.logger.warning("HELLO WORLD!")
-
     sessions = tuple((str(session) for session in Session.iter_sessions()))
 
     # Return JSON response to browser
