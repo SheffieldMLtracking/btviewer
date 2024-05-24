@@ -1,14 +1,13 @@
 import collections.abc
 import dataclasses
-import typing
 from pathlib import Path
-from typing import Generator, Tuple
+from typing import Generator, Tuple, TypeVar
 
 import flask
 
 app = flask.current_app
 
-Session = typing.TypeVar('Session', bound='Session')
+Session = TypeVar('Session')
 
 
 class Session:
@@ -47,14 +46,26 @@ class Session:
                 yield path
 
     @classmethod
+    def iter_session_paths(cls) -> Generator[Path, None, None]:
+        """
+        Iterate over all the paths of the available session directories.
+
+        Usage:
+        for path in Session.iter_session_paths():
+            print(path)
+        """
+        for path in cls.root_directory().iterdir():
+            if path.is_dir():
+                yield path
+
+    @classmethod
     def iter_sessions(cls) -> Generator[Session, None, None]:
         """
         Iterate over all the available sessions
 
         Usage:
-        for path in Session.iter_sessions():
-            print(path)
+        for session in Session.iter_sessions():
+            print(session)
         """
-        for path in cls.root_directory().iterdir():
-            if path.is_dir():
-                yield cls(path.name)
+        for path in cls.iter_session_paths():
+            yield cls(path.name)
