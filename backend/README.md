@@ -32,7 +32,7 @@ This directory contains the code files that define the Flask backend API app. Th
 To run the app in development mode:
 
 ```bash
-flask --app backend.btviewer.app run
+flask --app backend.btviewer.app run --debug
 ```
 
 Further reading:
