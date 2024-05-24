@@ -11,7 +11,8 @@ build-backend = "setuptools.build_meta"
 name = "btviewer"
 version = "0.0.0"
 dependencies = [
-    "flask==3.*"
+    "flask==3.*",
+    "waitress==3.*"
 ]
 # https://devguide.python.org/versions/
 requires-python = ">=3.8"

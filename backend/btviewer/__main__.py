@@ -2,17 +2,15 @@
 
 import argparse
 import logging
+import os
 from pathlib import Path
 
 import btviewer.app_factory
+import waitress
 
-DESCRIPTION = """
-This is a browser-based app for viewing and human labelling of tracking images.
-"""
+DESCRIPTION = "This is a browser-based app for viewing and human labelling of tracking images."
 
-USAGE = """
-btviewer ~/my_data/
-"""
+USAGE = "btviewer ~/my_data/"
 
 
 def get_args() -> argparse.Namespace:
@@ -31,6 +29,7 @@ def get_args() -> argparse.Namespace:
     parser.add_argument('--debug', type=bool, default=True)
     parser.add_argument('--host', default='127.0.0.1')
     parser.add_argument('--port', default=5000)
+    parser.add_argument('--threads', default=os.cpu_count(), type=int)
 
     # btviewer options
     parser.add_argument('root_directory', type=Path)
@@ -38,19 +37,15 @@ def get_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def show_version():
-    print("btviewer version", btviewer.__version__)
-    exit()
-
-
 def main():
     args = get_args()
-    if args.version:
-        show_version()
 
-    # Run in development mode
+    # Create WSGI app
     app = btviewer.app_factory.create_app(root_directory=args.root_directory)
-    app.run(host=args.host, port=args.port, debug=args.debug)
+
+    # Run web server
+    # https://docs.pylonsproject.org/projects/waitress/en/latest/arguments.html
+    waitress.serve(app, host=args.host, port=args.port, threads=args.threads)
 
 
 if __name__ == '__main__':
