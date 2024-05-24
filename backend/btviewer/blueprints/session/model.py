@@ -1,11 +1,10 @@
 import collections.abc
 from pathlib import Path
-from typing import Generator
+from typing import Generator, Tuple
 
 import flask
 
 app = flask.current_app
-ROOT_DIRECTORY = Path(app.config['ROOT_DIRECTORY'])
 
 
 class Session:
@@ -22,13 +21,17 @@ class Session:
     def __repr__(self):
         return f"Session('{self.id}')"
 
+    @classmethod
+    def root_directory(cls) -> Path:
+        return Path(app.config['ROOT_DIRECTORY'])
+
     @property
     def path(self) -> Path:
         """
         The path of this session's directory.
         e.g. ~/my_data/my_session_1
         """
-        return ROOT_DIRECTORY.joinpath(self.id)
+        return self.root_directory().joinpath(self.id)
 
     def iter_sets(self) -> Generator[Path, None, None]:
         """
@@ -48,10 +51,10 @@ class Session:
         for path in Session.iter_sessions():
             print(path)
         """
-        for path in ROOT_DIRECTORY.iterdir():
+        for path in cls.root_directory().iterdir():
             if path.is_dir():
                 yield path
 
     @classmethod
-    def list(cls) -> tuple[Path]:
+    def list(cls) -> tuple[Path, ...]:
         return tuple(cls.iter_sessions())

@@ -1,9 +1,8 @@
-import flask
 from .model import Session
 
-app = flask.current_app
+import flask
 
-blueprint = flask.Blueprint('session', __name__)
+blueprint = flask.Blueprint('session', __name__, url_prefix='/session')
 
 
 @blueprint.route("/")
@@ -23,6 +22,6 @@ def list_():
     ]
     """
     # Get all the sessions
-    sessions = Session.list()
+    sessions = tuple(path.name for path in Session.iter_sessions())
     # Return JSON response to browser
     return flask.jsonify(sessions)
