@@ -35,7 +35,10 @@ def list_():
 def list_path(url: str):
     """
     List directory contents of any data subdirectory
+
+    <root_directory>/<session>/<set>/<device id>/<camera id>/<timestamp>_<photo id>.np
     """
+
     url = Path(url)
     parent_path = Session.root_directory().joinpath(url)
 

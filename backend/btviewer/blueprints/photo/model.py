@@ -8,19 +8,40 @@ class Photo:
     An image taken by a camera.
     """
 
-    def __init__(self, session: str, set_name: str, device_id: str, camera_id: str, timestamp: datetime.datetime,
-                 photo_id: int):
-        self.session = session
-        self.set_name = set_name
-        self.device_id = device_id
-        self.camera_id = camera_id
-        self.timestamp = timestamp
-        self.photo_id = photo_id
+    def __init__(self, path: Path):
+        self.path = Path(path)
+
+    @classmethod
+    def validate_filename(cls, filename: str):
+        """
+        Validate a filename <timestamp>_<photo_id>.np
+        https://github.com/SheffieldMLtracking#file-structures
+        where timestamp is YYYMMDD_HHMMSS.UUUUUU
+        where photo_id is a zero-padded integer
+        """
+        filename = Path(filename)
+        if filename.suffix != ".np":
+            raise ValueError(filename)
+        timestamp, _, photo_id = filename.stem.rpartition("_")
+        photo_id = int(photo_id)
+        cls.parse_timestamp(timestamp)
+
+    @classmethod
+    def parse_timestamp(cls, timestamp: str) -> datetime.datetime:
+        """
+        Parse the `timestamp` part of a photo filename.
+        https://github.com/SheffieldMLtracking#file-structures
+        "YYYMMDD_HHMMSS.UUUUUU" -> datetime.datetime()
+        """
+        # https://docs.python.org/3/library/datetime.html#strftime-and-strptime-behavior
+        dt = datetime.datetime.strptime(timestamp, "%Y%m%d_%H%M%S.%f")
+        # Use UTC timestamp
+        dt.replace(tzinfo=datetime.timezone.utc)
+        return dt
 
     @property
     def timestamp_string(self) -> str:
         raise NotImplementedError
-
 
     @property
     def filename(self) -> str:
