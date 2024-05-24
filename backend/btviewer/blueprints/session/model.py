@@ -1,7 +1,7 @@
 import collections.abc
 import dataclasses
 from pathlib import Path
-from typing import Generator, Tuple, TypeVar
+from typing import Generator, Tuple, TypeVar, Union
 
 import flask
 
@@ -15,14 +15,27 @@ class Session:
     A photo data gathering session.
     """
 
-    def __init__(self, session_id: str):
-        self.id = session_id
+    def __init__(self, session_id: Union[str, Path]):
+        if isinstance(session_id, Path):
+            self.path_to_session_id(session_id)
+        self.id = str(session_id)
 
     def __str__(self):
         return self.id
 
     def __repr__(self):
         return f"Session('{self.id}')"
+
+    @classmethod
+    def path_to_session_id(cls, path: Path) -> str:
+        """
+        If a path is passed in, then use the directory name
+        """
+        if not path.exists():
+            raise FileNotFoundError(path)
+        if not path.is_dir():
+            raise NotADirectoryError(path)
+        return path.name
 
     @classmethod
     def root_directory(cls) -> Path:
