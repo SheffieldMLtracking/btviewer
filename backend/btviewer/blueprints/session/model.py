@@ -15,8 +15,8 @@ class Session:
     A photo data gathering session.
     """
 
-    def __init__(self, set_id: str):
-        self.id = set_id
+    def __init__(self, session_id: str):
+        self.id = session_id
 
     def __str__(self):
         return self.id
