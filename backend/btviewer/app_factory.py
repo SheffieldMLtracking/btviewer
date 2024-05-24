@@ -22,14 +22,6 @@ def create_app(root_directory: Path, **kwargs) -> flask.Flask:
     ))
     register_blueprints(app)
 
-    for blueprint in app.iter_blueprints():
-        app.logger.info(blueprint)
-        print(blueprint)
-
-    for route in app.url_map.iter_rules():
-        app.logger.info(route)
-        print(route)
-
     return app
 
 

@@ -2,6 +2,8 @@ from .model import Session
 
 import flask
 
+app: flask.Flask = flask.current_app
+
 blueprint = flask.Blueprint('session', __name__, url_prefix='/session')
 
 
@@ -21,7 +23,10 @@ def list_():
         "my_session_3"
     ]
     """
-    # Get all the sessions
-    sessions = tuple(path.name for path in Session.iter_sessions())
+
+    app.logger.warning("HELLO WORLD!")
+
+    sessions = tuple((str(session) for session in Session.iter_sessions()))
+
     # Return JSON response to browser
     return flask.jsonify(sessions)
