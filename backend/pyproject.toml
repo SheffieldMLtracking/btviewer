@@ -52,7 +52,7 @@ Changelog = "https://github.com/SheffieldMLtracking/btviewer/blob/master/CHANGEL
 pythonpath = ['btviewer']
 testpaths = ['tests']
 
-# Entry points
-# https://packaging.python.org/en/latest/specifications/entry-points/
+# Executable scripts
+# https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#creating-executable-scripts
 [project.scripts]
 btviewer = "btviewer.__main__:main"
