@@ -37,3 +37,6 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+    - name: Check command line interface
+      run: |
+        btviewer --version

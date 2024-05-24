@@ -4,7 +4,7 @@
 # https://python.plainenglish.io/how-to-create-a-flask-application-as-a-python-package-d22e11163246
 
 [build-system]
-requires = ["setuptools >= 61.*", "wheel"]
+requires = ["setuptools >= 61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -51,3 +51,8 @@ Changelog = "https://github.com/SheffieldMLtracking/btviewer/blob/master/CHANGEL
 [tool.pytest.ini_options]
 pythonpath = ['btviewer']
 testpaths = ['tests']
+
+# Entry points
+# https://packaging.python.org/en/latest/specifications/entry-points/
+[project.scripts]
+btviewer = "btviewer.__main__:main"
