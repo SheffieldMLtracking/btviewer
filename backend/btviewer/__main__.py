@@ -3,6 +3,7 @@
 import argparse
 import logging
 import os
+import webbrowser
 from pathlib import Path
 
 import btviewer.app_factory
@@ -42,6 +43,17 @@ def main():
 
     # Create WSGI app
     app = btviewer.app_factory.create_app(root_directory=args.root_directory)
+
+    # Get URI of backend
+    backend_uri = f"http://{args.host}:{args.port}"
+    print(f'Running backend with {args.threads} threads at {backend_uri}')
+
+    # Get file path of frontend
+    frontend_uri = Path(app.instance_path).parent.parent.joinpath('frontend/index.html').as_uri()
+    print(frontend_uri)
+
+    # Open frontend in web browser
+    webbrowser.open(frontend_uri)
 
     # Run web server
     # https://docs.pylonsproject.org/projects/waitress/en/latest/arguments.html
