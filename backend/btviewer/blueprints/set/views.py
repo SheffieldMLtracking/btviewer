@@ -1,15 +1,19 @@
-from .model import Session
+from ..session.models import Session
+from .models import Set
 
 import flask
 
 app: flask.Flask = flask.current_app
 
-blueprint = flask.Blueprint('set', __name__, url_prefix='/session')
+blueprint = flask.Blueprint('set', __name__)
 
 
 @blueprint.route("/<string:session>")
 def list_(session: str):
+    """
+    Show all the sets in this session.
+    """
     session = Session(session)
-    sets = tuple(str(set_) for set_ in session.iter_sets())
+    sets = tuple(str(Set(path)) for path in session.iter_set_paths())
 
     return flask.jsonify(sets)

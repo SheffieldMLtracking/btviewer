@@ -1,10 +1,10 @@
-from .model import Session
+from .models import Session
 
 import flask
 
 app: flask.Flask = flask.current_app
 
-blueprint = flask.Blueprint('session', __name__, url_prefix='/session')
+blueprint = flask.Blueprint('session', __name__)
 
 
 @blueprint.route("/")

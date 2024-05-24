@@ -5,26 +5,24 @@ from typing import Generator, Tuple, TypeVar, Union
 
 import flask
 
+from btviewer.mixins import StructureMixin
+
 app = flask.current_app
 
 Session = TypeVar('Session')
 
 
-class Session:
+class Session(StructureMixin):
     """
     A photo data gathering session.
     """
 
     def __init__(self, session_id: Union[str, Path]):
+        if session_id is None:
+            raise ValueError(session_id)
         if isinstance(session_id, Path):
             self.path_to_session_id(session_id)
         self.id = str(session_id)
-
-    def __str__(self):
-        return self.id
-
-    def __repr__(self):
-        return f"Session('{self.id}')"
 
     @classmethod
     def path_to_session_id(cls, path: Path) -> str:
@@ -49,7 +47,7 @@ class Session:
         """
         return self.root_directory().joinpath(self.id)
 
-    def iter_sets(self) -> Generator[Path, None, None]:
+    def iter_set_paths(self) -> Generator[Path, None, None]:
         """
         Get all the photo sets in this session by iterating over
         all the files in this directory.

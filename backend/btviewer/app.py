@@ -1,8 +1,5 @@
 """
 Flask app to run in development mode
-
-Usage:
-flask --app backend.btviewer.app run --debug
 """
 
 from pathlib import Path
