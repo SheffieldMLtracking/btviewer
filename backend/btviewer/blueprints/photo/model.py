@@ -131,13 +131,13 @@ class Photo:
         """
         return PIL.Image.fromarray(self.image_array)
 
-    def to_bytes(self, format: str = 'PNG', **kwargs) -> io.BytesIO:
+    def to_bytes(self, **kwargs) -> io.BytesIO:
         """
         Convert the 2D image data to an image file format.
         """
         # Use BytesIO to store the image in memory
         buffer = io.BytesIO()
-        self.image.save(buffer, format=format, **kwargs)
+        self.image.save(buffer, **kwargs)
         buffer.seek(0)
 
         return buffer
@@ -146,7 +146,7 @@ class Photo:
         """
         Convert image data to PNG format
         """
-        return self.to_bytes('PNG')
+        return self.to_bytes(format='PNG')
 
     @property
     def tags(self) -> list[Mapping]:
