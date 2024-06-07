@@ -3,9 +3,9 @@ import io
 from pathlib import Path
 from typing import Iterable, Mapping, Union
 
+import PIL.Image
 import flask
 import numpy
-import PIL.Image
 
 app: flask.Flask = flask.current_app
 
@@ -68,7 +68,9 @@ class Photo:
         }
         """
         # https://numpy.org/doc/stable/reference/generated/numpy.load.html
-        return numpy.load(self.path, allow_pickle=True)
+        data = numpy.load(self.path, allow_pickle=True)
+        app.logger.info("Loaded '%s'", self.path)
+        return data
 
     def add_label(self, **kwargs):
         """
@@ -109,6 +111,9 @@ class Photo:
         Convert image data to TIFF format
         """
         return self.to_bytes(format='TIFF')
+
+    def to_jpeg(self):
+        return self.to_bytes(format='JPEG')
 
     @property
     def data(self) -> Mapping:

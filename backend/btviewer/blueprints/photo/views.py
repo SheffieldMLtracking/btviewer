@@ -9,6 +9,7 @@ blueprint = flask.Blueprint('photo', __name__, url_prefix='/photos')
 
 
 @blueprint.route('<path:path>.tiff')
+@blueprint.route('<path:path>.tif')
 def image_tiff(path):
     """
     /photos/<session>/<set>/<device id>/<camera id>/<timestamp>_<photo id>.tiff
@@ -28,6 +29,15 @@ def image_png(path):
 
     # Return the image as a PNG file
     return flask.send_file(photo.to_png(), mimetype='image/png', as_attachment=False)
+
+
+@blueprint.route('<path:path>.jpeg')
+@blueprint.route('<path:path>.jpg')
+def image_jpeg(path):
+    photo = Photo(path + ".np")
+
+    # Return the image as a PNG file
+    return flask.send_file(photo.to_jpeg(), mimetype='image/jpeg', as_attachment=False)
 
 
 @blueprint.route('/<path:path>')
