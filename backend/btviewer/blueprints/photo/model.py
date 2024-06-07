@@ -108,7 +108,7 @@ class Photo:
         """
         Convert image data to TIFF format
         """
-        raise NotImplementedError
+        return self.to_bytes(format='TIFF')
 
     @property
     def data(self) -> Mapping:
@@ -131,14 +131,23 @@ class Photo:
         """
         return PIL.Image.fromarray(self.image_array)
 
-    def to_png(self) -> io.BytesIO:
+    def to_bytes(self, format: str = 'PNG', **kwargs) -> io.BytesIO:
         """
-        Convert image data to PNG format
+        Convert the 2D image data to an image file format.
         """
-
         # Use BytesIO to store the image in memory
         buffer = io.BytesIO()
-        self.image.save(buffer, format='PNG')
+        self.image.save(buffer, format=format, **kwargs)
         buffer.seek(0)
 
         return buffer
+
+    def to_png(self):
+        """
+        Convert image data to PNG format
+        """
+        return self.to_bytes('PNG')
+
+    @property
+    def tags(self) -> list[Mapping]:
+        raise NotImplementedError
