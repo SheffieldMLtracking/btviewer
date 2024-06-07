@@ -6,7 +6,7 @@ from .models import Session
 
 app: flask.Flask = flask.current_app
 
-blueprint = flask.Blueprint('session', __name__)
+blueprint = flask.Blueprint('session', __name__, url_prefix='/sessions')
 
 
 @blueprint.route("/")
@@ -51,6 +51,6 @@ def list_path(url: str):
 
     else:
         # Get subdirectory names
-        subdir_paths = Session.list_subdirectories(parent_path)
+        subdir_paths = Session.iter_subdirectories(parent_path)
         subdir_names = tuple(str(path.name) for path in subdir_paths)
         return flask.jsonify(subdir_names)

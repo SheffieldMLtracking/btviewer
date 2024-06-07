@@ -1,6 +1,10 @@
 import datetime
+import io
 from pathlib import Path
-from typing import Iterable
+from typing import Iterable, Mapping
+
+import numpy
+import PIL.Image
 
 
 class Photo:
@@ -51,16 +55,17 @@ class Photo:
     def relative_path(self) -> Path:
         return Path(f"{self.session}/{self.set_name}/{self.device_id}/{self.camera_id}/{self.filename}")
 
-    @property
-    def path(self) -> Path:
-        return
-
-    def load(self):
+    def load(self) -> dict:
         """
         Get the image data from the storage disk.
-        :return:
+        :returns:
+        {
+          "record": {...},
+          "image": array(...)
+        }
         """
-        raise NotImplementedError
+        # https://numpy.org/doc/stable/reference/generated/numpy.load.html
+        return numpy.load(self.path, allow_pickle=True)
 
     def add_label(self, **kwargs):
         """
@@ -88,3 +93,49 @@ class Photo:
         Iterate over all the label files for this image.
         """
         yield from self.label_directory.glob("*.json")
+
+    @property
+    def metadata(self) -> dict:
+        """
+        Get all the image information, except the 2D image data array.
+        """
+        return {key: value for key, value in self.data.items() if key != 'img'}
+
+    def to_tiff(self):
+        """
+        Convert image data to TIFF format
+        """
+        raise NotImplementedError
+
+    @property
+    def data(self) -> Mapping:
+        """
+        Image data and metadata
+        """
+        return self.load()
+
+    @property
+    def _image(self) -> numpy.array:
+        """
+        2D photo data array
+        """
+        return self.data['img']
+
+    @property
+    def image(self) -> PIL.Image:
+        """
+        A PIL image object for the photo data.
+        """
+        return PIL.Image.Image.fromarray(self.image)
+
+    def to_png(self) -> io.BytesIO:
+        """
+        Convert image data to PNG format
+        """
+
+        # Use BytesIO to store the image in memory
+        buffer = io.BytesIO()
+        self.image.save(buffer, format='PNG')
+        buffer.seek(0)
+
+        return buffer
