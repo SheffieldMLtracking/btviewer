@@ -1,10 +1,13 @@
 import datetime
 import io
 from pathlib import Path
-from typing import Iterable, Mapping
+from typing import Iterable, Mapping, Union
 
+import flask
 import numpy
 import PIL.Image
+
+app: flask.Flask = flask.current_app
 
 
 class Photo:
@@ -12,8 +15,8 @@ class Photo:
     An image taken by a camera.
     """
 
-    def __init__(self, path: Path):
-        self.path = Path(path)
+    def __init__(self, path: Union[Path, str]):
+        self.path = Path(app.config['ROOT_DIRECTORY']).joinpath(path).absolute()
 
     @classmethod
     def validate_filename(cls, filename: str):
@@ -115,7 +118,7 @@ class Photo:
         return self.load()
 
     @property
-    def _image(self) -> numpy.array:
+    def image_array(self) -> numpy.array:
         """
         2D photo data array
         """
@@ -126,7 +129,7 @@ class Photo:
         """
         A PIL image object for the photo data.
         """
-        return PIL.Image.Image.fromarray(self.image)
+        return PIL.Image.fromarray(self.image_array)
 
     def to_png(self) -> io.BytesIO:
         """

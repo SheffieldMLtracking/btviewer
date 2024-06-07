@@ -40,7 +40,6 @@ def detail(path: str):
     :param path: The path of the data file
     :return:
     """
-    path = Path(app.config['ROOT_DIRECTORY']).joinpath(path)
     photo = Photo(path)
     return flask.jsonify(photo.metadata)
 
