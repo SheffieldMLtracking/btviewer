@@ -1,10 +1,8 @@
-import flask
-
 from .model import Photo
 
-app: flask.Flask = flask.current_app
+import flask
 
-blueprint = flask.Blueprint('photo', __name__)
+blueprint = flask.Blueprint('photo', __name__, url_prefix='/photo')
 
 
 @blueprint.route('/<path:filename>')
