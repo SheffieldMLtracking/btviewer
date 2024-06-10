@@ -1,4 +1,4 @@
-import ImageTrial from './components/ImageTrial';
+import ImageTrial from './components/ImageTrial.jsx';
 
 function App() {
   return (
