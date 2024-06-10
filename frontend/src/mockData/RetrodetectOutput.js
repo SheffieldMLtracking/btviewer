@@ -1,0 +1,53 @@
+export const RetrodetectOutput = [
+    {
+        "x": 1643,
+        "y": 2150,
+        "confidence": "Unsure",
+        "text": "aaaaa"
+    }, {
+        "x": 1643,
+        "y": 2494,
+        "confidence": "Sure",
+        "text": "bbbbbbb"
+    }, {
+        "x": 1755,
+        "y": 1660,
+        "confidence": "Sure",
+        "text": "cccccc"
+    }, {
+        "x": 1739,
+        "y": 1484,
+        "confidence": "Sure",
+        "text": "dddddd"
+    }, {
+        "x": 1739,
+        "y": 1163,
+        "confidence": "Sure",
+        "text": "eeeeee"
+    }, {
+        "x": 3566,
+        "y": 922,
+        "confidence": "Sure",
+        "text": 'ffffff'
+    }, {
+        "x": 4488,
+        "y": 2984,
+        "confidence": "Sure",
+        "text": "ggggggg"
+    }, {
+        "x": 681,
+        "y": 1965,
+        "confidence": "Sure",
+        "text": "qqqqqq"
+    }, {
+        "x": 2637,
+        "y": 898,
+        "confidence": "Unsure",
+        "text": "xxxxxx"
+    }, {
+        "x": 457,
+        "y": 963,
+        "confidence": "Unsure",
+        "text": "pppppp"
+    }
+]

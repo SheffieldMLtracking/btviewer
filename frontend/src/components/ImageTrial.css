@@ -1,0 +1,21 @@
+.ImageContainer {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    width: 50.0%;
+    height: 50.0%;
+
+}
+
+img {
+    position: relative;
+    width: 100.0%;
+    height: 100.0%;
+}
+
+.ImageContainer svg {
+    position: absolute;
+    display: inline-block;
+    top: 0;
+    left: 0;
+  }
