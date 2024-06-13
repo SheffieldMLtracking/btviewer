@@ -1,10 +1,8 @@
 from http import HTTPStatus
 
-import pytest
-
 
 def test_session_list(client):
-    response = client.get('/session/')
+    response = client.get('/sessions/')
     assert response.status_code == HTTPStatus.OK
 
     # Check response contents
