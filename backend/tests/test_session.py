@@ -1,7 +1,5 @@
 from http import HTTPStatus
 
-import pytest
-
 
 def test_session_list(client):
     response = client.get('/sessions/')
