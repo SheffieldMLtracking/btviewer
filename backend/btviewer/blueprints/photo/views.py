@@ -2,7 +2,7 @@ from .model import Photo
 
 import flask
 
-blueprint = flask.Blueprint('photo', __name__, url_prefix='/photo')
+blueprint = flask.Blueprint('photo', __name__, url_prefix='/photos')
 
 
 @blueprint.route('/<path:filename>')
