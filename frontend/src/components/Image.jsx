@@ -1,4 +1,4 @@
-import './ImageTrial.css'
+import './Image.css'
 import image from '../mockData/test.jpg'
 
 import { useState, useRef, useEffect } from 'react'
