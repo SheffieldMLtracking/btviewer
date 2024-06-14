@@ -12,7 +12,9 @@ name = "btviewer"
 version = "0.0.0"
 dependencies = [
     "flask==3.*",
-    "waitress==3.*"
+    "waitress==3.*",
+    "pillow==10.*",
+    "numpy==1.*"
 ]
 # https://devguide.python.org/versions/
 requires-python = ">=3.8"
