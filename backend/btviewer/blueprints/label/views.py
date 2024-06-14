@@ -1,5 +1,7 @@
 import flask
 
+from btviewer.blueprints.photo.model import Photo
+
 blueprint = flask.Blueprint('label', __name__, url_prefix='/labels')
 
 
