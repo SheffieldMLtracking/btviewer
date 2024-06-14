@@ -1,5 +1,6 @@
 import datetime
 import io
+import json
 from pathlib import Path
 from typing import Iterable, Mapping, Union
 
@@ -80,6 +81,17 @@ class Photo:
         """
         raise NotImplementedError
 
+    def add_labels(self, labels: list[dict], source: str):
+        label_file_path = self.label_directory.joinpath(f'{source}.json')
+
+        # Make label directory
+        self.label_directory.mkdir(exist_ok=True)
+
+        # Save label file
+        with label_file_path.open('w') as file:
+            json.dump(labels, file)
+            app.logger.info("Labels saved to '%s'", file.name)
+
     @property
     def label_directory(self) -> Path:
         """
@@ -87,10 +99,10 @@ class Photo:
         :return:
         """
         # If the photo path is
-        # ~/photos/2020-01-01T09+40+43_00123.tiff
+        # ~/photos/2020-01-01T09+40+43_00123.np
         # the label directory is
         # ~/photos/2020-01-01T09+40+43_00123/
-        folder_name = self.path.name
+        folder_name = self.path.stem
         return self.path.parent.joinpath(folder_name)
 
     def iter_labels(self) -> Iterable[Path]:

@@ -4,20 +4,21 @@ import flask
 
 from btviewer.blueprints.photo.model import Photo
 
+app: flask.Flask = flask.current_app
 blueprint = flask.Blueprint('label', __name__, url_prefix='/labels')
 
 
-@blueprint.route('/<path:path>', methods=['GET'])
-def detail(path: str):
+@blueprint.route('/detail?path=<path:photo_path>', methods=['GET'])
+def detail(photo_path: str):
     """
     Get all the tags associated with this image
     """
-    photo = Photo(path)
+    photo = Photo(photo_path)
     return flask.jsonify(photo.labels)
 
 
-@blueprint.route('/<path:path>', methods=['POST'])
-def create(path: str):
+@blueprint.route('/create', methods=['POST'])
+def create():
     """
     Create new labels
 
@@ -42,13 +43,17 @@ def create(path: str):
         }
     ]
     """
-    photo = Photo(path)
+
+    # Load the selected image
+    photo_path = flask.request.args['path']
+    source = flask.request.args['source']
+    photo = Photo(photo_path)
 
     # Get the label data from the request
     labels = flask.request.json
 
     # Create the labels
-    photo.add_labels(labels)
+    photo.add_labels(labels, source=source)
 
     # Return a success response
-    return HTTPStatus.CREATED
+    return flask.Response(status=HTTPStatus.CREATED)
