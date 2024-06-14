@@ -139,6 +139,8 @@ class Photo:
     def to_bytes(self, **kwargs) -> io.BytesIO:
         """
         Convert the 2D image data to an image file format.
+
+        :returns: Image data buffer
         """
         # Use BytesIO to store the image in memory
         buffer = io.BytesIO()
@@ -154,5 +156,8 @@ class Photo:
         return self.to_bytes(format='PNG')
 
     @property
-    def tags(self) -> list[Mapping]:
+    def labels(self) -> set[Mapping]:
+        """
+        The tags applied to this image.
+        """
         raise NotImplementedError
