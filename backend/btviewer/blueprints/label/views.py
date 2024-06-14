@@ -46,14 +46,15 @@ def create():
 
     # Load the selected image
     photo_path = flask.request.args['path']
-    source = flask.request.args['source']
     photo = Photo(photo_path)
 
     # Get the label data from the request
+    source = flask.request.args['source']
+    version = flask.request.args['version']
     labels = flask.request.json
 
     # Create the labels
-    photo.add_labels(labels, source=source)
+    photo.add_labels(labels, source=source, version=version)
 
     # Return a success response
     return flask.Response(status=HTTPStatus.CREATED)

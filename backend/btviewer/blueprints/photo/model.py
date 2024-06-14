@@ -81,15 +81,25 @@ class Photo:
         """
         raise NotImplementedError
 
-    def add_labels(self, labels: list[dict], source: str):
+    def add_labels(self, labels: list[dict], source: str, version: str, indent: int = 2):
         label_file_path = self.label_directory.joinpath(f'{source}.json')
 
         # Make label directory
         self.label_directory.mkdir(exist_ok=True)
 
+        # Build our labels metadata file contents
+        document = {
+            "provenance": {
+                "source": source,
+                "version": version,
+                "mode": "manual"
+            },
+            "tags": labels
+        }
+
         # Save label file
         with label_file_path.open('w') as file:
-            json.dump(labels, file)
+            json.dump(document, file, indent=indent)
             app.logger.info("Labels saved to '%s'", file.name)
 
     @property

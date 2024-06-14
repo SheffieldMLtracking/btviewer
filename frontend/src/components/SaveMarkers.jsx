@@ -10,7 +10,8 @@ function SaveMarkers(props) {
         // eslint-disable-next-line no-unused-vars
         const photo_path = '1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np';
         const source = 'btviewer';
-        const url = `/api/labels/create?path=${photo_path}&source=${source}`;
+        const version = '0.0.0'
+        const url = `/api/labels/create?path=${photo_path}&source=${source}&version=${version}`;
 
         fetch(url, {
             method: 'post',
