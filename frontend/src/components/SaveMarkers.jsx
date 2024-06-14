@@ -1,15 +1,16 @@
-function SaveMarkers (props) {
+/*
+Save labels
 
-    
+Send the labels to the backend
+*/
+function SaveMarkers(props) {
 
-    function handleSubmit (e) {
-        e.preventDefault();
-        const url = 'http://localhost:5000/labels/create';
+    function handleSubmit() {
+        const url = '/api/labels/create';
 
         fetch(url, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-type': 'application/json' },
+            method: 'post',
+            headers: {'Content-type': 'application/json'},
             body: JSON.stringify(props.markerList)
         })
             .then((response) => {
@@ -20,16 +21,15 @@ function SaveMarkers (props) {
             })
 
 
-      }
-    
-    
+    }
 
 
-    return(
+    return (
         <>
-        <button onClick={handleSubmit}>Save</button>
+            <button onClick={handleSubmit}>Save</button>
         </>
     )
 
 }
+
 export default SaveMarkers
