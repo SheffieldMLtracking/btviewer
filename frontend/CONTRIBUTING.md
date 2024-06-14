@@ -10,6 +10,24 @@ This code uses the [React](https://react.dev/) JavaScript framework
 
 This section describes the development environment used to work on this software.
 
+## Installation
+
+* npm
+
+## Usage
+
+The development environment is defined by the `dev` configuration in `package.json`.
+
+```
+cd ./frontend/
+# Install package dependencies based on package.json
+npm install
+# Run the development environment
+npm run dev
+```
+
+
+
 ## Vite
 
 [Vite](https://vitejs.dev/) with Hot Module Replacement (HMR) and some code analysis using ESLint rules.

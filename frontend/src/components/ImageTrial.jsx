@@ -6,6 +6,9 @@ import DrawRetrodetectMarkers from './DrawRetrodetectMarkers.jsx';
 import DrawExistingMarkers from './DrawingExistingMarkers.jsx';
 /*import SaveMarkers from './SaveMarkers.jsx';*/
 
+/*
+A bee tracking photo
+*/
 function ImageTrial () {
 
   //Ref for image

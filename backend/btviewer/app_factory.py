@@ -22,7 +22,14 @@ def create_app(root_directory: Path = None, **kwargs) -> flask.Flask:
     ))
     register_blueprints(app)
 
+    app.after_request(set_headers)
+
     return app
+
+
+def set_headers(response: flask.Response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
 
 
 def register_blueprints(app: flask.Flask):

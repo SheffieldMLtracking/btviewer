@@ -44,6 +44,8 @@ def main():
     # Create WSGI app
     app = btviewer.app_factory.create_app(root_directory=args.root_directory)
 
+    print(Path(app.config['ROOT_DIRECTORY']).absolute())
+
     # Get URI of backend
     backend_uri = f"http://{args.host}:{args.port}"
     print(f'Running backend with {args.threads} threads at {backend_uri}')
