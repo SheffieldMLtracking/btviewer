@@ -1,5 +1,5 @@
 /*
-Save labels
+Save labels-
 
 Send the labels to the backend
 */
@@ -7,7 +7,6 @@ function SaveMarkers(props) {
 
     function handleSubmit() {
 
-        // eslint-disable-next-line no-unused-vars
         const photo_path = '1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np';
         const source = 'btviewer';
         const version = '0.0.0'
