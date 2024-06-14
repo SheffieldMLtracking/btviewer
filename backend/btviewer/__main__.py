@@ -51,7 +51,8 @@ def main():
     print(f'Running backend with {args.threads} threads at {uri}')
 
     # Open frontend in web browser
-    webbrowser.open(uri)
+    static_uri = uri + '/static/index.html'
+    webbrowser.open(static_uri)
 
     # Run web server
     # https://docs.pylonsproject.org/projects/waitress/en/latest/arguments.html
