@@ -38,10 +38,12 @@ def register_blueprints(app: flask.Flask):
     https://flask.palletsprojects.com/en/3.0.x/blueprints/
     """
 
+    import btviewer.blueprints.frontend.views
     import btviewer.blueprints.session.views
     import btviewer.blueprints.label.views
     import btviewer.blueprints.photo.views
 
+    app.register_blueprint(btviewer.blueprints.home.views.blueprint)
     app.register_blueprint(btviewer.blueprints.photo.views.blueprint)
     app.register_blueprint(btviewer.blueprints.label.views.blueprint)
     app.register_blueprint(btviewer.blueprints.session.views.blueprint)

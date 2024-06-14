@@ -19,22 +19,36 @@ def detail(path: str):
 @blueprint.route('/<path:path>', methods=['POST'])
 def create(path: str):
     """
-    Create a new label
+    Create new labels
 
-    {
-      "x": 123,
-      "y": 456,
-      "confident": true,
-      "label": "not the bees!"
-    }
+    The front end will send a POST request to create the labels with an
+    array of label information like so:
+
+    POST
+    http://localhost:5000/labels/create
+
+    [
+        {
+          "x": 123,
+          "y": 456,
+          "confident": true,
+          "label": "not the bees!"
+        },
+        {
+          "x": 123,
+          "y": 456,
+          "confident": true,
+          "label": "not the bees!"
+        }
+    ]
     """
     photo = Photo(path)
 
-    photo.add_label(
-        x=int(flask.request.form['x']),
-        y=int(flask.request.form['y']),
-        confident=bool(flask.request.form['confident']),
-        label=str(flask.request.form['label']),
-    )
+    # Get the label data from the request
+    labels = flask.request.json
 
+    # Create the labels
+    photo.add_labels(labels)
+
+    # Return a success response
     return HTTPStatus.CREATED
