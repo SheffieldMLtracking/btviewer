@@ -1,6 +1,5 @@
 import {useEffect, useState} from 'react'
 
-
 /*
 The list of bee tracking photo data capture sessions.
 */
