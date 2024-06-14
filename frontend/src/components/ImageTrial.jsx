@@ -1,10 +1,10 @@
 import './ImageTrial.css'
-import image from '../mockData/flash1.jpg'
+import image from '../mockData/test.jpg'
 
 import { useState, useRef, useEffect } from 'react'
 import DrawRetrodetectMarkers from './DrawRetrodetectMarkers.jsx';
 import DrawExistingMarkers from './DrawingExistingMarkers.jsx';
-
+import SaveMarkers from './SaveMarkers.jsx';
 
 function ImageTrial () {
 
@@ -53,6 +53,10 @@ function ImageTrial () {
       let imageRect = imageCurrent.getBoundingClientRect();
       let viewX = Math.round(imageRect.width)
       let viewY = Math.round(imageRect.height)
+     
+      // Console.log to be deleted.
+      console.log('viewX ' + viewX )
+      console.log('viewY ' + viewY )
 
       setImageSize({
         originalWidth : originalX,
@@ -93,6 +97,7 @@ function ImageTrial () {
     console.log('View width & height',imageRect.width, imageRect.height)
     console.log('Original width & height', originalX,originalY)
     console.log('Offset X & Y', e.nativeEvent.offsetX, e.nativeEvent.offsetY)
+    console.log('client X & client Y', e.clientX, e.clientY)
     console.log('original pixel x & y', originalPixelX, originalPixelY)
 
     setCoordinateOnImage({
@@ -181,6 +186,7 @@ function ImageTrial () {
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence {coordinate.confidence}</h2>
+        <SaveMarkers markerList={markerList}/>
         <button onClick={MLcontroller}>Show ML labels</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={image} onClick={clickHandler} alt=''/>
