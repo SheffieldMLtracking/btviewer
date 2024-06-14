@@ -54,7 +54,7 @@ def create():
     labels = flask.request.json
 
     # Create the labels
-    photo.add_labels(labels, source=source, version=version)
+    label_path = photo.add_labels(labels, source=source, version=version)
 
     # Return a success response
-    return flask.Response(status=HTTPStatus.CREATED)
+    return flask.jsonify(dict(label_path=label_path)), HTTPStatus.CREATED

@@ -19,7 +19,7 @@ function SaveMarkers(props) {
             body: JSON.stringify(props.markerList)
         })
             .then((response) => {
-                console.log(response);
+                console.log(JSON.stringify(response.json()));
             })
             .catch((err) => {
                 console.log(err.response.data)

@@ -102,6 +102,8 @@ class Photo:
             json.dump(document, file, indent=indent)
             app.logger.info("Labels saved to '%s'", file.name)
 
+            return file.name
+
     @property
     def label_directory(self) -> Path:
         """
