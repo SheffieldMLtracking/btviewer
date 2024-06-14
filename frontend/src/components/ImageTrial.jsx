@@ -4,7 +4,7 @@ import image from '../mockData/test.jpg'
 import { useState, useRef, useEffect } from 'react'
 import DrawRetrodetectMarkers from './DrawRetrodetectMarkers.jsx';
 import DrawExistingMarkers from './DrawingExistingMarkers.jsx';
-import SaveMarkers from './SaveMarkers.jsx';
+/*import SaveMarkers from './SaveMarkers.jsx';*/
 
 function ImageTrial () {
 
@@ -186,7 +186,6 @@ function ImageTrial () {
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence {coordinate.confidence}</h2>
-        <SaveMarkers markerList={markerList}/>
         <button onClick={MLcontroller}>Show ML labels</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={image} onClick={clickHandler} alt=''/>
