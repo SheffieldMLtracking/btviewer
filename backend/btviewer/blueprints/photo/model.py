@@ -123,25 +123,27 @@ class Photo:
         return self.load()
 
     @property
-    def array(self, scale_factor: float = None, dtype='uint8', maximum_value: float = 255.) -> numpy.array:
+    def array(self, scale_factor: float = None, dtype=numpy.dtype('uint8')) -> numpy.array:
         """
         2D image data array of pixel values.
 
         By default, this produces a normalised 2D grid of unsigned 8-bit integers (0 to 255).
 
         :param scale_factor: Multiplication factor for the pixel brightness values
-        :param dtype: https://numpy.org/doc/stable/reference/generated/numpy.ndarray.astype.html
-        :param maximum_value: Target maximum pixel value, defaults to
+        :param dtype: Data type https://numpy.org/doc/stable/reference/generated/numpy.ndarray.astype.html
         """
-        array = self.data['img']
+        # Set data type for array values
+        dtype = numpy.dtype(dtype)
+        maximum_value = numpy.iinfo(dtype).max
 
-        print(array.max())
+        # Load image data
+        array: numpy.ndarray = self.data['img']
 
         # Adjust brightness
         if scale_factor is None:
             # Normalise
             scale_factor = maximum_value / array.max()
-        array = (array * scale_factor)
+        numpy.multiply(array, scale_factor, out=array, casting='unsafe')
 
         return array.astype(dtype=dtype)
 
