@@ -189,7 +189,7 @@ function Image () {
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence {coordinate.confidence}</h2>
-        <SaveMarkers/>
+        <SaveMarkers markerList={markerList}/>
         <button onClick={MLcontroller}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={image} onClick={clickHandler} alt=''/>
