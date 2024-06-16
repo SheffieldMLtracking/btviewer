@@ -41,7 +41,7 @@ function Image () {
   })
 
   //State to determine if ML marker to be shown
-  const [showML, setShowML] = useState(0)
+  const [showRetrodetect, setShowRetrodetect] = useState(0)
 
 
   useEffect(() => {
@@ -49,23 +49,23 @@ function Image () {
       const imageCurrent = imgRef.current; //so that it will still work when clickHandler has not been called
 
       // Get the original width and height of the image
-      let originalX = imageCurrent.naturalWidth; 
-      let originalY = imageCurrent.naturalHeight;
+      let originalWidth = imageCurrent.naturalWidth; 
+      let originalHeight = imageCurrent.naturalHeight;
 
       // Get the height/width of the image container
       let imageRect = imageCurrent.getBoundingClientRect();
-      let viewX = Math.round(imageRect.width)
-      let viewY = Math.round(imageRect.height)
+      let viewWidth = Math.round(imageRect.width)
+      let viewHeight = Math.round(imageRect.height)
      
       // Console.log to be deleted.
-      console.log('viewX ' + viewX )
-      console.log('viewY ' + viewY )
+      console.log('viewX ' + viewWidth )
+      console.log('viewY ' + viewHeight )
 
       setImageSize({
-        originalWidth : originalX,
-        originalHeight : originalY,
-        viewWidth : viewX,
-        viewHeight : viewY
+        originalWidth : originalWidth,
+        originalHeight : originalHeight,
+        viewWidth : viewWidth,
+        viewHeight : viewHeight
       })  
 
       }
@@ -80,25 +80,25 @@ function Image () {
     const imageCurrent = imgRef.current;
 
     // Get the original width and height of the image
-    let originalX = imageCurrent.naturalWidth; 
-	  let originalY = imageCurrent.naturalHeight;
+    let originalWidth = imageCurrent.naturalWidth; 
+	  let originalHeight = imageCurrent.naturalHeight;
 
     // Get the height/width of the image container
     let imageRect = imageCurrent.getBoundingClientRect();
-    let viewX = Math.round(imageRect.width)
-    let viewY = Math.round(imageRect.height)
+    let viewWidth = Math.round(imageRect.width)
+    let viewHeight = Math.round(imageRect.height)
 
     // Get the coordinates of the clicking based its offset from the image container
     let currentOffsetX = e.nativeEvent.offsetX
     let currentOffsetY = e.nativeEvent.offsetY
 
     // Calculation for the coordinates of the clicking on the original image pixel
-	  let originalPixelX = Math.round((originalX / viewX) * currentOffsetX)
-	  let originalPixelY = Math.round((originalY / viewY) * currentOffsetY)
+	  let originalPixelX = Math.round((originalWidth / viewWidth) * currentOffsetX)
+	  let originalPixelY = Math.round((originalHeight / viewHeight) * currentOffsetY)
 
     // Console.log to be deleted.
     console.log('View width & height',imageRect.width, imageRect.height)
-    console.log('Original width & height', originalX,originalY)
+    console.log('Original width & height', originalWidth,originalHeight)
     console.log('Offset X & Y', e.nativeEvent.offsetX, e.nativeEvent.offsetY)
     console.log('client X & client Y', e.clientX, e.clientY)
     console.log('original pixel x & y', originalPixelX, originalPixelY)
@@ -109,10 +109,10 @@ function Image () {
       })
 
     setImageSize({
-      originalWidth : originalX,
-      originalHeight : originalY,
-      viewWidth : viewX,
-      viewHeight : viewY
+      originalWidth : originalWidth,
+      originalHeight : originalHeight,
+      viewWidth : viewWidth,
+      viewHeight : viewHeight
     })  
 
     console.log(imageSize)
@@ -146,41 +146,35 @@ function Image () {
             confidence: "Sure"}])
             console.log(markerList)
 
-      } else if (e.arrowUp){
-        console.log('alt is pressed');
-
-      } else if (e.keyCode===65){
-        console.log('tab is pressed');
-
       }
 
     }
 
     //Separated from the function above. to control whether to show the ML markers
-    function MLcontroller (){
-      if (showML ===0){
-        setShowML(1)
+    function RetrodetectController (){
+      if (showRetrodetect ===0){
+        setShowRetrodetect(1)
 
         const imageCurrent = imgRef.current; //so that it will still work when clickHandler has not been called
 
         // Get the original width and height of the image
-        let originalX = imageCurrent.naturalWidth; 
-	      let originalY = imageCurrent.naturalHeight;
+        let originalWidth = imageCurrent.naturalWidth; 
+	      let originalHeight = imageCurrent.naturalHeight;
 
         // Get the height/width of the image container
         let imageRect = imageCurrent.getBoundingClientRect();
-        let viewX = Math.round(imageRect.width)
-        let viewY = Math.round(imageRect.height)
+        let viewWidth = Math.round(imageRect.width)
+        let viewHeight = Math.round(imageRect.height)
 
         setImageSize({
-          originalWidth : originalX,
-          originalHeight : originalY,
-          viewWidth : viewX,
-          viewHeight : viewY
+          originalWidth : originalWidth,
+          originalHeight : originalHeight,
+          viewWidth : viewWidth,
+          viewHeight : viewHeight
         })  
 
       } else {
-        setShowML(0)
+        setShowRetrodetect(0)
       }
     }
    
@@ -190,10 +184,10 @@ function Image () {
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence {coordinate.confidence}</h2>
         <SaveMarkers markerList={markerList}/>
-        <button onClick={MLcontroller}>Show Retrodetect labels</button>
+        <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={image} onClick={clickHandler} alt=''/>
-            <DrawRetrodetectMarkers control={showML} imageSize={imageSize}/>
+            <DrawRetrodetectMarkers control={showRetrodetect} imageSize={imageSize}/>
             <DrawExistingMarkers markerList={markerList} imageSize={imageSize} />
     
         </div>
