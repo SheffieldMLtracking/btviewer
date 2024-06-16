@@ -23,7 +23,7 @@ function Sessions() {
     // Get sessions asynchronously (in the background)
     useEffect(() => {
         fetchSessions();
-    });
+    });//TODO: need to add REMOVE so it won't keep requesting from the backend
 
     // Render a drop-down list of session names
     return (<>{sessions}</>)
