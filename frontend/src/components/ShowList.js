@@ -1,18 +1,28 @@
-function ShowList (props){ // to be change to button click so as to send the list to the backend
+import { useState} from 'react'
 
-    function mapping (item) {
-        if (item!=null){
-            return (
-                <li>{item.x}{item.y}</li>
-            )
-        }
+function ShowList (props) {
+    const [sessionData,setSessionData] = useState('0')
+    const listDisplayed = props.data.map(item =>
+        <option value={item.session}>{item.session}</option>)
+
+    function changeHandler (e){
+        let areaFound = props.data.filter((element) => element.areaName === e.target.value)
+        setSessionData(
+            sessionData[0]
+        )
     }
-    let recordedList = props.data.map(mapping)
-        
+
     return(
-        <>
-        <ul>{recordedList}</ul>
+         <>
+        <h1>Photo Selection </h1>
+        <select 
+            name='session'
+            id='session'
+            onChange={changeHandler}
+        >{listDisplayed}</select>
         </>
     )
+
 }
+
 export default ShowList
