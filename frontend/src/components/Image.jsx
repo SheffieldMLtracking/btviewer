@@ -44,7 +44,9 @@ function Image () {
   const [showRetrodetect, setShowRetrodetect] = useState(0)
 
   // for zooming
-  let scale = 1.2
+  let scale = 1
+  let scaleZoomIn = 1.2
+  let scaleZoomOut = 0.8
 
   const [imageNewPosition, setImageNewPosition] = useState({
       left: 0,
@@ -158,7 +160,13 @@ function Image () {
             console.log(markerList)
 
       }
-      } else if (e.altKey){
+      } else if (e.altKey||e.metaKey){
+
+        if (e.altKey){
+          scale = scaleZoomIn
+        } else if (e.metaKey){
+          scale = scaleZoomOut
+        }
         const imageCurrent = imgRef.current;
 
         let imageRect = imageCurrent.getBoundingClientRect();
