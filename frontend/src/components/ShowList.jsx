@@ -1,5 +1,5 @@
 import {useState} from 'react'
-
+import PhotoSelection from './PhotoSelection'
 /*
 Display a drop-down list of sessions for navigation.
 */
@@ -25,15 +25,11 @@ function ShowList(props) {
         fetch(url)
             .then(response => response.json())
             .then(data => setPhotoFilenames(data));
+
+       
     }
 
-    function PhotoList() {
-        console.log(photoFilenames);
-        return (
-            <ul>
-            </ul>
-        )
-    }
+  
 
     return (
         <>
@@ -45,7 +41,7 @@ function ShowList(props) {
             >
                 <option/>
                 {listDisplayed}</select>
-            <PhotoList/>
+            <PhotoSelection data={photoFilenames}/>
         </>
     )
 
