@@ -13,13 +13,14 @@ on:
   pull_request:
     branches: [ "main" ]
 
+defaults:
+  # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+  run:
+    working-directory: ./backend
+
 jobs:
   test:
-    # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
     runs-on: "ubuntu-22.04"
-    defaults:
-      run:
-        working-directory: ./backend
     strategy:
       fail-fast: false
       matrix:
