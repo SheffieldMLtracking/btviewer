@@ -1,25 +1,51 @@
-import { useState} from 'react'
+import {useState} from 'react'
 
-function ShowList (props) {
-    const [sessionData,setSessionData] = useState('0')
-    const listDisplayed = props.data.map(item =>
-        <option key={item.id} value={item}>{item}</option>)
+/*
+Display a drop-down list of sessions for navigation.
+*/
+function ShowList(props) {
+    // Store the selected session name
+    let [currentSession, setCurrentSession] = useState('');
+    let listDisplayed = props.data.map(item =>
+        <option key={item.id} value={item}>{item}</option>);
 
-    function changeHandler (e){
-        let areaFound = props.data.filter((element) => element.areaName === e.target.value)
-        setSessionData(
-            sessionData[0]
+    // The photos in that session
+    let [photoFilenames, setPhotoFilenames] = useState([]);
+
+    /*
+    When the user selects a session, save it.
+    */
+    function changeHandler(e) {
+        let selectedSession = e.target.value;
+        setCurrentSession(selectedSession);
+        console.log(selectedSession);
+
+        // Update the list of photo filenames available in that session
+        let url = `/api/sessions/${selectedSession}`;
+        fetch(url)
+            .then(response => response.json())
+            .then(data => setPhotoFilenames(data));
+    }
+
+    function PhotoList() {
+        console.log(photoFilenames);
+        return (
+            <ul>
+            </ul>
         )
     }
 
-    return(
-         <>
-        <h1>Photo Selection </h1>
-        <select 
-            name="session"
-            id="session"
-            onChange={changeHandler}
-        >{listDisplayed}</select>
+    return (
+        <>
+            <h1>Photo Selection</h1>
+            <select
+                name="session"
+                id="session"
+                onChange={changeHandler}
+            >
+                <option/>
+                {listDisplayed}</select>
+            <PhotoList/>
         </>
     )
 
