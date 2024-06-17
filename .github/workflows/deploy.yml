@@ -62,12 +62,13 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install build --user
       - name: Build a binary wheel and a source tarball
-        run: python -m build
+        run: python -m build . --outdir ./dist/
       - name: Store the distribution packages
         uses: actions/upload-artifact@v4
         with:
           name: python-package-distributions
-          path: dist/
+          path: ./dist/
+          if-no-files-found: error
 
   # OpenID Connect token that the pypi-publish actions needs to implement secretless trusted publishing to PyPI
   # https://docs.pypi.org/trusted-publishers/
