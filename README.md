@@ -1,4 +1,4 @@
-![unit-tests](https://github.com/sheffieldmltracking/btviewer/actions/workflows/unit-tests.yml/badge.svg)
+![deploy](https://github.com/sheffieldmltracking/btviewer/actions/workflows/deploy.yml/badge.svg)
 
 # Bee tracking viewer
 
