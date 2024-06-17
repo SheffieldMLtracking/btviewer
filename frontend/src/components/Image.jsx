@@ -261,7 +261,7 @@ function Image (props) {
         <SaveMarkers markerList={markerList}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
-            <img ref={imgRef} src='${props.image}' onClick={clickHandler} alt='' style={{
+            <img ref={imgRef} src={props.image} onClick={clickHandler} alt='' style={{
                 height: `${imageSize.viewHeight}px`,
                 width: `${imageSize.viewWidth}px`,
                 top: `${imageNewPosition.top}px`,
