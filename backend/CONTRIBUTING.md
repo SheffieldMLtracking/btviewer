@@ -10,6 +10,8 @@ This directory contains the code files that define the Flask backend API app. Th
 
 - `blueprints/` contains the app code. See: [Modular Applications with Blueprints](https://flask.palletsprojects.com/en/2.3.x/blueprints/)
 - `tests/`  contains unit tests. See [Testing Flask Applications](https://flask.palletsprojects.com/en/3.0.x/testing/)
+- `pyproject.toml` specifies the [Python package](https://packaging.python.org/)
+- `MANIFEST.in` tells the build system what [other files to include](https://setuptools.pypa.io/en/latest/userguide/miscellaneous.html#controlling-files-in-the-distribution) (such as the static files)
 
 To run the app in development mode:
 
