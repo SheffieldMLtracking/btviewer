@@ -36,13 +36,23 @@ function Image () {
   const [imageSize, setImageSize] = useState({
     originalWidth : 0,
     originalHeight : 0,
-    viewWidth : 0,
-    viewHeight : 0
+    viewWidth : 683,
+    viewHeight : 512
   })
 
   //State to determine if ML marker to be shown
   const [showRetrodetect, setShowRetrodetect] = useState(0)
 
+  // for zooming
+  let scale = 1
+  let scaleZoomIn = 1.2
+  let scaleZoomOut = 0.8
+
+  const [imageNewPosition, setImageNewPosition] = useState({
+      left: 0,
+      top: 0,
+  })
+  // for zooming in
 
   useEffect(() => {
     const handleResize = () => {
@@ -79,6 +89,9 @@ function Image () {
   function clickHandler(e){ // determining the coordinates of the click and draw the marker
     const imageCurrent = imgRef.current;
 
+
+
+    if (e.shiftKey||e.ctrlKey){
     // Get the original width and height of the image
     let originalWidth = imageCurrent.naturalWidth; 
 	  let originalHeight = imageCurrent.naturalHeight;
@@ -147,7 +160,68 @@ function Image () {
             console.log(markerList)
 
       }
+      } else if (e.altKey||e.metaKey){
 
+        if (e.altKey){
+          scale = scaleZoomIn
+        } else if (e.metaKey){
+          scale = scaleZoomOut
+        }
+        const imageCurrent = imgRef.current;
+
+        let imageRect = imageCurrent.getBoundingClientRect();
+
+        let originalWidth = imageCurrent.naturalWidth; 
+        let originalHeight = imageCurrent.naturalHeight;
+        let updatedRectTop =  imageRect.top +  window.scrollY
+        let updatedRectLeft = imageRect.left + window.scrollX
+
+        console.log('mouseClick')
+
+        console.log('e.nativeEvent.offsetX' + e.nativeEvent.offsetX)
+        console.log('e.nativeEvent.offsetY' + e.nativeEvent.offsetY)
+        console.log('e.pageX' + e.pageX)
+        console.log('e.pageY' + e.pageY)
+
+
+        console.log(imageCurrent)
+        console.log(imageRect)
+        console.log('Updated imageRect.left ' + updatedRectLeft )
+        console.log('Updated imageRect.top ' + updatedRectTop )
+
+        let transformCoordinateX = (e.pageX - updatedRectLeft) * scale + updatedRectLeft // new.e.pageX when the image is enlarged
+        let transformCoordinateY = (e.pageY - updatedRectTop) * scale + updatedRectTop // new.e.pageX when the image is enlarged
+
+        console.log('transformCoordinateX', transformCoordinateX)
+        console.log('transformCoordinateY', transformCoordinateY)
+
+        let movementLeft = (transformCoordinateX - e.pageX)
+        let movementTop = (transformCoordinateY - e.pageY)
+        console.log('movementLeft', movementLeft)
+        console.log('movementTop', movementTop)
+
+
+        let enlargedImageWidth = imageRect.width*scale
+        let enlargedImageHeight = imageRect.height*scale
+        console.log('enlargedImageWidth' + enlargedImageWidth)
+        console.log('enlargedImageHeight' + enlargedImageHeight)
+
+
+        setImageSize({
+          originalWidth : originalWidth,
+          originalHeight : originalHeight,
+          viewWidth : enlargedImageWidth,
+          viewHeight : enlargedImageHeight
+        })  
+        let x = imageNewPosition.left - movementLeft
+        let y = imageNewPosition.top - movementTop
+
+        setImageNewPosition(
+            {top: y,
+            left: x
+            }
+        ) 
+      }
     }
 
     //Separated from the function above. to control whether to show the ML markers
@@ -186,9 +260,14 @@ function Image () {
         <SaveMarkers markerList={markerList}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
-            <img ref={imgRef} src={image} onClick={clickHandler} alt=''/>
-            <DrawRetrodetectMarkers control={showRetrodetect} imageSize={imageSize}/>
-            <DrawExistingMarkers markerList={markerList} imageSize={imageSize} />
+            <img ref={imgRef} src={image} onClick={clickHandler} alt='' style={{
+                height: `${imageSize.viewHeight}px`,
+                width: `${imageSize.viewWidth}px`,
+                top: `${imageNewPosition.top}px`,
+                left: `${imageNewPosition.left}px`,
+              }}/>
+            <DrawRetrodetectMarkers control={showRetrodetect} imageSize={imageSize} imagePosition={imageNewPosition}/>
+            <DrawExistingMarkers markerList={markerList} imageSize={imageSize} imagePosition={imageNewPosition} />
     
         </div>
       </>

@@ -11,8 +11,8 @@ function DrawRetrodetectMarkers (props) {
         let currentOffsetY
 
         let currentOffsetArray = RetrodetectOutput.map((item) =>{
-            currentOffsetX = Math.round((item.x/props.imageSize.originalWidth)*props.imageSize.viewWidth)
-            currentOffsetY = Math.round((item.y/props.imageSize.originalHeight)*props.imageSize.viewHeight)
+            currentOffsetX = Math.round((item.x/props.imageSize.originalWidth)*props.imageSize.viewWidth)+props.imagePosition.left
+            currentOffsetY = Math.round((item.y/props.imageSize.originalHeight)*props.imageSize.viewHeight)+props.imagePosition.top
             return {currentOffsetX, currentOffsetY}
         })
 

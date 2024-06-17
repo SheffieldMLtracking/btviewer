@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react'
-
+import ShowList from './ShowList';
 /*
 The list of bee tracking photo data capture sessions.
 */
@@ -23,10 +23,14 @@ function Sessions() {
     // Get sessions asynchronously (in the background)
     useEffect(() => {
         fetchSessions();
-    });//TODO: need to add REMOVE so it won't keep requesting from the backend
+    }, []);//TODO: need to add cleanup code so it won't keep requesting from the backend, not sure what I added is correct
 
     // Render a drop-down list of session names
-    return (<>{sessions}</>)
+    return (
+    <>
+    <ShowList data={sessions}/>
+    </>
+    )
 }
 
 export default Sessions;
