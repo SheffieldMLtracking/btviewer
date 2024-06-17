@@ -12,6 +12,16 @@ blueprint = flask.Blueprint('label', __name__, url_prefix='/labels')
 def detail():
     """
     Get all the tags associated with this image
+
+    Usage:
+    /label/detail?path=1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np
+
+    :returns: List of labels
+    [
+      {"confidence": "Unsure", "x": 321, "y": 789},
+      {"confidence": "Sure", "x": 123, "y": 6564},
+      {"confidence": "Unsure", "x": 456, "y": 789}
+    ]
     """
     photo_path = flask.request.args['path']
     photo = Photo(photo_path)
