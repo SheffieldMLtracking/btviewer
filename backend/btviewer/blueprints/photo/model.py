@@ -181,6 +181,7 @@ class Photo:
         """
         Convert the 2D image data to an image file format.
 
+        :param kwargs: Keyword arguments for PIL Image.save()
         :returns: Image data buffer
         """
         # Use BytesIO to store the image in memory
