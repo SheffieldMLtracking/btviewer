@@ -63,7 +63,7 @@ jobs:
           python -m pip install build --user
       - name: Copy files
         run: |
-          cp -verbose ../LICENSE .
+          cp --verbose ../LICENSE .
       - name: Build a binary wheel and a source tarball
         run: python -m build . --outdir ./dist/
       - name: Store the distribution packages
