@@ -13,6 +13,8 @@ on:
   # Pull requests that target the main branch
   pull_request:
     branches: [ "main" ]
+  release:
+    types: [ published ]
 
 defaults:
   run:
