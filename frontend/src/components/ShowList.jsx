@@ -3,7 +3,7 @@ import { useState} from 'react'
 function ShowList (props) {
     const [sessionData,setSessionData] = useState('0')
     const listDisplayed = props.data.map(item =>
-        <option value={item.session}>{item.session}</option>)
+        <option key={item.id} value={item}>{item}</option>)
 
     function changeHandler (e){
         let areaFound = props.data.filter((element) => element.areaName === e.target.value)
@@ -16,8 +16,8 @@ function ShowList (props) {
          <>
         <h1>Photo Selection </h1>
         <select 
-            name='session'
-            id='session'
+            name="session"
+            id="session"
             onChange={changeHandler}
         >{listDisplayed}</select>
         </>
