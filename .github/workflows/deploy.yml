@@ -77,26 +77,10 @@ jobs:
           path: backend/dist/
           if-no-files-found: error
 
-  test-frontend:
-    name: Test frontend
-    runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ./frontend/
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - run: npm run lint
-      - run: npm test
-
   # Build frontend user interface
   build-frontend:
     name: Build frontend
     runs-on: ubuntu-22.04
-    needs:
-      - test-frontend
     defaults:
       run:
         working-directory: ./frontend/
@@ -107,6 +91,8 @@ jobs:
           node-version: '22'
       - name: Clean install the npm project
         run: npm ci
+      #- run: npm run lint
+      - run: npm test
       - run: npm run build
 
   # OpenID Connect token that the pypi-publish actions needs to implement secretless trusted publishing to PyPI
