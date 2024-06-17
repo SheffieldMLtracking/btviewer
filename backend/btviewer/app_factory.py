@@ -17,8 +17,9 @@ def create_app(root_directory: Path = None, **kwargs) -> flask.Flask:
     :param kwargs: keyword arguments for the Flask app
     """
     app = flask.Flask(__name__, **kwargs)
+    root_directory = Path(root_directory or os.getenv('ROOT_DIRECTORY'))
     app.config.update(dict(
-        ROOT_DIRECTORY=root_directory or os.getenv('ROOT_DIRECTORY'),
+        ROOT_DIRECTORY=str(root_directory),
     ))
     register_blueprints(app)
 
