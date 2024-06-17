@@ -14,6 +14,18 @@ pip install btviewer
 
 # Usage
 
+To run the backend, please run the `btviewer` command in your terminal, specifying the root folder that contains your image capture sessions:
+
 ```bash
 btviewer ~/my_data/
 ```
+
+To see the other options, run:
+
+```
+btviewer --help
+```
+
+# Contributing
+
+Please read the [contribution guide](CONTRIBUTING.md).

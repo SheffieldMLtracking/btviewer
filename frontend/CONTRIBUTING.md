@@ -10,6 +10,8 @@ This code uses the [React](https://react.dev/) JavaScript framework. Please see 
 
 This section describes the development environment used to work on this software.
 
+This directory contains a JavaScript package (defined by `package.json`)
+
 ## Installation
 
 Requirements:
@@ -26,7 +28,7 @@ npm install
 
 ## Usage
 
-The development environment is defined by the `dev` configuration in `package.json` and uses the [Vite](https://vitejs.dev/guide/#index-html-and-project-root) tool.
+The development environment is defined by the `dev` configuration in `package.json` and uses the [Vite](https://vitejs.dev/guide/#index-html-and-project-root) tool.
 
 ```
 

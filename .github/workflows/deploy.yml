@@ -3,23 +3,24 @@
 
 # Workflow syntax for GitHub Actions
 # https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions
-name: Unit tests
+name: Python package automatic deployment
 
 # This workflow will run when the following conditions are met
 on:
   # Pushes to the main branch
   push:
     branches: [ "main" ]
+  # Pull requests that target the main branch
   pull_request:
     branches: [ "main" ]
 
 defaults:
-  # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
   run:
-    working-directory: ./backend
+    working-directory: ./backend/
 
 jobs:
   test:
+    # # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
     runs-on: "ubuntu-22.04"
     strategy:
       fail-fast: false
@@ -49,7 +50,7 @@ jobs:
       run: |
         btviewer --version
 
-  build:
+  build-backend:
     runs-on: ubuntu-22.04
     needs: test
     steps:
@@ -57,12 +58,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install build frontend
+      - name: Install build tool
         run: |
           python -m pip install --upgrade pip
           python -m pip install build --user
       - name: Copy files
         run: |
+          cp --verbose ../README* .
           cp --verbose ../LICENSE .
           cp --verbose ../CITATION.cff .
       - name: Build a binary wheel and a source tarball
@@ -74,12 +76,30 @@ jobs:
           path: backend/dist/
           if-no-files-found: error
 
+  # Build frontend user interface
+  build-frontend:
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./frontend/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Clean install the npm project
+        run: npm ci
+      - run: npm run lint
+      #- run: npm run test
+      - run: npm run build
+
   # OpenID Connect token that the pypi-publish actions needs to implement secretless trusted publishing to PyPI
   # https://docs.pypi.org/trusted-publishers/
   publish-to-test-pypi:
     name: Publish to test PyPI
     needs:
-      - build
+      - build-backend
+      - build-frontend
     runs-on: ubuntu-22.04
     # https://test.pypi.org/manage/project/btviewer/settings/publishing/
     environment:

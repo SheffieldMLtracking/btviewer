@@ -2,12 +2,8 @@
 
 This is a user interface for labelling bee tracker images.
 
-This directory contains a JavaScript package (defined by `package.json`)
+This frontend is installed as part of the Python package.
 
-# Installation
+## Contributing
 
-# Usage
-
-# Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md).
+To develop this code, please read [CONTRIBUTING.md](CONTRIBUTING.md).
