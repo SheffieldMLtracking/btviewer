@@ -46,9 +46,9 @@ test = [
 [project.urls]
 Homepage = "https://pypi.org/project/btbiewer"
 Bug_Tracker = "https://github.com/SheffieldMLtracking/btviewer/issues"
-Documentation = "https://github.com/SheffieldMLtracking/btviewer/README.md"
+Documentation = "https://github.com/SheffieldMLtracking/btviewer/blob/main/README.md"
 Repository = "https://github.com/SheffieldMLtracking/btviewer"
-Changelog = "https://github.com/SheffieldMLtracking/btviewer/blob/master/CHANGELOG.md"
+Changelog = "https://github.com/SheffieldMLtracking/btviewer/releases"
 
 #https://docs.pytest.org/en/8.0.x/reference/customize.html
 [tool.pytest.ini_options]
