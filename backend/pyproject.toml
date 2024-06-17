@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btviewer"
-version = "0.0.1rc1"
+version = "0.0.1rc2"
 dependencies = [
     "flask==3.*",
     "waitress==3.*",
