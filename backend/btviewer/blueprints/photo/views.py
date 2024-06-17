@@ -45,8 +45,11 @@ def detail(path: str):
     """
     Show the photo metadata
 
-    :param path: The path of the data file
-    :return:
+    Usage:
+    /photos/1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.json
+
+    :param path: The path of the data file (but with a JSON file extension)
+    :returns: The metadata for that photo as a JSON object.
     """
     photo = Photo(path + '.np')
     return flask.jsonify(photo.metadata)
