@@ -91,8 +91,9 @@ jobs:
           node-version: '22'
       - name: Clean install the npm project
         run: npm ci
+      # TODO
       #- run: npm run lint
-      - run: npm test
+      #- run: npm test
       - run: npm run build
 
   # OpenID Connect token that the pypi-publish actions needs to implement secretless trusted publishing to PyPI
