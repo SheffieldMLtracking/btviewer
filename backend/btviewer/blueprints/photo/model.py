@@ -2,7 +2,7 @@ import datetime
 import io
 import json
 from pathlib import Path
-from typing import Iterable, Mapping, Union
+from typing import Iterable, Mapping, Union, Generator
 
 import PIL.Image
 import flask
@@ -117,12 +117,6 @@ class Photo:
         folder_name = self.path.stem
         return self.path.parent.joinpath(folder_name)
 
-    def iter_labels(self) -> Iterable[Path]:
-        """
-        Iterate over all the label files for this image.
-        """
-        yield from self.label_directory.glob("*.json")
-
     @property
     def metadata(self) -> dict:
         """
@@ -202,9 +196,22 @@ class Photo:
         """
         return self.to_bytes(format='PNG')
 
+    def iter_labels(self) -> Generator[Mapping, None, None]:
+        """
+        Iterate over label documents for this image.
+        """
+        # Iterate over JSON files in the label directory
+        for path in self.label_directory.glob('*.json'):
+            # Load JSON data
+            with path.open() as file:
+                doc = json.load(file)
+                app.logger.info("Loaded '%s'", file.name)
+            # Get list of tags
+            yield from doc['tags']
+
     @property
-    def labels(self) -> set[Mapping]:
+    def labels(self) -> Iterable[Mapping]:
         """
         The tags applied to this image.
         """
-        raise NotImplementedError
+        return list(dict(label) for label in self.iter_labels())

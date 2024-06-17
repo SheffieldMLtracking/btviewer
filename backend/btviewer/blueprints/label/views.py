@@ -8,11 +8,12 @@ app: flask.Flask = flask.current_app
 blueprint = flask.Blueprint('label', __name__, url_prefix='/labels')
 
 
-@blueprint.route('/detail?path=<path:photo_path>', methods=['GET'])
-def detail(photo_path: str):
+@blueprint.route('/detail', methods=['GET'])
+def detail():
     """
     Get all the tags associated with this image
     """
+    photo_path = flask.request.args['path']
     photo = Photo(photo_path)
     return flask.jsonify(photo.labels)
 
