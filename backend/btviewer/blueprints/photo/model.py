@@ -150,7 +150,8 @@ class Photo:
     def array(self):
         return self.get_array()
 
-    def get_array(self, scale_factor: float = None, dtype=numpy.dtype('uint8')) -> numpy.array:
+    def get_array(self, scale_factor: float = None, dtype=numpy.dtype('uint8'),
+                  mean_exposure: float = 0.18) -> numpy.array:
         """
         2D image data array of pixel values.
 
@@ -158,6 +159,7 @@ class Photo:
 
         :param scale_factor: Multiplication factor for the pixel brightness values
         :param dtype: Data type https://numpy.org/doc/stable/reference/generated/numpy.ndarray.astype.html
+        :param mean_exposure: The target average brightness (default 1to 18% grey)
         """
         # Set data type for array values
         dtype = numpy.dtype(dtype)
@@ -167,8 +169,8 @@ class Photo:
         array: numpy.ndarray = self.data['img']
 
         if scale_factor is None:
-            # Adjust brightness to average 18% grey
-            scale_factor = 255 * 0.18 / array.mean()
+            # Adjust brightness to target average exposure
+            scale_factor = maximum_value * mean_exposure / array.mean()
 
         numpy.multiply(array, scale_factor, out=array, casting='unsafe')
 
