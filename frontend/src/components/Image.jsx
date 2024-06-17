@@ -1,5 +1,4 @@
 import './Image.css'
-import image from '../mockData/test.jpg'
 
 import { useState, useRef, useEffect } from 'react'
 import DrawRetrodetectMarkers from './DrawRetrodetectMarkers.jsx';
@@ -8,12 +7,14 @@ import SaveMarkers from './SaveMarkers.jsx';
 
 /*
 A bee tracking photo
-*/
-function Image () {
+import image from '../mockData/test.jpg'
 
+*/
+function Image (props) {
   //Ref for image
   const imgRef = useRef(null);
-
+  console.log('IN IMAGE COMPONENT')
+  console.log(props.image)
 
   //State for x, y coordinates based on the original image 
   const [coordinate, setCoordinate] = useState({
@@ -260,7 +261,7 @@ function Image () {
         <SaveMarkers markerList={markerList}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
-            <img ref={imgRef} src={image} onClick={clickHandler} alt='' style={{
+            <img ref={imgRef} src={props.image} onClick={clickHandler} alt='' style={{
                 height: `${imageSize.viewHeight}px`,
                 width: `${imageSize.viewWidth}px`,
                 top: `${imageNewPosition.top}px`,

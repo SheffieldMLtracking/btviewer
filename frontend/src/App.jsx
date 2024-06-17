@@ -5,7 +5,6 @@ function App() {
     return (
         <div className="App">
             <Sessions/>  {/*It should be a component, which in turn have all the children component to fetch session, camera, device etc.*/}
-            <Image/>
         </div>
     );
 }
