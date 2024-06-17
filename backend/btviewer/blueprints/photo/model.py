@@ -147,7 +147,10 @@ class Photo:
         return self.load()
 
     @property
-    def array(self, scale_factor: float = None, dtype=numpy.dtype('uint8')) -> numpy.array:
+    def array(self):
+        return self.get_array()
+
+    def get_array(self, scale_factor: float = None, dtype=numpy.dtype('uint8')) -> numpy.array:
         """
         2D image data array of pixel values.
 
@@ -163,10 +166,10 @@ class Photo:
         # Load image data
         array: numpy.ndarray = self.data['img']
 
-        # Adjust brightness
         if scale_factor is None:
-            # Normalise
-            scale_factor = maximum_value / array.max()
+            # Adjust brightness to average 18% grey
+            scale_factor = 255 * 0.18 / array.mean()
+
         numpy.multiply(array, scale_factor, out=array, casting='unsafe')
 
         return array.astype(dtype=dtype)
