@@ -6,4 +6,4 @@ For more information about this package, please see the [readme in the parent di
 
 ## Contributing
 
-Please read the [contribution guide](CONTRIBUTING.md)/
+Please read the [contribution guide](https://github.com/SheffieldMLtracking/btviewer/blob/main/CONTRIBUTING.md).

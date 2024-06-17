@@ -45,6 +45,8 @@ To run the app in development mode:
 flask --app backend.btviewer.app --debug run
 ```
 
+To run the frontend user interface in development mode, see the [frontend contribution guide](../frontend/CONTRIBUTING.md).
+
 ## Further reading
 
 - Flask [Project Layout](https://flask.palletsprojects.com/en/2.3.x/tutorial/layout/) and [tutorial example](https://github.com/pallets/flask/tree/3.0.2/examples/tutorial)
