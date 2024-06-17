@@ -9,6 +9,22 @@ app: flask.Flask = flask.current_app
 blueprint = flask.Blueprint('session', __name__, url_prefix='/sessions')
 
 
+@blueprint.route('/_all_cameras')
+def list_all_cameras():
+    """
+    DEVELOPMENT ONLY - THIS WILL BE REMOVED
+
+    List all data subdirectories
+    """
+
+    root_directory = Path(app.config['ROOT_DIRECTORY'])
+    # Get camera data subdirectories (nested four deep)
+    camera_directories = (path for path in root_directory.glob("*/*/*/*") if path.is_dir())
+    # Convert paths to strings
+    camera_directories = tuple(str(path.relative_to(root_directory).as_posix()) for path in camera_directories)
+    return flask.jsonify(camera_directories)
+
+
 @blueprint.route("/")
 def list_():
     """
