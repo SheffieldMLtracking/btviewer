@@ -19,7 +19,8 @@ defaults:
     working-directory: ./backend/
 
 jobs:
-  test:
+  test-backend:
+    name: Test backend
     # # https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
     runs-on: "ubuntu-22.04"
     strategy:
@@ -27,7 +28,6 @@ jobs:
       matrix:
         # https://devguide.python.org/versions/
         python-version: ["3.9", "3.10", "3.11", "3.12"]
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -51,8 +51,9 @@ jobs:
         btviewer --version
 
   build-backend:
+    name: Build backend
     runs-on: ubuntu-22.04
-    needs: test
+    needs: test-backend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -76,9 +77,26 @@ jobs:
           path: backend/dist/
           if-no-files-found: error
 
+  test-frontend:
+    name: Test frontend
+    runs-on: ubuntu-22.04
+    defaults:
+      run:
+        working-directory: ./frontend/
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm run lint
+      - run: npm test
+
   # Build frontend user interface
   build-frontend:
+    name: Build frontend
     runs-on: ubuntu-22.04
+    needs:
+      - test-frontend
     defaults:
       run:
         working-directory: ./frontend/
@@ -89,8 +107,6 @@ jobs:
           node-version: '22'
       - name: Clean install the npm project
         run: npm ci
-      - run: npm run lint
-      #- run: npm run test
       - run: npm run build
 
   # OpenID Connect token that the pypi-publish actions needs to implement secretless trusted publishing to PyPI
