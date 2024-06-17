@@ -55,19 +55,20 @@ def list_path(relative_path: str):
     <root_directory>/<session>/<set>/<device id>/<camera id>/<timestamp>_<photo id>.np
     """
 
+    root_directory = Session.root_directory()
     relative_path = Path(relative_path)
-    path: Path = Session.root_directory().joinpath(relative_path)
+    path: Path = root_directory.joinpath(relative_path)
 
     # Are we in a camera directory that contains photos?
     # (i.e. Are we at least four subdirectories deep in the file structure?)
     if len(relative_path.parents) >= 4:
         # Get photo files
         file_paths = path.glob("*.np")
-        file_names = tuple(str(path.name) for path in file_paths)
+        file_names = tuple(str(path.relative_to(root_directory).as_posix()) for path in file_paths)
         return flask.jsonify(file_names)
 
     else:
         # Get subdirectory names
         subdir_paths = (path for path in path.iterdir() if path.is_dir())
-        subdir_names = tuple(str(path.name) for path in subdir_paths)
+        subdir_names = tuple(str(path.relative_to(root_directory).as_posix()) for path in subdir_paths)
         return flask.jsonify(subdir_names)
