@@ -1,1 +1,2 @@
-include btviewer/static/*
+# Include Flask static files in the package
+recursive-include btviewer/static *
