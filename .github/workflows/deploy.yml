@@ -53,7 +53,9 @@ jobs:
   build-backend:
     name: Build backend
     runs-on: ubuntu-22.04
-    needs: test-backend
+    needs:
+      - test-backend
+      - build-frontend
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -63,6 +65,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install build --user
+      - name: Get frontend distributable files
+        uses: actions/download-artifact@v4
+        with:
+          name: frontend-dist
+          path: backend/btviewer/static/
       - name: Copy files
         run: |
           cp --verbose ../README* .
@@ -95,6 +102,11 @@ jobs:
       #- run: npm run lint
       #- run: npm test
       - run: npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          if-no-files-found: error
 
   # OpenID Connect token that the pypi-publish actions needs to implement secretless trusted publishing to PyPI
   # https://docs.pypi.org/trusted-publishers/
