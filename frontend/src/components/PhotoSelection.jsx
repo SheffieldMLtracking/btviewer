@@ -1,5 +1,5 @@
 import {useState} from 'react'
-
+import Image from './Image';
 /*
 Display a drop-down list of photos to be shown.
 */
@@ -16,17 +16,15 @@ function PhotoSelection (props) {
     */
     function photoFetcher(e) {
         let selectedPhoto = e.target.value;
-        setCurrentPhoto(selectedPhoto);
+       
         console.log(selectedPhoto);
 
         // Update the list of photo filenames available in that session
         let url = `/api/${selectedPhoto}`;
-        url = url.replace("np","jpeg")
-        console.log(url)
-        fetch(url)
-        .then(response => response.json())
-        .then(data => setCurrentPhoto(data));
-
+        let urlJpeg = url.replace("np","jpeg")
+        setCurrentPhoto(urlJpeg);
+       
+        console.log(currentPhoto)
 
     }
 
@@ -42,7 +40,7 @@ function PhotoSelection (props) {
             >
                 <option/>
                 {listDisplayed}</select>
-                
+            <Image image={currentPhoto}/>
 
         </>
     )
