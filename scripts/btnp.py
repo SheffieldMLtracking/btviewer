@@ -34,6 +34,8 @@ def get_args() -> argparse.Namespace:
     parser.add_argument('-m', '--mean_exposure', default=0.18, type=float,
                         help='Target mean exposure (default: 0.18)')
     parser.add_argument('-e', '--ext', default='.jpeg', help='Output file extension (default: .jpeg)')
+    # https://pillow.readthedocs.io/en/stable/handbook/concepts.html#concept-modes
+    parser.add_argument('-m', '--mode', default=None, help='PIL image mode. Default: L (8-bit pixels, grayscale)')
 
     return parser.parse_args()
 
@@ -57,10 +59,11 @@ def main():
     numpy.multiply(array, scale_factor, out=array, casting='unsafe')
 
     # Convert to output image format
-    image = PIL.Image.fromarray(array)
+    image = PIL.Image.fromarray(obj=array, mode=args.mode)
 
     # Save output
     if not args.output_path:
+        # e.g. change "file.np" to "file.jpeg"
         args.output_path = args.input_path.with_suffix(args.ext)
     image.save(args.output_path)
     logger.info("Wrote '%s'", args.output_path.absolute())
