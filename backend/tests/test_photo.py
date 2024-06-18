@@ -1,5 +1,8 @@
+import random
 from http import HTTPStatus
+from pathlib import Path
 
+import flask
 import numpy as np
 
 from btviewer.blueprints.photo.model import Photo
@@ -7,7 +10,7 @@ from btviewer.blueprints.photo.model import Photo
 
 def test_photo_array(app):
     with app.app_context():
-        photo = Photo('1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np')
+        photo = Photo('2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000001.np')
 
         assert isinstance(photo.array, np.ndarray)
         assert photo.array.shape == (1536, 2048)
@@ -18,7 +21,7 @@ def test_photo_array(app):
 def test_photo_jpeg(client):
     width = 1024
     height = 768
-    response = client.get('/photos/1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.jpeg')
+    response = client.get('photos/2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000001.jpeg')
     assert response.status_code == HTTPStatus.OK
 
     # Check response contents
