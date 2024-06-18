@@ -9,10 +9,13 @@ import PIL.Image
 import numpy
 
 DESCRIPTION = """
-Convert a bee_track numpy data file to JPEG format.
+Convert a bee_track numpy data file to JPEG (or other) image format.
 """
 USAGE = """
-python -m btnp $input_path
+path="my_image_data.np"
+python -m btnp $path
+python -m btnp $path -o file.png
+python -m btnp $path -o file.tiff
 """
 
 logger = logging.getLogger(__name__)
@@ -24,13 +27,13 @@ def get_args() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(description=DESCRIPTION, usage=USAGE)
     parser.add_argument('-v', '--verbose', action='store_true')
-    parser.add_argument('input_path', type=Path)
-    parser.add_argument('-o', '--output_path', type=Path, default=Path(),
+    parser.add_argument('input_path', type=Path, help="Path of the bee_track numpy data file")
+    parser.add_argument('-o', '--output_path', type=Path, default=None,
                         help='Output file path (default: same as input with image file extension)')
-    parser.add_argument('--dtype', default='uint8', help='Numpy array data type')
+    parser.add_argument('--dtype', default='uint8', help='Numpy array data type (default: uint8)')
     parser.add_argument('-m', '--mean_exposure', default=0.18, type=float,
-                        help='Target mean exposure percentage (0 to 1)')
-    parser.add_argument('-e', '--ext', default='.jpeg', help='Output file extension')
+                        help='Target mean exposure (default: 0.18)')
+    parser.add_argument('-e', '--ext', default='.jpeg', help='Output file extension (default: .jpeg)')
 
     return parser.parse_args()
 
@@ -39,7 +42,7 @@ def main():
     args = get_args()
     logging.basicConfig(
         format="%(name)s:%(asctime)s:%(levelname)s:%(message)s",
-        level=logging.WARNING if args.verbose else logging.INFO
+        level=logging.DEBUG if args.verbose else logging.INFO
     )
 
     # Load input data file
@@ -57,9 +60,10 @@ def main():
     image = PIL.Image.fromarray(array)
 
     # Save output
-    output_path = args.input_path.with_suffix(args.ext)
-    image.save(output_path)
-    logger.info("Wrote '%s'", output_path)
+    if not args.output_path:
+        args.output_path = args.input_path.with_suffix(args.ext)
+    image.save(args.output_path)
+    logger.info("Wrote '%s'", args.output_path.absolute())
 
 
 if __name__ == '__main__':
