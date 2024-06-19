@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 
+"""
+Convert a bee_track numpy data file to JPEG (or other) image format.
+
+Installation:
+pip install pillow numpy
+"""
+
 
 import argparse
 import logging
