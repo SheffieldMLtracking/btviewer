@@ -15,6 +15,7 @@ function Image (props) {
   const imgRef = useRef(null);
   console.log('IN IMAGE COMPONENT')
   console.log(props.image)
+  console.log(props.existingLabel)
 
   //State for x, y coordinates based on the original image 
   const [coordinate, setCoordinate] = useState({
@@ -27,7 +28,12 @@ function Image (props) {
   const [markerList, setMarkerList] = useState([])
 
   useEffect (() => { //reset every initial state when image changes
-    setMarkerList([])
+    if(props.existingLabel.length === 0){
+      setMarkerList([])
+    } else if (props.existingLabel.length > 0 ) {
+      setMarkerList([props.existingLabel])
+    }
+
     setImageSize({
       originalWidth : 0,
       originalHeight : 0,
