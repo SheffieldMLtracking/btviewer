@@ -26,12 +26,26 @@ function Image (props) {
   //State for array containing objects each of which recording one marker/tag. WARNING the LAST tag may not be recorded due to the useState
   const [markerList, setMarkerList] = useState([])
 
-
-  //State for x, y onscreen, no longer in use anymore
-  const [coordinateOnImage, setCoordinateOnImage] = useState({
-    x: 0,
-    y: 0
-  });
+  useEffect (() => { //reset every initial state when image changes
+    setMarkerList([])
+    setImageSize({
+      originalWidth : 0,
+      originalHeight : 0,
+      viewWidth : 683,
+      viewHeight : 512
+    })
+    setCoordinate({
+      x: -99,
+      y: -99,
+      confidence: 'Initialization'
+    })
+    setShowRetrodetect(0)
+    setImageNewPosition({
+      left: 0,
+      top: 0,
+    })
+    
+  }, [props])
 
   //State for recording the original width/height of the image and view width/height. THIS might not need to be STATE
   const [imageSize, setImageSize] = useState({
@@ -117,10 +131,7 @@ function Image (props) {
     console.log('client X & client Y', e.clientX, e.clientY)
     console.log('original pixel x & y', originalPixelX, originalPixelY)
 
-    setCoordinateOnImage({
-        x: currentOffsetX,
-        y: currentOffsetY,
-      })
+
 
     setImageSize({
       originalWidth : originalWidth,
