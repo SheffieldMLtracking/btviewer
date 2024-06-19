@@ -14,7 +14,12 @@ function Image (props) {
   //Ref for image
   const imgRef = useRef(null);
   console.log('IN IMAGE COMPONENT')
-  console.log(props.image)
+  console.log(props.existingLabel)
+
+  // to examine if there is an existing human labelled json file, if there is, we will merge the list to the markerlist in the useEffect when there is a change in props, if not we will declare the list as []
+  let existingLabel = props.existingLabel.length>0 ? props.existingLabel : [] 
+  let imageWidth = props.existingLabel.length>0 ? 2048 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
+  let imageHeight = props.existingLabel.length>0 ? 1536 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
 
   //State for x, y coordinates based on the original image 
   const [coordinate, setCoordinate] = useState({
@@ -26,28 +31,7 @@ function Image (props) {
   //State for array containing objects each of which recording one marker/tag. WARNING the LAST tag may not be recorded due to the useState
   const [markerList, setMarkerList] = useState([])
 
-  useEffect (() => { //reset every initial state when image changes
-    setMarkerList([])
-    setImageSize({
-      originalWidth : 0,
-      originalHeight : 0,
-      viewWidth : 683,
-      viewHeight : 512
-    })
-    setCoordinate({
-      x: -99,
-      y: -99,
-      confidence: 'Initialization'
-    })
-    setShowRetrodetect(0)
-    setImageNewPosition({
-      left: 0,
-      top: 0,
-    })
-    
-  }, [props])
-
-  //State for recording the original width/height of the image and view width/height. THIS might not need to be STATE
+    //State for recording the original width/height of the image and view width/height. THIS might not need to be STATE
   const [imageSize, setImageSize] = useState({
     originalWidth : 0,
     originalHeight : 0,
@@ -67,9 +51,31 @@ function Image (props) {
       left: 0,
       top: 0,
   })
-  // for zooming in
 
-  useEffect(() => {
+  useEffect (() => { //reset every initial state when image changes
+
+    setMarkerList(existingLabel)
+
+    setImageSize({
+      originalWidth : imageWidth,
+      originalHeight : imageHeight,
+      viewWidth : 683,
+      viewHeight : 512
+    })
+    setCoordinate({
+      x: -99,
+      y: -99,
+      confidence: 'Initialization'
+    })
+    setShowRetrodetect(0)
+    setImageNewPosition({
+      left: 0,
+      top: 0,
+    })
+    
+  }, [props])
+
+  useEffect(() => { // when there is a window resize
     const handleResize = () => {
       const imageCurrent = imgRef.current; //so that it will still work when clickHandler has not been called
 
@@ -130,7 +136,8 @@ function Image (props) {
     console.log('Offset X & Y', e.nativeEvent.offsetX, e.nativeEvent.offsetY)
     console.log('client X & client Y', e.clientX, e.clientY)
     console.log('original pixel x & y', originalPixelX, originalPixelY)
-
+    console.log('image.top', imageRect.top )
+    console.log('image.left', imageRect.left )
 
 
     setImageSize({
@@ -233,6 +240,7 @@ function Image (props) {
             left: x
             }
         ) 
+        
       }
     }
 
@@ -269,7 +277,7 @@ function Image (props) {
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence {coordinate.confidence}</h2>
-        <SaveMarkers markerList={markerList}/>
+        <SaveMarkers markerList={markerList} photo={props.photo}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={props.image} onClick={clickHandler} alt='' style={{

@@ -7,7 +7,8 @@ function SaveMarkers(props) {
 
     function handleSubmit() {
 
-        const photo_path = '1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np';
+        //const photo_path = '1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np';
+        const photo_path = props.photo
         const source = 'btviewer';
         const version = '0.0.0'
         const url = `/api/labels/create?path=${photo_path}&source=${source}&version=${version}`;
