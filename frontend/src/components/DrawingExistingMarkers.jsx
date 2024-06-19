@@ -6,6 +6,10 @@ function DrawExistingMarkers (props){ //imageSize and markerList
     let currentOffsetY
     let currentConfidence
 
+    
+    console.log('imageLeft' + props.imagePosition.left)
+    console.log('imageTop' + props.imagePosition.top)
+
     let currentOffsetArray = props.markerList.map((item) =>{
         currentOffsetX = Math.round((item.x/props.imageSize.originalWidth)*props.imageSize.viewWidth)+props.imagePosition.left
         currentOffsetY = Math.round((item.y/props.imageSize.originalHeight)*props.imageSize.viewHeight)+props.imagePosition.top

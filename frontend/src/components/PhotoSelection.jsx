@@ -6,6 +6,7 @@ Display a drop-down list of photos to be shown.
 */
 function PhotoSelection(props) {
     const [currentPhoto, setCurrentPhoto] = useState('')
+    const [photoPath, setPhotoPath] = useState('')
     const [humanLabel, setHumanLabel] = useState([])
     /*
     List the photos for users to choose from
@@ -19,7 +20,7 @@ function PhotoSelection(props) {
     function photoFetcher(e) {
         let selectedPhoto = e.target.value;
 
-        console.log(selectedPhoto);
+        setPhotoPath(selectedPhoto);
 
         // Update the list of photo filenames available in that session
         let urlJpeg = '/api/photos/' + selectedPhoto.replace("np", "jpeg");
@@ -52,7 +53,7 @@ function PhotoSelection(props) {
             >
                 <option/>
                 {listDisplayed}</select>
-            <Image image={currentPhoto} existingLabel={humanLabel}/>
+            <Image image={currentPhoto} existingLabel={humanLabel} photo={photoPath}/>
 
         </>
     )
