@@ -26,11 +26,20 @@ function PhotoSelection(props) {
         setCurrentPhoto(urlJpeg);
         console.log(currentPhoto)
 
-        let urlHumanLabel = '/api/labels/detail?path=' + selectedPhoto
-        fetch(urlHumanLabel)
-            .then(response => response.json())
-            .then(data => setHumanLabel(data));
+    // Get the json for the human label coordinates if it exists
+    let urlLabel = '/api/labels/detail?path=' + selectedPhoto
+    console.log('urlLabel')
+    console.log(urlLabel)
+    fetch(urlLabel)
+        .then(response => response.json())
+        .then((data) => {
+            setHumanLabel(data)
+        });
+    console.log(data)
+    console.log(humanLabel)
+
     }
+
 
 
     return (

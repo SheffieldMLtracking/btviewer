@@ -14,8 +14,10 @@ function Image (props) {
   //Ref for image
   const imgRef = useRef(null);
   console.log('IN IMAGE COMPONENT')
-  console.log(props.image)
   console.log(props.existingLabel)
+
+  let existingLabel = props.existingLabel.length>0 ? props.existingLabel : [] 
+  console.log(existingLabel)
 
   //State for x, y coordinates based on the original image 
   const [coordinate, setCoordinate] = useState({
@@ -27,12 +29,13 @@ function Image (props) {
   //State for array containing objects each of which recording one marker/tag. WARNING the LAST tag may not be recorded due to the useState
   const [markerList, setMarkerList] = useState([])
 
+  //useEffect(() => {
+  //  setMarkerList(props.existingLabel || []); // Set to empty array if existingLabel is not provided
+  //}, [props.existingLabel]); 
+
   useEffect (() => { //reset every initial state when image changes
-    if(props.existingLabel.length === 0){
-      setMarkerList([])
-    } else if (props.existingLabel.length > 0 ) {
-      setMarkerList([props.existingLabel])
-    }
+
+    setMarkerList([])
 
     setImageSize({
       originalWidth : 0,
@@ -277,6 +280,7 @@ function Image (props) {
         <h2>Confidence {coordinate.confidence}</h2>
         <SaveMarkers markerList={markerList}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
+        <p>{props.existingLabel}</p>
         <div className='ImageContainer'>
             <img ref={imgRef} src={props.image} onClick={clickHandler} alt='' style={{
                 height: `${imageSize.viewHeight}px`,
