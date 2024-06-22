@@ -73,7 +73,7 @@ function Image ({image, humanLabel, photoPath }) {
       top: 0,
     })
     
-  }, [photoPath])
+  }, [humanLabel])
 
   useEffect(() => { // when there is a window resize
     const handleResize = () => {
