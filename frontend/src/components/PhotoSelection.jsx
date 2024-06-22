@@ -4,14 +4,14 @@ import Image from './Image';
 /*
 Display a drop-down list of photos to be shown.
 */
-function PhotoSelection(props) {
+function PhotoSelection({photoFilenames}) {
     const [currentPhoto, setCurrentPhoto] = useState('')
     const [photoPath, setPhotoPath] = useState('')
     const [humanLabel, setHumanLabel] = useState([])
     /*
     List the photos for users to choose from
     */
-    let listDisplayed = props.data.map(item =>
+    let listDisplayed = photoFilenames.map(item =>
         <option key={item.id} value={item}>{item}</option>);
 
     /*
@@ -53,7 +53,7 @@ function PhotoSelection(props) {
             >
                 <option/>
                 {listDisplayed}</select>
-            <Image image={currentPhoto} existingLabel={humanLabel} photo={photoPath}/>
+            <Image image={currentPhoto} humanLabel={humanLabel} photoPath={photoPath}/>
 
         </>
     )

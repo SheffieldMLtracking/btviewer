@@ -8,18 +8,18 @@ import SaveMarkers from './SaveMarkers.jsx';
 /*
 A bee tracking photo
 import image from '../mockData/test.jpg'
-
 */
-function Image (props) {
+
+
+function Image ({image, humanLabel, photoPath }) {
   //Ref for image
   const imgRef = useRef(null);
   console.log('IN IMAGE COMPONENT')
-  console.log(props.existingLabel)
 
   // to examine if there is an existing human labelled json file, if there is, we will merge the list to the markerlist in the useEffect when there is a change in props, if not we will declare the list as []
-  let existingLabel = props.existingLabel.length>0 ? props.existingLabel : [] 
-  let imageWidth = props.existingLabel.length>0 ? 2048 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
-  let imageHeight = props.existingLabel.length>0 ? 1536 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
+  let existingLabel = humanLabel.length>0 ? humanLabel : [] 
+  let imageWidth = humanLabel.length>0 ? 2048 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
+  let imageHeight = humanLabel.length>0 ? 1536 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
 
   //State for x, y coordinates based on the original image 
   const [coordinate, setCoordinate] = useState({
@@ -73,7 +73,7 @@ function Image (props) {
       top: 0,
     })
     
-  }, [props])
+  }, [photoPath])
 
   useEffect(() => { // when there is a window resize
     const handleResize = () => {
@@ -277,16 +277,16 @@ function Image (props) {
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence {coordinate.confidence}</h2>
-        <SaveMarkers markerList={markerList} photo={props.photo}/>
+        <SaveMarkers markerList={markerList} photo={photoPath}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
-            <img ref={imgRef} src={props.image} onClick={clickHandler} alt='' style={{
+            <img ref={imgRef} src={image} onClick={clickHandler} alt='' style={{
                 height: `${imageSize.viewHeight}px`,
                 width: `${imageSize.viewWidth}px`,
                 top: `${imageNewPosition.top}px`,
                 left: `${imageNewPosition.left}px`,
               }}/>
-            <DrawRetrodetectMarkers control={showRetrodetect} imageSize={imageSize} imagePosition={imageNewPosition}/>
+            <DrawRetrodetectMarkers showRetrodetect={showRetrodetect} imageSize={imageSize} imagePosition={imageNewPosition}/>
             <DrawExistingMarkers markerList={markerList} imageSize={imageSize} imagePosition={imageNewPosition} />
     
         </div>

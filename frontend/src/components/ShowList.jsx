@@ -3,10 +3,10 @@ import PhotoSelection from './PhotoSelection'
 /*
 Display a drop-down list of sessions for navigation.
 */
-function ShowList(props) {
+function ShowList({data}) {
     // Store the selected session name
     let [currentSession, setCurrentSession] = useState('');
-    let listDisplayed = props.data.map(item =>
+    let listDisplayed = data.map(item =>
         <option key={item.id} value={item}>{item}</option>);
 
     // The photos in that session
@@ -41,7 +41,7 @@ function ShowList(props) {
             >
                 <option/>
                 {listDisplayed}</select>
-            <PhotoSelection data={photoFilenames}/>
+            <PhotoSelection photoFilenames={photoFilenames}/>
         </>
     )
 

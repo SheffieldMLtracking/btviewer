@@ -1,18 +1,18 @@
 import DrawMarker from './DrawMarker.jsx';
 
 
-function DrawExistingMarkers (props){ //imageSize and markerList
+function DrawExistingMarkers ({markerList, imageSize, imagePosition}){ //imageSize and markerList
     let currentOffsetX
     let currentOffsetY
     let currentConfidence
 
     
-    console.log('imageLeft' + props.imagePosition.left)
-    console.log('imageTop' + props.imagePosition.top)
+    console.log('imageLeft' + imagePosition.left)
+    console.log('imageTop' + imagePosition.top)
 
-    let currentOffsetArray = props.markerList.map((item) =>{
-        currentOffsetX = Math.round((item.x/props.imageSize.originalWidth)*props.imageSize.viewWidth)+props.imagePosition.left
-        currentOffsetY = Math.round((item.y/props.imageSize.originalHeight)*props.imageSize.viewHeight)+props.imagePosition.top
+    let currentOffsetArray = markerList.map((item) =>{
+        currentOffsetX = Math.round((item.x/imageSize.originalWidth) * imageSize.viewWidth) + imagePosition.left
+        currentOffsetY = Math.round((item.y/imageSize.originalHeight) * imageSize.viewHeight) + imagePosition.top
         currentConfidence = item.confidence
         return {currentOffsetX, currentOffsetY, currentConfidence}
     })

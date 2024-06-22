@@ -2,8 +2,8 @@ import { RetrodetectOutput } from '../mockData/RetrodetectOutput.js' //mockList 
 import DrawMarker from './DrawMarker.jsx';
 
 
-function DrawRetrodetectMarkers (props) {
-   if (props.control===0){ //Don't draw anything
+function DrawRetrodetectMarkers ({showRetrodetect, imageSize, imagePosition }) {
+   if (showRetrodetect===0){ //Don't draw anything
     return null
         
    } else {
@@ -11,8 +11,8 @@ function DrawRetrodetectMarkers (props) {
         let currentOffsetY
 
         let currentOffsetArray = RetrodetectOutput.map((item) =>{
-            currentOffsetX = Math.round((item.x/props.imageSize.originalWidth)*props.imageSize.viewWidth)+props.imagePosition.left
-            currentOffsetY = Math.round((item.y/props.imageSize.originalHeight)*props.imageSize.viewHeight)+props.imagePosition.top
+            currentOffsetX = Math.round((item.x/imageSize.originalWidth) * imageSize.viewWidth) + imagePosition.left
+            currentOffsetY = Math.round((item.y/imageSize.originalHeight)* imageSize.viewHeight)+ imagePosition.top
             return {currentOffsetX, currentOffsetY}
         })
 
