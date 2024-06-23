@@ -20,12 +20,13 @@ function Image ({image, humanLabel, photoPath }) {
   let existingLabel = humanLabel.length>0 ? humanLabel : [] 
   let imageWidth = humanLabel.length>0 ? 2048 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   let imageHeight = humanLabel.length>0 ? 1536 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
+  //TODO Get original image size from backend instead !!
 
   //State for x, y coordinates based on the original image 
   const [coordinate, setCoordinate] = useState({
     x: -99,
     y: -99,
-    confidence: 'Initialization',
+    confidence: true,
   });
 
   //State for array containing objects each of which recording one marker/tag. WARNING the LAST tag may not be recorded due to the useState
@@ -65,7 +66,7 @@ function Image ({image, humanLabel, photoPath }) {
     setCoordinate({
       x: -99,
       y: -99,
-      confidence: 'Initialization'
+      confidence: true
     })
     setShowRetrodetect(0)
     setImageNewPosition({
@@ -109,16 +110,16 @@ function Image ({image, humanLabel, photoPath }) {
   //All the functions
   function clickHandler(e){ // determining the coordinates of the click and draw the marker
     const imageCurrent = imgRef.current;
-
-
-
-    if (e.shiftKey||e.ctrlKey){
     // Get the original width and height of the image
     let originalWidth = imageCurrent.naturalWidth; 
-	  let originalHeight = imageCurrent.naturalHeight;
+    let originalHeight = imageCurrent.naturalHeight;
+    let imageRect = imageCurrent.getBoundingClientRect();
+
+
+    if (e.shiftKey||e.ctrlKey){ //For tagging
+
 
     // Get the height/width of the image container
-    let imageRect = imageCurrent.getBoundingClientRect();
     let viewWidth = Math.round(imageRect.width)
     let viewHeight = Math.round(imageRect.height)
 
@@ -147,20 +148,19 @@ function Image ({image, humanLabel, photoPath }) {
       viewHeight : viewHeight
     })  
 
-    console.log(imageSize)
     // Determining if additional keyboard keys are pressed, and record confidence label and any future label accordingly
-    //https://react.dev/reference/react-dom/components/common#mouseevent-handler
+
     if (e.shiftKey) {
         console.log('shift pressed')
         setCoordinate({
           x: originalPixelX,
           y: originalPixelY,
-          confidence: "Unsure"
+          confidence: false
         })
         setMarkerList([...markerList, 
           {x: originalPixelX,
             y: originalPixelY,
-            confidence: "Unsure"}])
+            confidence: false}])
             console.log(markerList)
 
 
@@ -170,28 +170,22 @@ function Image ({image, humanLabel, photoPath }) {
         setCoordinate({
           x: originalPixelX,
           y: originalPixelY,
-          confidence: "Sure"
+          confidence: true
         })
         setMarkerList([...markerList, 
           {x: originalPixelX,
             y: originalPixelY,
-            confidence: "Sure"}])
+            confidence: true}])
             console.log(markerList)
 
       }
-      } else if (e.altKey||e.metaKey){
+      } else if (e.altKey||e.metaKey){ //for zooming in and out
 
         if (e.altKey){
           scale = scaleZoomIn
         } else if (e.metaKey){
           scale = scaleZoomOut
         }
-        const imageCurrent = imgRef.current;
-
-        let imageRect = imageCurrent.getBoundingClientRect();
-
-        let originalWidth = imageCurrent.naturalWidth; 
-        let originalHeight = imageCurrent.naturalHeight;
         let updatedRectTop =  imageRect.top +  window.scrollY
         let updatedRectLeft = imageRect.left + window.scrollX
 
@@ -276,7 +270,7 @@ function Image ({image, humanLabel, photoPath }) {
     return (
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
-        <h2>Confidence {coordinate.confidence}</h2>
+        <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
         <SaveMarkers markerList={markerList} photo={photoPath}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>

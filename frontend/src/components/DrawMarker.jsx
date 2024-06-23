@@ -1,9 +1,9 @@
 function DrawMarker (props) { // current x and y based on the current view
   let colour
     if (typeof props !== 'undefined' && props !== null) {
-      if (props.confidence === 'Sure'){
+      if (props.confidence === true){
         colour = 'red' 
-      } else if (props.confidence === 'Unsure')  {
+      } else if (props.confidence === false)  {
         colour = 'blue'
       } else {
         colour = 'yellow'
