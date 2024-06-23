@@ -151,7 +151,7 @@ function Image ({image, humanLabel, photoPath }) {
     // Determining if additional keyboard keys are pressed, and record confidence label and any future label accordingly
 
     if (e.shiftKey) {
-        console.log('shift pressed')
+        console.log('shift pressed') //TODO where we can send to backend for saving. 
         setCoordinate({
           x: originalPixelX,
           y: originalPixelY,
@@ -165,7 +165,7 @@ function Image ({image, humanLabel, photoPath }) {
 
 
 
-      } else if (e.ctrlKey) {
+      } else if (e.ctrlKey) { //TODO where we can send to backend for saving. 
         console.log('control is pressed')
         setCoordinate({
           x: originalPixelX,
