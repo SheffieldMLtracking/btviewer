@@ -22,6 +22,8 @@ function Image ({image, humanLabel, photoPath }) {
   let imageHeight = humanLabel.length>0 ? 1536 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   //TODO Get original image size from backend instead !!
 
+  const [isDragging, setIsDragging] = useState(false)
+
   //State for x, y coordinates based on the original image 
   const [coordinate, setCoordinate] = useState({
     x: -99,
@@ -54,7 +56,7 @@ function Image ({image, humanLabel, photoPath }) {
   })
 
   useEffect (() => { //reset every initial state when image changes
-
+    setIsDragging(false)
     setMarkerList(existingLabel)
 
     setImageSize({
@@ -195,7 +197,8 @@ function Image ({image, humanLabel, photoPath }) {
         console.log('e.nativeEvent.offsetY' + e.nativeEvent.offsetY)
         console.log('e.pageX' + e.pageX)
         console.log('e.pageY' + e.pageY)
-
+        console.log('e.clientX' + e.clientX)
+        console.log('e.clientY' + e.clientY)
 
         console.log(imageCurrent)
         console.log(imageRect)
@@ -265,21 +268,79 @@ function Image ({image, humanLabel, photoPath }) {
         setShowRetrodetect(0)
       }
     }
-   
+
+    useEffect( () => {
+    const imageCurrent = imgRef.current;
+    let deltaX
+    let deltaY
+    let prevPosition
+    //Dragging function
+
+    function handlePointerDown(e){
+      setIsDragging(true)
+      prevPosition = { x: e.pageX, y: e.pageY }; 
+
+    }
+
+    function handlePointerUp(e){
+      setIsDragging(false);
+
+      }
+
+    function handlePointerMove(e){
+      console.log(isDragging)
+      if (isDragging){
+
+      let imageRect = imageCurrent.getBoundingClientRect();
+      let updatedRectTop =  imageRect.top +  window.scrollY
+      let updatedRectLeft = imageRect.left + window.scrollX
+
+      deltaX = updatedRectLeft - (e.pageX - prevPosition.x)
+      deltaY = updatedRectTop - (e.pageY - prevPosition.y)
+      console.log('deltaX ' + deltaX)
+      console.log('deltaY ' + deltaY)
+
+      prevPosition = { x: e.pageX, y: e.pageY }; 
+
+      setImageNewPosition({
+        top: deltaY,
+        left: deltaX
+      })
+          }
+    }
+     // Add event listeners
+     imageCurrent?.addEventListener("pointerdown", handlePointerDown);
+     imageCurrent?.addEventListener("pointermove", handlePointerMove);
+     imageCurrent?.addEventListener("pointerup", handlePointerUp);
+
+     
+     // Remove event listeners on component unmount
+     return () => {
+      imageCurrent?.removeEventListener("pointerdown", handlePointerDown);
+      imageCurrent?.removeEventListener("pointermove", handlePointerMove);
+      imageCurrent?.removeEventListener("pointerup", handlePointerUp);
+
+     };
+  },[imgRef])
         /* use another state annotation position array to save all markers for current image, when next image is clicked, then remove this array and s*/
     return (
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
+        <h2>top{imageNewPosition.top} left{imageNewPosition.left}</h2>
         <SaveMarkers markerList={markerList} photo={photoPath}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={image} onClick={clickHandler} alt='' style={{
+
                 height: `${imageSize.viewHeight}px`,
                 width: `${imageSize.viewWidth}px`,
                 top: `${imageNewPosition.top}px`,
                 left: `${imageNewPosition.left}px`,
-              }}/>
+
+              }}
+              draggable={false}
+             />
             <DrawRetrodetectMarkers showRetrodetect={showRetrodetect} imageSize={imageSize} imagePosition={imageNewPosition}/>
             <DrawExistingMarkers markerList={markerList} imageSize={imageSize} imagePosition={imageNewPosition} />
     
