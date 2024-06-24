@@ -296,16 +296,18 @@ function Image ({image, humanLabel, photoPath }) {
         }));
     };
      // Add event listeners
-     imageCurrent?.addEventListener("pointerdown", handlePointerDown);
-     imageCurrent?.addEventListener("pointermove", handlePointerMove);
-     imageCurrent?.addEventListener("pointerup", handlePointerUp);
-
+     //imageCurrent?.addEventListener("pointerdown", handlePointerDown);
+     //imageCurrent?.addEventListener("pointermove", handlePointerMove);
+     //imageCurrent?.addEventListener("pointerup", handlePointerUp);
+     window.addEventListener("pointerdown", handlePointerDown);
+     window.addEventListener("pointermove", handlePointerMove);
+     window.addEventListener("pointerup", handlePointerUp);
      
      // Remove event listeners on component unmount
      return () => {
-      imageCurrent?.removeEventListener("pointerdown", handlePointerDown);
-      imageCurrent?.removeEventListener("pointermove", handlePointerMove);
-      imageCurrent?.removeEventListener("pointerup", handlePointerUp);
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
 
      };
   },[imgRef])
