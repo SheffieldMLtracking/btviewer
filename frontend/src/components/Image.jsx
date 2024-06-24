@@ -271,43 +271,30 @@ function Image ({image, humanLabel, photoPath }) {
 
     useEffect( () => {
     const imageCurrent = imgRef.current;
-    let deltaX
-    let deltaY
-    let prevPosition
+    let isDragging = false;
+    let prevPosition = { x: 0, y: 0 };
     //Dragging function
 
-    function handlePointerDown(e){
-      setIsDragging(true)
-      prevPosition = { x: e.pageX, y: e.pageY }; 
+    const handlePointerDown = (e) => {
+      isDragging = true;
+      prevPosition = { x: e.clientX, y: e.clientY}; 
+  };
 
-    }
+    const handlePointerUp = () => {
+        isDragging = false;
+    };
 
-    function handlePointerUp(e){
-      setIsDragging(false);
 
-      }
-
-    function handlePointerMove(e){
-      console.log(isDragging)
-      if (isDragging){
-
-      let imageRect = imageCurrent.getBoundingClientRect();
-      let updatedRectTop =  imageRect.top +  window.scrollY
-      let updatedRectLeft = imageRect.left + window.scrollX
-
-      deltaX = updatedRectLeft - (e.pageX - prevPosition.x)
-      deltaY = updatedRectTop - (e.pageY - prevPosition.y)
-      console.log('deltaX ' + deltaX)
-      console.log('deltaY ' + deltaY)
-
-      prevPosition = { x: e.pageX, y: e.pageY }; 
-
-      setImageNewPosition({
-        top: deltaY,
-        left: deltaX
-      })
-          }
-    }
+      const handlePointerMove = (e) => {
+        if (!isDragging) return;
+        const deltaX = e.clientX - prevPosition.x;
+        const deltaY = e.clientY - prevPosition.y;
+        prevPosition = { x: e.clientX, y: e.clientY };
+        setImageNewPosition((imageNewPosition) => ({
+            left: imageNewPosition.left + deltaX,
+            top: imageNewPosition.top + deltaY,
+        }));
+    };
      // Add event listeners
      imageCurrent?.addEventListener("pointerdown", handlePointerDown);
      imageCurrent?.addEventListener("pointermove", handlePointerMove);
@@ -327,7 +314,6 @@ function Image ({image, humanLabel, photoPath }) {
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
-        <h2>top{imageNewPosition.top} left{imageNewPosition.left}</h2>
         <SaveMarkers markerList={markerList} photo={photoPath}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
