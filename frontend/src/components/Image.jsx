@@ -266,13 +266,27 @@ function Image ({image, humanLabel, photoPath }) {
       }
     }
    
+    function ResetImage (){
+      setImageSize({
+        ...imageSize,
+        viewWidth : 683,
+        viewHeight : 512
+      })
+
+      setImageNewPosition({
+        left: 0,
+        top: 0,
+      })
+      
+
+    }
         /* use another state annotation position array to save all markers for current image, when next image is clicked, then remove this array and s*/
     return (
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
         <SaveMarkers markerList={markerList} photo={photoPath}/>
-        <button onClick={RetrodetectController}>Show Retrodetect labels</button>
+        <button onClick={RetrodetectController}>Show Retrodetect labels</button><button onClick={ResetImage}>Reset</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={image} onClick={clickHandler} alt='' style={{
                 height: `${imageSize.viewHeight}px`,
