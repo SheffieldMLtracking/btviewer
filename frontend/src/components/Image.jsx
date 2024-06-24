@@ -21,7 +21,6 @@ function Image ({image, humanLabel, photoPath }) {
   let imageHeight = humanLabel.length>0 ? 1536 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   //TODO Get original image size from backend instead !!
 
-  const [isDragging, setIsDragging] = useState(false)
 
   //State for x, y coordinates based on the original image 
   const [coordinate, setCoordinate] = useState({
@@ -55,7 +54,6 @@ function Image ({image, humanLabel, photoPath }) {
   })
 
   useEffect (() => { //reset every initial state when image changes
-    setIsDragging(false)
     setMarkerList(existingLabel)
 
     setImageSize({
@@ -283,7 +281,7 @@ function Image ({image, humanLabel, photoPath }) {
 
     }
     useEffect( () => {
-    const imageCurrent = imgRef.current;
+    
     let isDragging = false;
     let prevPosition = { x: 0, y: 0 };
     //Dragging function
@@ -324,12 +322,17 @@ function Image ({image, humanLabel, photoPath }) {
 
      };
   },[imgRef])
+
+  function deleteHandler(){
+    setMarkerList([])
+  }
         /* use another state annotation position array to save all markers for current image, when next image is clicked, then remove this array and s*/
     return (
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
         <SaveMarkers markerList={markerList} photo={photoPath}/>
+        <button onClick={deleteHandler}>Delete All</button>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button><button onClick={ResetImage}>Reset</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={image} onClick={clickHandler} alt='' style={{
