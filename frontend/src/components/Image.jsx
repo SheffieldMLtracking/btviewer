@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import DrawRetrodetectMarkers from './DrawRetrodetectMarkers.jsx';
 import DrawExistingMarkers from './DrawingExistingMarkers.jsx';
 import SaveMarkers from './SaveMarkers.jsx';
+import Navigation from './Navigation.jsx';
 
 /*
 A bee tracking photo
@@ -15,7 +16,6 @@ function Image ({image, humanLabel, photoPath }) {
   //Ref for image
   const imgRef = useRef(null);
   console.log('IN IMAGE COMPONENT')
-
   // to examine if there is an existing human labelled json file, if there is, we will merge the list to the markerlist in the useEffect when there is a change in props, if not we will declare the list as []
   let existingLabel = humanLabel.length>0 ? humanLabel : [] 
   let imageWidth = humanLabel.length>0 ? 2048 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
@@ -272,6 +272,7 @@ function Image ({image, humanLabel, photoPath }) {
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
         <SaveMarkers markerList={markerList} photo={photoPath}/>
+        <Navigation photoPath={photoPath}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={image} onClick={clickHandler} alt='' style={{
