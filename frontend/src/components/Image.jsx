@@ -15,7 +15,6 @@ function Image ({image, humanLabel, photoPath }) {
   //Ref for image
   const imgRef = useRef(null);
   console.log('IN IMAGE COMPONENT')
-
   // to examine if there is an existing human labelled json file, if there is, we will merge the list to the markerlist in the useEffect when there is a change in props, if not we will declare the list as []
   let existingLabel = humanLabel.length>0 ? humanLabel : [] 
   let imageWidth = humanLabel.length>0 ? 2048 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here

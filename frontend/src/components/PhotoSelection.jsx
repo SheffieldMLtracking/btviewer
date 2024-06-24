@@ -42,6 +42,13 @@ function PhotoSelection({photoFilenames}) {
     }
 
 
+    function nextPhoto(){
+        console.log(photoPath)
+    }
+
+    function previousPhoto(){
+        console.log(photoPath)
+    }
 
     return (
         <>
@@ -53,6 +60,7 @@ function PhotoSelection({photoFilenames}) {
             >
                 <option/>
                 {listDisplayed}</select>
+            <button onclick={nextPhoto}>Next</button><button onclick={previousPhoto}>Previous</button>
             <Image image={currentPhoto} humanLabel={humanLabel} photoPath={photoPath}/>
 
         </>
