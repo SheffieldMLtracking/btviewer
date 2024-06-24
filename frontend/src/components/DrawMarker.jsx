@@ -22,7 +22,7 @@ function DrawMarker (props) { // current x and y based on the current view
         top:-10,
         width: 20,
         height: 20,
-        pointerEvents: `${props.pointer}`,
+        pointerEvents: `${props.pointer}`, //The element on its own is never the target of pointer events.
 
       }} 
       />
