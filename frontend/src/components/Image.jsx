@@ -4,7 +4,6 @@ import { useState, useRef, useEffect } from 'react'
 import DrawRetrodetectMarkers from './DrawRetrodetectMarkers.jsx';
 import DrawExistingMarkers from './DrawingExistingMarkers.jsx';
 import SaveMarkers from './SaveMarkers.jsx';
-import Navigation from './Navigation.jsx';
 
 /*
 A bee tracking photo
@@ -272,7 +271,6 @@ function Image ({image, humanLabel, photoPath }) {
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
         <SaveMarkers markerList={markerList} photo={photoPath}/>
-        <Navigation photoPath={photoPath}/>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button>
         <div className='ImageContainer'>
             <img ref={imgRef} src={image} onClick={clickHandler} alt='' style={{
