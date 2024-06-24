@@ -3,7 +3,6 @@ import './Image.css'
 import { useState, useRef, useEffect } from 'react'
 import DrawRetrodetectMarkers from './DrawRetrodetectMarkers.jsx';
 import DrawExistingMarkers from './DrawingExistingMarkers.jsx';
-import SaveMarkers from './SaveMarkers.jsx';
 
 /*
 A bee tracking photo
@@ -21,7 +20,8 @@ function Image ({image, humanLabel, photoPath }) {
   let imageHeight = humanLabel.length>0 ? 1536 : 0 //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   //TODO Get original image size from backend instead !!
 
-
+  //state for photoPath
+  const [currentPhotoPath, setCurrentPhotoPath] = useState('')
   //State for x, y coordinates based on the original image 
   const [coordinate, setCoordinate] = useState({
     x: -99,
@@ -53,7 +53,35 @@ function Image ({image, humanLabel, photoPath }) {
       top: 0,
   })
 
+  function SaveMarkers(markerList, photoPath) { //TODO: ask Yuliang how to move function to a util
+    const photo_path = photoPath
+    const source = 'btviewer';
+    const version = '0.0.0'
+    const url = `/api/labels/create?path=${photo_path}&source=${source}&version=${version}`;
+
+    fetch(url, {
+        method: 'post',
+        headers: {'Content-type': 'application/json'},
+        body: JSON.stringify(markerList)
+    })
+        .then((response) => {
+            console.log(JSON.stringify(response.json()));
+        })
+        .catch((err) => {
+            console.log(err.response.data)
+        })
+}
+
+
   useEffect (() => { //reset every initial state when image changes
+    if (currentPhotoPath===''){
+      setCurrentPhotoPath(photoPath)
+    } else {
+      SaveMarkers(markerList,currentPhotoPath)
+      setCurrentPhotoPath(photoPath)
+    }
+
+
     setMarkerList(existingLabel)
 
     setImageSize({
@@ -331,7 +359,6 @@ function Image ({image, humanLabel, photoPath }) {
       <>
         <h1>{coordinate.x}, {coordinate.y}</h1>
         <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
-        <SaveMarkers markerList={markerList} photo={photoPath}/>
         <button onClick={deleteHandler}>Delete All</button>
         <button onClick={RetrodetectController}>Show Retrodetect labels</button><button onClick={ResetImage}>Reset</button>
         <div className='ImageContainer'>
