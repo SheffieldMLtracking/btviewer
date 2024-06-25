@@ -61,7 +61,8 @@ function PhotoSelection({photoFilenames}) {
                 <option/>
                 {listDisplayed}</select>
             <button onClick={nextPhoto}>Next</button><button onClick={previousPhoto}>Previous</button>
-            <Image image={currentPhoto} humanLabel={humanLabel} photoPath={photoPath}/>
+            {/* pass function as prop */}
+            <Image image={currentPhoto} humanLabel={humanLabel} photoPath={photoPath} handlePreviousPhoto={previousPhoto} />
 
         </>
     )

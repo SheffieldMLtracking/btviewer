@@ -16,6 +16,7 @@ function Sessions() {
         fetch(url)
             .then(response => response.json())
             .then((sessionsList) => {
+                console.log(sessionsList)
                 setSessions(sessionsList)
             })
             .catch((error) => console.log(error));
