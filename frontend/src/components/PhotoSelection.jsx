@@ -43,11 +43,19 @@ function PhotoSelection({ photoFilenames }) {
     console.log(humanLabel);
   }
 
-  function nextPhoto() {
-    console.log(photoPath);
+  function handleNextPhoto() {
+    setPhotoPath("2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.np")
+    let urlJpeg = "/api/photos/2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.jpeg"
+    setCurrentPhoto(urlJpeg);
+    let urlLabel = "/api/labels/detail?path=2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.np"
+    fetch(urlLabel)
+      .then((response) => response.json())
+      .then((data) => {
+        setHumanLabel(data);
+      });
   }
 
-  function previousPhoto() {
+  function handlePreviousPhoto() {
     console.log(photoPath);
   }
 
@@ -57,12 +65,13 @@ function PhotoSelection({ photoFilenames }) {
         <option />
         {listDisplayed}
       </select>
-      <button onclick={nextPhoto}>Next</button>
-      <button onclick={previousPhoto}>Previous</button>
+
       <Image
         image={currentPhoto}
         humanLabel={humanLabel}
         photoPath={photoPath}
+        handleNextPhoto={handleNextPhoto}
+        handlePreviousPhoto={handlePreviousPhoto}
       />
       {/* pass function (nextPhoto & previsouPhoto that handles navigation of photo to image */}
     </>
