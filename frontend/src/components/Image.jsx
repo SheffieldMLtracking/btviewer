@@ -3,7 +3,7 @@ import "./Image.css";
 import { useState, useRef, useEffect } from "react";
 import DrawRetrodetectMarkers from "./DrawRetrodetectMarkers.jsx";
 import DrawExistingMarkers from "./DrawingExistingMarkers.jsx";
-import SaveMarkers from "./SaveMarkers.jsx";
+import { SaveMarkers } from "./utils.js";
 
 import Forward10Icon from '@mui/icons-material/Forward10';
 import Replay10Icon from '@mui/icons-material/Replay10';
@@ -27,6 +27,9 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
   let imageHeight = humanLabel.length > 0 ? 1536 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   
   //TODO Get original image size from backend instead !!
+
+  //state for photoPath for savingMarkers
+  const [currentPhotoPath, setCurrentPhotoPath] = useState("");
 
   //State for x, y coordinates based on the original image
   const [coordinate, setCoordinate] = useState({
@@ -61,6 +64,13 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
 
   useEffect(() => { // TODO: May move to button click if button click is the only way to change image
     //reset every initial state when image changes
+    if (currentPhotoPath === "") { //For saving markers in one go. similar as above may not use useEffect
+      setCurrentPhotoPath(photoPath);
+    } else {
+      SaveMarkers(markerList, currentPhotoPath);
+      setCurrentPhotoPath(photoPath);
+    }
+
     setMarkerList(existingLabel);
 
     setImageSize({
@@ -327,7 +337,6 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
         {coordinate.x}, {coordinate.y}
       </h1>
       <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
-      <SaveMarkers markerList={markerList} photo={photoPath} />
       <button onClick={deleteHandler}>Delete All</button>
       <button onClick={RetrodetectController}>Show Retrodetect labels</button>
       <button onClick={ResetImage}>Reset</button>
