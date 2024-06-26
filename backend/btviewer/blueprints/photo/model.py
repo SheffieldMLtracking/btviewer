@@ -1,6 +1,7 @@
 import datetime
 import io
 import json
+import tempfile
 from pathlib import Path
 from typing import Iterable, Mapping, Union, Generator
 
@@ -82,40 +83,48 @@ class Photo:
         raise NotImplementedError
 
     def add_labels(self, labels: list[dict], source: str, version: str, indent: int = 2):
-        label_file_path = self.label_directory.joinpath(f'{source}.json')
+        label_path = self.make_label_path(source=source)
 
-        # Make label directory
-        self.label_directory.mkdir(exist_ok=True)
+        # Build a list of labels
+        document: list[dict] = list()
 
-        # Build our labels metadata file contents
-        document = {
-            "provenance": {
-                "source": source,
-                "version": version,
-                "mode": "manual"
-            },
-            "tags": labels
+        # Open existing labels file
+        try:
+            with label_path.open('r') as file:
+                document.extend(json.load(file))
+        except FileNotFoundError:
+            pass
+
+        # Include the newly-added labels
+        document.extend(labels)
+
+        # Append the metadata to each label
+        metadata = {
+            "source": source,
+            "version": version,
+            "mode": "manual"
         }
+        document = [dict(**metadata, **label) for label in document]
 
-        # Save label file
-        with label_file_path.open('w') as file:
-            json.dump(document, file, indent=indent)
-            app.logger.info("Labels saved to '%s'", file.name)
+        # Save labels to disk
+        with label_path.open('w') as file:
+            json.dump(document, file)
 
-            return file.name
+        app.logger.info("Labels saved to '%s'", label_path)
+        return label_path
 
-    @property
-    def label_directory(self) -> Path:
+    def make_label_path(self, source: str) -> Path:
         """
-        The path of the directory containing all the label files associated with this image.
-        :return:
+        The path of the file containing all the label files for this photo for this source.
         """
         # If the photo path is
         # ~/photos/2020-01-01T09+40+43_00123.np
-        # the label directory is
-        # ~/photos/2020-01-01T09+40+43_00123/
-        folder_name = self.path.stem
-        return self.path.parent.joinpath(folder_name)
+        # the label directory for btviewer is
+        # ~/photos/btviewer/2020-01-01T09+40+43_00123.json
+        filename = path.with_suffix('.json').name
+        label_path = self.path.parent.joinpath(source).joinpath(filename)
+        label_path.parent.mkdir(exist_ok=True)
+        return label_path
 
     @property
     def metadata(self) -> dict:

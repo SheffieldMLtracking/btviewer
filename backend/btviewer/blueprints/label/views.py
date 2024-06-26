@@ -37,7 +37,7 @@ def create():
     array of label information like so:
 
     POST
-    http://localhost:5000/labels/create
+    http://localhost:5000/labels/create?path=1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np
 
     [
         {
@@ -50,7 +50,7 @@ def create():
           "x": 123,
           "y": 456,
           "confident": true,
-          "label": "not the bees!"
+          "label": "To be, or not to be."
         }
     ]
     """
