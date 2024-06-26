@@ -5,6 +5,10 @@ import DrawRetrodetectMarkers from "./DrawRetrodetectMarkers.jsx";
 import DrawExistingMarkers from "./DrawingExistingMarkers.jsx";
 import SaveMarkers from "./SaveMarkers.jsx";
 
+import Forward10Icon from '@mui/icons-material/Forward10';
+import Replay10Icon from '@mui/icons-material/Replay10';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
 /*
 A bee tracking photo
@@ -328,8 +332,10 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
       <button onClick={RetrodetectController}>Show Retrodetect labels</button>
       <button onClick={ResetImage}>Reset</button>
       <div  className="ImageOutsideContainer">
-      <button onClick={handlePreviousPhoto} id='previousArrow'>Previous</button>
+      <NavigateBeforeIcon id='previousArrow' onClick={handlePreviousPhoto}></NavigateBeforeIcon>
+      <Replay10Icon id='previous10Arrow' onClick={handlePreviousPhoto}></Replay10Icon>
 
+      
       <div className="ImageContainer">
         <img
           ref={imgRef}
@@ -355,7 +361,10 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
           imagePosition={imageNewPosition}
         />
       </div>
-      <button onClick={handleNextPhoto} id='nextArrow'>Next</button>
+      <NavigateNextIcon id='nextArrow' onClick={handleNextPhoto}></NavigateNextIcon>
+      <Forward10Icon id='next10Arrow' onClick={handleNextPhoto}></Forward10Icon>
+
+
 
       </div>
 
