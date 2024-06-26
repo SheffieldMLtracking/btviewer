@@ -91,6 +91,32 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
     });
   }, [humanLabel]);
 
+  useEffect(()=>{
+
+    const handleKeyDown = (e) => {
+      if (e.key === 'a') {
+        handlePreviousPhoto()
+      } else if (e.key == 'q'){
+        handlePreviousPhoto()
+      } else if (e.key == 'w') {
+        handleNextPhoto()
+      } else if (e.key === 's'){
+        handleNextPhoto()
+      } else if (e.key === 'z'){
+        ResetImage()
+      } else if (e.key === 'd') {
+        deleteHandler()
+      } else if (e.key === 'r'){
+        RetrodetectController()
+      }
+
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  },[])
+
+
   useEffect(() => {
     // when there is a window resize
     const handleResize = () => {
@@ -250,6 +276,7 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
 
   //Separated from the function above. to control whether to show the ML markers
   function RetrodetectController() {
+    console.log(showRetrodetect)
     if (showRetrodetect === 0) {
       setShowRetrodetect(1);
 
@@ -333,14 +360,15 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
   /* use another state annotation position array to save all markers for current image, when next image is clicked, then remove this array and s*/
   return (
     <>
-      <h1>
+      <h2>
         {coordinate.x}, {coordinate.y}
-      </h1>
+      </h2>
       <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
+      <h2>retrodetect controller {showRetrodetect}</h2>
       <button onClick={deleteHandler}>Delete All</button>
-      <button onClick={RetrodetectController}>Show Retrodetect labels</button>
-      <button onClick={ResetImage}>Reset</button>
-      <div  className="ImageOutsideContainer">
+      <button onClick={RetrodetectController}>Show/Hide Retrodetect labels</button>
+      <button onClick={ResetImage}>Reset Zoom</button>
+      <div className="ImageOutsideContainer">
       <NavigateBeforeIcon id='previousArrow' onClick={handlePreviousPhoto}></NavigateBeforeIcon>
       <Replay10Icon id='previous10Arrow' onClick={handlePreviousPhoto}></Replay10Icon>
 
