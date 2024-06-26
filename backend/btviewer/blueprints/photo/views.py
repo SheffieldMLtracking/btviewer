@@ -53,3 +53,18 @@ def detail(path: str):
     """
     photo = Photo(path + '.np')
     return flask.jsonify(photo.metadata)
+
+
+@blueprint.route('/next')
+def next_():
+    """
+    Get the path of the next photo in the collection directory.
+
+
+    Usage:
+    /photos/next/?path=1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np&skip=-10
+    """
+    path = flask.request.args['path']
+    skip = int(flask.request.args.get('skip', 1))
+    photo = Photo(path)
+    return photo.next(skip=skip)

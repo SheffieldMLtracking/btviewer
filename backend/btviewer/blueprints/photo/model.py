@@ -225,3 +225,25 @@ class Photo:
         The tags applied to this image.
         """
         return list(dict(label) for label in self.iter_labels())
+
+    def next(self, skip: int = 1) -> Path:
+        """
+        Get the path of the next file in this directory.
+
+        :param skip: The number of photo files to navigate through.
+        """
+
+        # Get the list of photo filenames in the current directory
+        camera_dir = self.path.parent
+        photos = sorted(camera_dir.glob('*.np'))
+
+        # Figure out the current position in that list
+        current_index = photos.index(self.path)
+
+        # Go to the previous/next file
+        # Skip x photos (skip may be negative or positive)
+        try:
+            return photos[current_index + skip]
+        except IndexError:
+            # If there are no more,. just go the first one
+            return photos[0]
