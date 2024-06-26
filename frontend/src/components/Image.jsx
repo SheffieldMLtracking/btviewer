@@ -5,6 +5,7 @@ import DrawRetrodetectMarkers from "./DrawRetrodetectMarkers.jsx";
 import DrawExistingMarkers from "./DrawingExistingMarkers.jsx";
 import SaveMarkers from "./SaveMarkers.jsx";
 
+
 /*
 A bee tracking photo
 import image from '../mockData/test.jpg'
@@ -326,8 +327,8 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
       <button onClick={deleteHandler}>Delete All</button>
       <button onClick={RetrodetectController}>Show Retrodetect labels</button>
       <button onClick={ResetImage}>Reset</button>
-      <button onClick={handlePreviousPhoto}>Previous</button>
-      <button onClick={handleNextPhoto}>Next</button>
+      <div  className="ImageOutsideContainer">
+      <button onClick={handlePreviousPhoto} id='previousArrow'>Previous</button>
 
       <div className="ImageContainer">
         <img
@@ -354,6 +355,10 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
           imagePosition={imageNewPosition}
         />
       </div>
+      <button onClick={handleNextPhoto} id='nextArrow'>Next</button>
+
+      </div>
+
     </>
   );
 }

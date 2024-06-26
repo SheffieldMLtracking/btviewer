@@ -1,7 +1,7 @@
 .ImageContainer {
     position: relative;
     top: 50px;
-    left:50px;
+    left:80px;
     height: 512px; /* original np array shape (1536, 2048) I made it 1/3 here */
     width: 683px;
     overflow-y: hidden;
@@ -10,9 +10,31 @@
 
   }
 
+.ImageOutsideContainer{
+  position: relative;
+  height: 600px; /* original np array shape (1536, 2048) I made it 1/3 here */
+  width: 850px;
+
+}
+
 img {
     position: relative;
     width: 100.0%;
     height: 100.0%;
 }
 
+#previousArrow {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 0;
+
+}
+
+#nextArrow {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  right: 0;
+
+}

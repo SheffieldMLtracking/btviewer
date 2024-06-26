@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <Container>
         <Row>
-          <Col sm={4}>
+          <Col sm={3}>
             <Instructions />
           </Col>
           <Col sm={8}>
@@ -18,7 +18,7 @@ function App() {
             {/*It should be a component, which in turn have all the children component to fetch session, camera, device etc.*/}
           </Col>
         </Row>
-      </Container>
+        </Container>
     </div>
   );
 }
