@@ -69,3 +69,17 @@ def create():
 
     # Return a success response
     return flask.jsonify(dict(label_path=label_path)), HTTPStatus.CREATED
+
+
+@blueprint.route('/delete')
+def delete():
+    """
+    Delete the labels on a photo
+    """
+    # Load the selected image
+    photo_path = flask.request.args['path']
+    photo = Photo(photo_path)
+
+    photo.delete_labels()
+
+    return HTTPStatus.OK

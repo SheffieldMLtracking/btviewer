@@ -74,13 +74,15 @@ class Photo:
         app.logger.info("Loaded '%s'", self.path)
         return data
 
-    def add_label(self, **kwargs):
+    def add_label(self, label: dict, **kwargs):
         """
         Add a label to the image.
+
+        :param label: The tag info
         :param kwargs: Label parameters
         :return:
         """
-        raise NotImplementedError
+        return self.add_labels([label], **kwargs)
 
     def add_labels(self, labels: list[dict], source: str, version: str, indent: int = 2):
         label_path = self.make_label_path(source=source)
@@ -247,3 +249,36 @@ class Photo:
         except IndexError:
             # If there are no more,. just go the first one
             return photos[0]
+
+    def delete_labels(self, source: str, x: int = None, y: int = None, indent: int = 2):
+        """
+        Delete some labels associated with this photo.
+
+        :param source: The app that created the label e.g. "btviewer"
+        :param x: The horizontal pixel coordinate
+        :param y: The vertical pixel coordinate
+        :param indent: JSON formatting option
+        """
+
+        # Get the label file
+        label_path = self.make_label_path(source=source)
+
+        # No specific label specified
+        if not x:
+            # Delete all labels from that source
+            label_path.unlink(missing_ok=True)
+            app.logger.info("Deleted '%s'", label_path)
+
+        # Delete a specific label
+        else:
+            # Filter by label
+            with label_path.open() as file:
+                labels = json.load(file)
+
+            # Filter by coordinates
+            labels = [label for label in labels if label['x'] != x & label['y'] != y]
+
+            # Save changes to disk
+            with label_path.open('w') as file:
+                json.dump(labels, file, indent=indent)
+                app.logger.info("Deleted label at %s, %s from '%s'", x, y, file.name)
