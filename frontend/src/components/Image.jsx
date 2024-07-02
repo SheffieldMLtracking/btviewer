@@ -106,20 +106,28 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
   useEffect(() => { //short cut keey
 
     const handleKeyDown = (e) => {
-      if (e.key === 'a') {
+      if (e.key === 'a' && e.ctrlKey) {
+        e.preventDefault()
         handlePreviousPhoto()
-      } else if (e.key == 'q') {
+      } else if (e.key == 'q' && e.ctrlKey) {
+        e.preventDefault()
         handlePreviousPhoto()
-      } else if (e.key == 'w') {
+      } else if (e.key == 'w' && e.ctrlKey) {
+        e.preventDefault()
         handleNextPhoto()
-      } else if (e.key === 's') {
+      } else if (e.key === 's' && e.ctrlKey) {
+        e.preventDefault()
         handleNextPhoto()
-      } else if (e.key === 'z') {
+      } else if (e.key === 'z' && e.ctrlKey) {
+        e.preventDefault()
         ResetImage()
-      } else if (e.key === 'd') {
+      } else if (e.key === 'd' && e.ctrlKey) {
+        e.preventDefault()
         deleteHandler()
-      } else if (e.key === 'r') {
-        RetrodetectController()
+      } else if (e.key === 'r' && e.ctrlKey) {
+        e.preventDefault()
+        RetrodetectController() //BUG: the keyboard shortcut does not work when retrodetect is 1
+
       }
 
     };
@@ -284,6 +292,7 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
         viewHeight: viewHeight,
       });
     } else if (showRetrodetect === 1) {
+      console.log('i did go through this part')
       setShowRetrodetect(0);
     }
   }
