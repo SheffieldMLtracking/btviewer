@@ -178,9 +178,9 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
           { x: originalPixelX, y: originalPixelY, confidence: false },
         ]);
         console.log(markerList);
-        SaveMarkers({x: originalPixelX,
+        SaveMarkers([{x: originalPixelX,
                             y: originalPixelY,
-                            confidence: false,},
+                            confidence: false,}],
                     photoPath)
       } else if (e.ctrlKey) {
         //TODO where we can send to backend for saving.
