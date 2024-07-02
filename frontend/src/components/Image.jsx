@@ -10,26 +10,16 @@ import Replay10Icon from '@mui/icons-material/Replay10';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 
-/*
-A bee tracking photo
-import image from '../mockData/test.jpg'
-*/
-
 function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPhoto }) {
   //Ref for image
   const imgRef = useRef(null);
-  console.log("IN IMAGE COMPONENT");
-  console.log(photoPath)
-  console.log(image)
+
   // to examine if there is an existing human labelled json file, if there is, we will merge the list to the markerlist in the useEffect when there is a change in props, if not we will declare the list as []
   let existingLabel = humanLabel.length > 0 ? humanLabel : [];
   let imageWidth = humanLabel.length > 0 ? 2048 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   let imageHeight = humanLabel.length > 0 ? 1536 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   
   //TODO Get original image size from backend instead !!
-
-  //state for photoPath for savingMarkers
-  const [currentPhotoPath, setCurrentPhotoPath] = useState("");
 
   //State for x, y coordinates based on the original image
   const [coordinate, setCoordinate] = useState({
@@ -64,13 +54,6 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
 
   useEffect(() => { // TODO: May move to button click if button click is the only way to change image
     //reset every initial state when image changes
-    if (currentPhotoPath === "") { //For saving markers in one go. similar as above may not use useEffect
-      setCurrentPhotoPath(photoPath);
-    } else {
-      SaveMarkers(markerList, currentPhotoPath);
-      setCurrentPhotoPath(photoPath);
-    }
-
     setMarkerList(existingLabel);
 
     setImageSize({
@@ -174,15 +157,6 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
         (originalHeight / viewHeight) * currentOffsetY
       );
 
-      // Console.log to be deleted.
-      console.log("View width & height", imageRect.width, imageRect.height);
-      console.log("Original width & height", originalWidth, originalHeight);
-      console.log("Offset X & Y", e.nativeEvent.offsetX, e.nativeEvent.offsetY);
-      console.log("client X & client Y", e.clientX, e.clientY);
-      console.log("original pixel x & y", originalPixelX, originalPixelY);
-      console.log("image.top", imageRect.top);
-      console.log("image.left", imageRect.left);
-
       setImageSize({
         originalWidth: originalWidth,
         originalHeight: originalHeight,
@@ -204,6 +178,10 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
           { x: originalPixelX, y: originalPixelY, confidence: false },
         ]);
         console.log(markerList);
+        SaveMarkers({x: originalPixelX,
+                            y: originalPixelY,
+                            confidence: false,},
+                    photoPath)
       } else if (e.ctrlKey) {
         //TODO where we can send to backend for saving.
         console.log("control is pressed");
