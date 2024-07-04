@@ -8,6 +8,7 @@ function PhotoSelection({ photoFilenames }) {
   const [currentPhoto, setCurrentPhoto] = useState("");
   const [photoPath, setPhotoPath] = useState("");
   const [humanLabel, setHumanLabel] = useState([]);
+  const [retrodetectLabel, setRetrodetectLabel] = useState([]);
   /*
     List the photos for users to choose from
     */
@@ -38,9 +39,9 @@ function PhotoSelection({ photoFilenames }) {
       .then((response) => response.json())
       .then((data) => {
         setHumanLabel(data);
-      });
-    console.log(data);
-    console.log(humanLabel);
+    });
+    //console.log(data);
+    //console.log(humanLabel);
   }
 
   function handleNextPhoto() {

@@ -3,12 +3,12 @@ import "./Image.css";
 import { useState, useRef, useEffect } from "react";
 import DrawRetrodetectMarkers from "./DrawRetrodetectMarkers.jsx";
 import DrawExistingMarkers from "./DrawingExistingMarkers.jsx";
-import { SaveMarkers } from "./utils.js";
 
 import Forward10Icon from '@mui/icons-material/Forward10';
 import Replay10Icon from '@mui/icons-material/Replay10';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import { SaveMarkers } from "./utils.js";
 
 function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPhoto }) {
   //Ref for image
@@ -19,6 +19,7 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
   let imageWidth = humanLabel.length > 0 ? 2048 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   let imageHeight = humanLabel.length > 0 ? 1536 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   
+  console.log(humanLabel)
   //TODO Get original image size from backend instead !!
 
   //State for x, y coordinates based on the original image
@@ -114,9 +115,6 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
       let viewWidth = Math.round(imageRect.width);
       let viewHeight = Math.round(imageRect.height);
 
-      // Console.log to be deleted.
-      console.log("viewX " + viewWidth);
-      console.log("viewY " + viewHeight);
 
       setImageSize({
         originalWidth: originalWidth,
@@ -129,6 +127,7 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  
   //All the functions
   function clickHandler(e) {
     // determining the coordinates of the click and draw the marker
@@ -195,6 +194,10 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
           { x: originalPixelX, y: originalPixelY, confidence: true },
         ]);
         console.log(markerList);
+        SaveMarkers([{x: originalPixelX,
+          y: originalPixelY,
+          confidence: true,}],
+        photoPath)
       }
     } else if (e.altKey || e.metaKey) {
       //for zooming in and out
@@ -207,37 +210,20 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
       let updatedRectTop = imageRect.top + window.scrollY;
       let updatedRectLeft = imageRect.left + window.scrollX;
 
-      console.log("mouseClick");
-
-      console.log("e.nativeEvent.offsetX" + e.nativeEvent.offsetX);
-      console.log("e.nativeEvent.offsetY" + e.nativeEvent.offsetY);
-      console.log("e.pageX" + e.pageX);
-      console.log("e.pageY" + e.pageY);
-      console.log("e.clientX" + e.clientX);
-      console.log("e.clientY" + e.clientY);
-
-      console.log(imageCurrent);
-      console.log(imageRect);
-      console.log("Updated imageRect.left " + updatedRectLeft);
-      console.log("Updated imageRect.top " + updatedRectTop);
+    
 
       let transformCoordinateX =
         (e.pageX - updatedRectLeft) * scale + updatedRectLeft; // new.e.pageX when the image is enlarged
       let transformCoordinateY =
         (e.pageY - updatedRectTop) * scale + updatedRectTop; // new.e.pageX when the image is enlarged
 
-      console.log("transformCoordinateX", transformCoordinateX);
-      console.log("transformCoordinateY", transformCoordinateY);
 
       let movementLeft = transformCoordinateX - e.pageX;
       let movementTop = transformCoordinateY - e.pageY;
-      console.log("movementLeft", movementLeft);
-      console.log("movementTop", movementTop);
+
 
       let enlargedImageWidth = imageRect.width * scale;
       let enlargedImageHeight = imageRect.height * scale;
-      console.log("enlargedImageWidth" + enlargedImageWidth);
-      console.log("enlargedImageHeight" + enlargedImageHeight);
 
       setImageSize({
         originalWidth: originalWidth,
