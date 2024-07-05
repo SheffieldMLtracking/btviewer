@@ -7,8 +7,7 @@ Display a drop-down list of photos to be shown.
 function PhotoSelection({ photoFilenames }) {
   const [currentPhoto, setCurrentPhoto] = useState("");
   const [photoPath, setPhotoPath] = useState("");
-  const [humanLabel, setHumanLabel] = useState([]);
-  const [retrodetectLabel, setRetrodetectLabel] = useState([]);
+  const [label, setLabel] = useState([]);
   /*
     List the photos for users to choose from
     */
@@ -38,10 +37,9 @@ function PhotoSelection({ photoFilenames }) {
     fetch(urlLabel)
       .then((response) => response.json())
       .then((data) => {
-        setHumanLabel(data);
+        setLabel(data);
     });
-    //console.log(data);
-    //console.log(humanLabel);
+
   }
 
   function handleNextPhoto() {
@@ -52,7 +50,7 @@ function PhotoSelection({ photoFilenames }) {
     fetch(urlLabel)
       .then((response) => response.json())
       .then((data) => {
-        setHumanLabel(data);
+        setLabel(data);
       });
   }
 
@@ -69,7 +67,7 @@ function PhotoSelection({ photoFilenames }) {
 
       <Image
         image={currentPhoto}
-        humanLabel={humanLabel}
+        label={label}
         photoPath={photoPath}
         handleNextPhoto={handleNextPhoto}
         handlePreviousPhoto={handlePreviousPhoto}
