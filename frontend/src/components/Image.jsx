@@ -1,7 +1,6 @@
 import "./Image.css";
 
 import { useState, useRef, useEffect } from "react";
-import DrawRetrodetectMarkers from "./DrawRetrodetectMarkers.jsx";
 import DrawExistingMarkers from "./DrawingExistingMarkers.jsx";
 
 import Forward10Icon from '@mui/icons-material/Forward10';
@@ -174,7 +173,7 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
         });
         setMarkerList([
           ...markerList,
-          { x: originalPixelX, y: originalPixelY, confidence: false },
+          { x: originalPixelX, y: originalPixelY, confidence: false, mode: 'manual' },
         ]);
         console.log(markerList);
         SaveMarkers([{x: originalPixelX,
@@ -191,7 +190,7 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
         });
         setMarkerList([
           ...markerList,
-          { x: originalPixelX, y: originalPixelY, confidence: true },
+          { x: originalPixelX, y: originalPixelY, confidence: true, mode: 'manual' },
         ]);
         console.log(markerList);
         SaveMarkers([{x: originalPixelX,
