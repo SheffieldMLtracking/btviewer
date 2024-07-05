@@ -1,13 +1,18 @@
 import DrawMarker from "./DrawMarker.jsx";
 
-function DrawExistingMarkers({ markerList, imageSize, imagePosition }) {
+function DrawExistingMarkers({ showRetrodetect, markerList, imageSize, imagePosition }) {
   //imageSize and markerList
   let currentOffsetX;
   let currentOffsetY;
   let currentConfidence;
+  let currentMode; //Options 'retrodetect' or 'manual'
+  let processList = markerList
 
+  if (showRetrodetect === 0) {
+    processList = processList.filter(item => item['mode'] !== 'retrodetect');
+  }
  
-  let currentOffsetArray = markerList.map((item) => {
+  let currentOffsetArray = processList.map((item) => {
     currentOffsetX =
       Math.round((item.x / imageSize.originalWidth) * imageSize.viewWidth) +
       imagePosition.left;
@@ -15,8 +20,13 @@ function DrawExistingMarkers({ markerList, imageSize, imagePosition }) {
       Math.round((item.y / imageSize.originalHeight) * imageSize.viewHeight) +
       imagePosition.top;
     currentConfidence = item.confidence;
-    return { currentOffsetX, currentOffsetY, currentConfidence };
+    currentMode = item.mode;
+    return { currentOffsetX, currentOffsetY, currentConfidence, currentMode };
   });
+  
+
+
+
 
   return (
     <>
@@ -25,6 +35,7 @@ function DrawExistingMarkers({ markerList, imageSize, imagePosition }) {
           x={item.currentOffsetX}
           y={item.currentOffsetY}
           confidence={item.currentConfidence}
+          mode={item.currentMode}
           pointer="none"
         />
       ))}

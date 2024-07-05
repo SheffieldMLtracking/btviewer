@@ -351,12 +351,8 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
           }}
           draggable={false}
         />
-        <DrawRetrodetectMarkers
-          showRetrodetect={showRetrodetect}
-          imageSize={imageSize}
-          imagePosition={imageNewPosition}
-        />
         <DrawExistingMarkers
+          showRetrodetect={showRetrodetect}
           markerList={markerList}
           imageSize={imageSize}
           imagePosition={imageNewPosition}

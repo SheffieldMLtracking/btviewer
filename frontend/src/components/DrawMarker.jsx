@@ -1,14 +1,28 @@
 function DrawMarker(props) {
   // current x and y based on the current view
-  let colour;
+  let circleColour;
+  let reticuleColour; // reticule is only shown when it is manual
+  
   if (typeof props !== "undefined" && props !== null) {
-    if (props.confidence === true) {
-      colour = "red";
-    } else if (props.confidence === false) {
-      colour = "blue";
-    } else {
-      colour = "yellow";
+    if (props.confidence === true && props.mode==='manual') {
+      circleColour = "red";
+      reticuleColour = "red";
+
+    } else if (props.confidence === false && props.mode==='manual') {
+      circleColour = "blue";
+      reticuleColour = "blue";
+
+    } else if (props.confidence === false && props.mode==='retrodetect'){
+      circleColour = "yellow";
+      reticuleColour = "transparent";
+
+    } else if (props.confidence === true && props.mode==='retrodetect'){
+      circleColour = "transparent";
+      reticuleColour = "yellow";
+
     }
+
+
     return (
       <>
         <div
@@ -17,7 +31,7 @@ function DrawMarker(props) {
             position: "absolute",
             borderWidth: "1px", // Adjust border thickness as needed
             borderStyle: "solid", // Adjust border style (e.g., dashed, dotted)
-            borderColor: `${colour}`, // Adjust border color as needed
+            borderColor: `${circleColour}`, // Adjust border color as needed
             backgroundColor: "transparent", // Removes background color
             borderRadius: "50%",
             transform: `translate(${props.x}px, ${props.y}px)`,
@@ -32,7 +46,7 @@ function DrawMarker(props) {
           style={{
             //top verticle line
             position: "absolute",
-            backgroundColor: `${colour}`,
+            backgroundColor: `${reticuleColour}`,
             transform: `translate(${props.x}px, ${props.y}px)`,
             left: 0,
             top: -8,
@@ -45,7 +59,7 @@ function DrawMarker(props) {
           style={{
             //left horizontal line
             position: "absolute",
-            backgroundColor: `${colour}`,
+            backgroundColor: `${reticuleColour}`,
             transform: `translate(${props.x}px, ${props.y}px)`,
             left: -8,
             top: 0,
@@ -58,7 +72,7 @@ function DrawMarker(props) {
           style={{
             //bottom verticle line
             position: "absolute",
-            backgroundColor: `${colour}`,
+            backgroundColor: `${reticuleColour}`,
             transform: `translate(${props.x}px, ${props.y}px)`,
             left: 0,
             top: 4,
@@ -71,7 +85,7 @@ function DrawMarker(props) {
           style={{
             //right horizontal line
             position: "absolute",
-            backgroundColor: `${colour}`,
+            backgroundColor: `${reticuleColour}`,
             transform: `translate(${props.x}px, ${props.y}px)`,
             left: 4,
             top: 0,

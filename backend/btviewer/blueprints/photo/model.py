@@ -20,7 +20,7 @@ class Photo:
     def __init__(self, path: Union[Path, str]):
         self.path = Path(app.config['ROOT_DIRECTORY']).joinpath(path).absolute()
 
-    @classmethod
+    @classmethod #not used, to be deleted
     def validate_filename(cls, filename: str):
         """
         Validate a filename <timestamp>_<photo_id>.np
@@ -35,7 +35,7 @@ class Photo:
         photo_id = int(photo_id)
         cls.parse_timestamp(timestamp)
 
-    @classmethod
+    @classmethod #only used in validate_filename, to be deleted.
     def parse_timestamp(cls, timestamp: str) -> datetime.datetime:
         """
         Parse the `timestamp` part of a photo filename.
@@ -48,17 +48,13 @@ class Photo:
         dt.replace(tzinfo=datetime.timezone.utc)
         return dt
 
-    @property
+    @property #not used
     def timestamp_string(self) -> str:
         raise NotImplementedError
 
-    @property
+    @property #not used
     def filename(self) -> str:
         return f"{self.timestamp_string}_{self.photo_id}.np"
-
-    @property
-    def relative_path(self) -> Path:
-        return Path(f"{self.session}/{self.set_name}/{self.device_id}/{self.camera_id}/{self.filename}")
 
     def load(self) -> dict:
         """
@@ -74,7 +70,7 @@ class Photo:
         app.logger.info("Loaded '%s'", self.path)
         return data
 
-    def add_label(self, label: dict, **kwargs):
+    def add_label(self, label: dict, **kwargs): #Not used
         """
         Add a label to the image.
 
@@ -84,11 +80,11 @@ class Photo:
         """
         return self.add_labels([label], **kwargs)
 
-    def add_labels(self, labels: list[dict], source: str, version: str, indent: int = 2):
+    def add_labels(self, labels: list[dict], source: str, version: str, indent: int = 2) -> Path:
         label_path = self.make_label_path(source=source)
 
-        # Build a list of labels
-        document: list[dict] = list()
+        # Build a list of labels, starting with an empty list
+        document: list[dict] = []
 
         # Open existing labels file
         try:
@@ -97,16 +93,18 @@ class Photo:
         except FileNotFoundError:
             pass
 
-        # Include the newly-added labels
-        document.extend(labels)
 
-        # Append the metadata to each label
+        # Append the metadata to each new label
         metadata = {
             "source": source,
             "version": version,
             "mode": "manual"
         }
-        document = [dict(**metadata, **label) for label in document]
+        for label in labels:
+            label.update(metadata)
+        
+        # Include the newly-added labels
+        document.extend(labels)
 
         # Save labels to disk
         with label_path.open('w') as file:
@@ -114,6 +112,15 @@ class Photo:
 
         app.logger.info("Labels saved to '%s'", label_path)
         return label_path
+
+    @property
+    def label_filename(self) -> str:
+        """
+        The filename of each label file
+
+        e.g. "2020-01-01T09+40+43_00123.json"
+        """
+        return self.path.with_suffix('.json').name
 
     def make_label_path(self, source: str) -> Path:
         """
@@ -123,9 +130,14 @@ class Photo:
         # ~/photos/2020-01-01T09+40+43_00123.np
         # the label directory for btviewer is
         # ~/photos/btviewer/2020-01-01T09+40+43_00123.json
-        filename = path.with_suffix('.json').name
-        label_path = self.path.parent.joinpath(source).joinpath(filename)
-        label_path.parent.mkdir(exist_ok=True)
+        
+        # Make a subdirectory for this source
+        label_dir = self.path.parent.joinpath(source)
+        label_dir.mkdir(exist_ok=True)
+
+        # Build the label path
+        label_path = label_dir.joinpath(self.label_filename)
+
         return label_path
 
     @property
@@ -208,18 +220,27 @@ class Photo:
         """
         return self.to_bytes(format='PNG')
 
+
+
     def iter_labels(self) -> Generator[Mapping, None, None]:
         """
         Iterate over label documents for this image.
         """
-        # Iterate over JSON files in the label directory
-        for path in self.label_directory.glob('*.json'):
-            # Load JSON data
-            with path.open() as file:
-                doc = json.load(file)
-                app.logger.info("Loaded '%s'", file.name)
-            # Get list of tags
-            yield from doc['tags']
+        # Iterate over subdirectories 
+        path: Path
+        for path in self.path.parent.iterdir():
+            # Subdirectories only, for example btviewer folder and retrodetect
+            if path.is_dir():
+                label_path = path.joinpath(self.label_filename) #btviewer/photofilename.json
+                try:
+                    # Load JSON data
+                    with label_path.open() as file:
+                        doc = json.load(file)
+                        app.logger.info("Loaded '%s'", file.name)
+                    # Get list of tags
+                    yield from doc #https://www.geeksforgeeks.org/use-yield-keyword-instead-return-keyword-python/
+                except FileNotFoundError:
+                    continue
 
     @property
     def labels(self) -> Iterable[Mapping]:

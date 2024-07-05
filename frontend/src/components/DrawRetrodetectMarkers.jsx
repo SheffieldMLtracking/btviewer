@@ -1,3 +1,4 @@
+//NO LONGER in use
 import { RetrodetectOutput } from "../mockData/RetrodetectOutput.js"; //mockList assuming from the machine learning labelling sent from the backend
 import DrawMarker from "./DrawMarker.jsx";
 

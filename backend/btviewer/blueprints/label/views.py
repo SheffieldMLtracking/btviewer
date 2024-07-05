@@ -14,7 +14,7 @@ def detail():
     Get all the tags associated with this image
 
     Usage:
-    /label/detail?path=1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np
+    /labels/detail?path=1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np
 
     :returns: List of labels
     [
@@ -63,12 +63,12 @@ def create():
     source = flask.request.args['source']
     version = flask.request.args['version']
     labels = flask.request.json
-
+    
     # Create the labels
     label_path = photo.add_labels(labels, source=source, version=version)
 
     # Return a success response
-    return flask.jsonify(dict(label_path=label_path)), HTTPStatus.CREATED
+    return flask.jsonify(dict(label_path=str(label_path))), HTTPStatus.CREATED
 
 
 @blueprint.route('/delete')
