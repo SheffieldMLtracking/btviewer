@@ -8,6 +8,8 @@ function PhotoSelection({ photoFilenames }) {
   const [currentPhoto, setCurrentPhoto] = useState("");
   const [photoPath, setPhotoPath] = useState("");
   const [label, setLabel] = useState([]);
+  const [imageDimension, setImageDimension] = useState({'width':0, 
+                                                        'height':0})
   /*
     List the photos for users to choose from
     */
@@ -28,6 +30,18 @@ function PhotoSelection({ photoFilenames }) {
     let urlJpeg = "/api/photos/" + selectedPhoto.replace("np", "jpeg");
     setCurrentPhoto(urlJpeg);
     console.log('urlJpeg' + urlJpeg);
+
+    //Get photo dimension
+    let urlDimension = "/api/photos/dimension?path=" + selectedPhoto;
+    fetch(urlDimension)
+      .then((response) => response.json())
+      .then((data)=>{
+        setImageDimension({
+          width: data.width,
+          height: data.height,
+        });
+
+      })
 
     // Get the json for the human/retrodetect label coordinates if it exists
     let urlLabel = "/api/labels/detail?path=" + selectedPhoto;
@@ -70,6 +84,7 @@ function PhotoSelection({ photoFilenames }) {
       <p>{photoPath}</p>
       <Image
         image={currentPhoto}
+        dimension={imageDimension}
         label={label}
         photoPath={photoPath}
         handleNextPhoto={handleNextPhoto}
