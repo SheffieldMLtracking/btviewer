@@ -22,15 +22,14 @@ function PhotoSelection({ photoFilenames }) {
     */
   function photoFetcher(e) {
     let selectedPhoto = e.target.value;
-
     setPhotoPath(selectedPhoto);
 
-    // Update the list of photo filenames available in that session
+    //SC:Did we fetch photo, it does not seems so, and I only submit the image source to the image.jsx
     let urlJpeg = "/api/photos/" + selectedPhoto.replace("np", "jpeg");
     setCurrentPhoto(urlJpeg);
-    console.log(currentPhoto);
+    console.log('urlJpeg' + urlJpeg);
 
-    // Get the json for the human label coordinates if it exists
+    // Get the json for the human/retrodetect label coordinates if it exists
     let urlLabel = "/api/labels/detail?path=" + selectedPhoto;
     console.log("urlLabel");
     console.log(urlLabel);
@@ -38,15 +37,18 @@ function PhotoSelection({ photoFilenames }) {
       .then((response) => response.json())
       .then((data) => {
         setLabel(data);
-    });
-
+      });
   }
 
   function handleNextPhoto() {
-    setPhotoPath("2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.np")
-    let urlJpeg = "/api/photos/2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.jpeg"
+    setPhotoPath(
+      "2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.np"
+    );
+    let urlJpeg =
+      "/api/photos/2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.jpeg";
     setCurrentPhoto(urlJpeg);
-    let urlLabel = "/api/labels/detail?path=2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.np"
+    let urlLabel =
+      "/api/labels/detail?path=2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.np";
     fetch(urlLabel)
       .then((response) => response.json())
       .then((data) => {
@@ -64,7 +66,8 @@ function PhotoSelection({ photoFilenames }) {
         <option />
         {listDisplayed}
       </select>
-
+      <p>image source {currentPhoto}</p>
+      <p>{photoPath}</p>
       <Image
         image={currentPhoto}
         label={label}
