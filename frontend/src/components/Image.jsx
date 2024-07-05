@@ -7,6 +7,8 @@ import Forward10Icon from '@mui/icons-material/Forward10';
 import Replay10Icon from '@mui/icons-material/Replay10';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import Popover from '@mui/material/Popover';
+
 import { SaveMarkers } from "./utils.js";
 
 function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPhoto }) {
@@ -17,9 +19,27 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
   let existingLabel = humanLabel.length > 0 ? humanLabel : [];
   let imageWidth = humanLabel.length > 0 ? 2048 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   let imageHeight = humanLabel.length > 0 ? 1536 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
-  
+
   console.log(humanLabel)
   //TODO Get original image size from backend instead !!
+
+  const [annotateCoordinate, setAnnotateCoordinate] = useState({
+    x: -99,
+    y: -99,
+    annotation: ''
+  });
+
+  const [anchor, setAnchor] = useState({
+    x: -99,
+    y: -99,
+  });
+  
+
+  const [popupOpen, setPopupOpen] = useState(false)
+
+  const [popupID, setPopupID] = useState(undefined)
+  //state for photoPath for savingMarkers
+  const [currentPhotoPath, setCurrentPhotoPath] = useState("");
 
   //State for x, y coordinates based on the original image
   const [coordinate, setCoordinate] = useState({
@@ -52,7 +72,7 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
     top: 0,
   });
 
-  useEffect(() => { // TODO: May move to button click if button click is the only way to change image
+  useEffect(() => { // Initialise TODO: May move to button click if button click is the only way to change image
     //reset every initial state when image changes
     setMarkerList(existingLabel);
 
@@ -74,34 +94,41 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
     });
   }, [humanLabel]);
 
-  useEffect(()=>{
+  useEffect(() => { //short cut keey
 
     const handleKeyDown = (e) => {
-      if (e.key === 'a') {
+      if (e.key === 'a' && e.ctrlKey) {
+        e.preventDefault()
         handlePreviousPhoto()
-      } else if (e.key == 'q'){
+      } else if (e.key == 'q' && e.ctrlKey) {
+        e.preventDefault()
         handlePreviousPhoto()
-      } else if (e.key == 'w') {
+      } else if (e.key == 'w' && e.ctrlKey) {
+        e.preventDefault()
         handleNextPhoto()
-      } else if (e.key === 's'){
+      } else if (e.key === 's' && e.ctrlKey) {
+        e.preventDefault()
         handleNextPhoto()
-      } else if (e.key === 'z'){
+      } else if (e.key === 'z' && e.ctrlKey) {
+        e.preventDefault()
         ResetImage()
-      } else if (e.key === 'd') {
+      } else if (e.key === 'd' && e.ctrlKey) {
+        e.preventDefault()
         deleteHandler()
-      } else if (e.key === 'r'){
-        RetrodetectController()
+      } else if (e.key === 'r' && e.ctrlKey) {
+        e.preventDefault()
+        RetrodetectController() //BUG: the keyboard shortcut does not work when retrodetect is 1
+
       }
 
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  },[])
+  }, [])
 
 
-  useEffect(() => {
-    // when there is a window resize
+  useEffect(() => {// when there is a window resize
     const handleResize = () => {
       const imageCurrent = imgRef.current; //so that it will still work when clickHandler has not been called
 
@@ -135,7 +162,6 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
     let originalWidth = imageCurrent.naturalWidth;
     let originalHeight = imageCurrent.naturalHeight;
     let imageRect = imageCurrent.getBoundingClientRect();
-
     if (e.shiftKey || e.ctrlKey) {
       //For tagging
 
@@ -154,6 +180,8 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
       let originalPixelY = Math.round(
         (originalHeight / viewHeight) * currentOffsetY
       );
+
+
 
       setImageSize({
         originalWidth: originalWidth,
@@ -209,20 +237,24 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
       let updatedRectTop = imageRect.top + window.scrollY;
       let updatedRectLeft = imageRect.left + window.scrollX;
 
-    
-
+     
       let transformCoordinateX =
         (e.pageX - updatedRectLeft) * scale + updatedRectLeft; // new.e.pageX when the image is enlarged
       let transformCoordinateY =
         (e.pageY - updatedRectTop) * scale + updatedRectTop; // new.e.pageX when the image is enlarged
 
+      console.log("transformCoordinateX", transformCoordinateX);
+      console.log("transformCoordinateY", transformCoordinateY);
 
       let movementLeft = transformCoordinateX - e.pageX;
       let movementTop = transformCoordinateY - e.pageY;
-
+      console.log("movementLeft", movementLeft);
+      console.log("movementTop", movementTop);
 
       let enlargedImageWidth = imageRect.width * scale;
       let enlargedImageHeight = imageRect.height * scale;
+      console.log("enlargedImageWidth" + enlargedImageWidth);
+      console.log("enlargedImageHeight" + enlargedImageHeight);
 
       setImageSize({
         originalWidth: originalWidth,
@@ -260,7 +292,8 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
         viewWidth: viewWidth,
         viewHeight: viewHeight,
       });
-    } else {
+    } else if (showRetrodetect === 1) {
+      console.log('i did go through this part')
       setShowRetrodetect(0);
     }
   }
@@ -320,7 +353,85 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
   function deleteHandler() {
     setMarkerList([]);
   }
-  /* use another state annotation position array to save all markers for current image, when next image is clicked, then remove this array and s*/
+
+  function rightClickHandler(e) {
+    e.preventDefault()
+    setPopupOpen(true)
+    setPopupID('simple-popover')
+
+    const clientX = e.pageX;
+    const clientY = e.pageY;
+    const scrollX = window.scrollX;
+    const scrollY = window.scrollY;
+
+    const adjustedX = clientX - scrollX;
+    const adjustedY = clientY - scrollY;
+
+    setAnchor({...anchor,
+              x: adjustedX,
+              y: adjustedY});
+
+     // determining the coordinates of the click and draw the marker
+     const imageCurrent = imgRef.current;
+     // Get the original width and height of the image
+     let originalWidth = imageCurrent.naturalWidth;
+     let originalHeight = imageCurrent.naturalHeight;
+     let imageRect = imageCurrent.getBoundingClientRect();
+   // Get the height/width of the image container
+       let viewWidth = Math.round(imageRect.width);
+       let viewHeight = Math.round(imageRect.height);
+ 
+       // Get the coordinates of the clicking based its offset from the image container
+       let currentOffsetX = e.nativeEvent.offsetX;
+       let currentOffsetY = e.nativeEvent.offsetY;
+ 
+       // Calculation for the coordinates of the clicking on the original image pixel
+       let originalPixelX = Math.round(
+         (originalWidth / viewWidth) * currentOffsetX
+       );
+       let originalPixelY = Math.round(
+         (originalHeight / viewHeight) * currentOffsetY
+       );
+ 
+ 
+ 
+     setAnnotateCoordinate({
+           x: originalPixelX,
+           y: originalPixelY,
+         });
+     
+      ///trial ends
+          
+
+    console.log('rightclick')
+    console.log('x' + adjustedX)
+    console.log('y' + adjustedY)
+
+  }
+
+
+  function handleClose(e) {
+    setPopupOpen(false)
+    setPopupID(undefined)
+    //Fetch before erase anchor
+    console.log('anchor ' + anchor.x + ' ' + anchor.y)
+    console.log('AnnotateCoordinate' + annotateCoordinate.x + ' ' + annotateCoordinate.y)
+    console.log('coordinate' + coordinate.x + ' ' + coordinate.y)  
+    setAnchor({x:-99,
+               y:-99,
+              });
+    setAnnotateCoordinate({x:-99,
+                y:-99,
+                annotation:''
+               });
+  };
+
+  function enterHandler(e){
+    if (e.key === 'Enter') {
+      console.log('xxx')
+      handleClose()
+  }
+  }
   return (
     <>
       <h2>
@@ -332,33 +443,55 @@ function Image({ image, humanLabel, photoPath, handlePreviousPhoto, handleNextPh
       <button onClick={RetrodetectController}>Show/Hide Retrodetect labels</button>
       <button onClick={ResetImage}>Reset Zoom</button>
       <div className="ImageOutsideContainer">
-      <NavigateBeforeIcon id='previousArrow' onClick={handlePreviousPhoto}></NavigateBeforeIcon>
-      <Replay10Icon id='previous10Arrow' onClick={handlePreviousPhoto}></Replay10Icon>
+        <NavigateBeforeIcon id='previousArrow' onClick={handlePreviousPhoto}></NavigateBeforeIcon>
+        <Replay10Icon id='previous10Arrow' onClick={handlePreviousPhoto}></Replay10Icon>
 
-      
-      <div className="ImageContainer">
-        <img
-          ref={imgRef}
-          src={image}
-          onClick={clickHandler}
-          alt=""
-          style={{
-            height: `${imageSize.viewHeight}px`,
-            width: `${imageSize.viewWidth}px`,
-            top: `${imageNewPosition.top}px`,
-            left: `${imageNewPosition.left}px`,
-          }}
-          draggable={false}
-        />
-        <DrawExistingMarkers
-          showRetrodetect={showRetrodetect}
-          markerList={markerList}
-          imageSize={imageSize}
-          imagePosition={imageNewPosition}
-        />
-      </div>
-      <NavigateNextIcon id='nextArrow' onClick={handleNextPhoto}></NavigateNextIcon>
-      <Forward10Icon id='next10Arrow' onClick={handleNextPhoto}></Forward10Icon>
+
+        <div className="ImageContainer">
+          <img
+            aria-describedby={popupID}
+            ref={imgRef}
+            src={image}
+            onClick={clickHandler}
+            onContextMenu={rightClickHandler}
+            alt=""
+            style={{
+              height: `${imageSize.viewHeight}px`,
+              width: `${imageSize.viewWidth}px`,
+              top: `${imageNewPosition.top}px`,
+              left: `${imageNewPosition.left}px`,
+            }}
+            draggable={false}
+          />
+          <Popover
+            id={popupID}
+            open={popupOpen}
+            onClose={handleClose}
+            anchorReference="anchorPosition"
+            anchorPosition={{ top: anchor.y-10, left: anchor.x+10 }}
+
+          >
+            <input
+             id='annotation'
+             type="text"
+             placeholder="Annotation"
+             autoFocus
+             onKeyDown={enterHandler}
+             value={annotateCoordinate.annotation}
+             onChange ={(e) => setAnnotateCoordinate({...annotateCoordinate,
+              annotation: e.target.value})}
+             ></input>
+            </Popover>
+
+          <DrawExistingMarkers
+            showRetrodetect={showRetrodetect}
+            markerList={markerList}
+            imageSize={imageSize}
+            imagePosition={imageNewPosition}
+          />
+        </div>
+        <NavigateNextIcon id='nextArrow' onClick={handleNextPhoto}></NavigateNextIcon>
+        <Forward10Icon id='next10Arrow' onClick={handleNextPhoto}></Forward10Icon>
 
 
 
