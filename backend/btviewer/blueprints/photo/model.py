@@ -147,6 +147,16 @@ class Photo:
         """
         return {key: value for key, value in self.data.items() if key != 'img'}
 
+    @property
+    def dimension(self) -> dict:
+        """
+        Get all the image dimension
+        """
+        image = self.data['img']
+        width = len(image[0])
+        height = len(image)
+        return {'width': width, 'height':height}
+
     def to_tiff(self):
         """
         Convert image data to TIFF format

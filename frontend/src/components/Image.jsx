@@ -74,8 +74,8 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
     top: 0,
   });
 
-  useEffect(() => { // Initialise TODO: May move to button click if button click is the only way to change image
-    //reset every initial state when image changes
+
+  useEffect(() => { // We need this to detect every change of the labels
     setMarkerList(existingLabel);
 
     setImageSize({
@@ -95,7 +95,7 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
       top: 0,
     });
   }, [label]);
-
+ 
   useEffect(() => { //short cut keey
 
     const handleKeyDown = (e) => {
