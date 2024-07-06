@@ -5,16 +5,16 @@ import flask
 from btviewer.blueprints.photo.model import Photo
 
 app: flask.Flask = flask.current_app
-blueprint = flask.Blueprint('label', __name__, url_prefix='/labels')
+blueprint = flask.Blueprint("label", __name__, url_prefix="/labels")
 
 
-@blueprint.route('/detail', methods=['GET'])
+@blueprint.route("/detail", methods=["GET"])
 def detail():
     """
     Get all the tags associated with this image
 
     Usage:
-    /labels/detail?path=1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np
+    /label/detail?path=1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np
 
     :returns: List of labels
     [
@@ -23,12 +23,12 @@ def detail():
       {"confidence": "Unsure", "x": 456, "y": 789}
     ]
     """
-    photo_path = flask.request.args['path']
+    photo_path = flask.request.args["path"]
     photo = Photo(photo_path)
     return flask.jsonify(photo.labels)
 
 
-@blueprint.route('/create', methods=['POST'])
+@blueprint.route("/create", methods=["POST"])
 def create():
     """
     Create new labels
@@ -56,14 +56,14 @@ def create():
     """
 
     # Load the selected image
-    photo_path = flask.request.args['path']
+    photo_path = flask.request.args["path"]
     photo = Photo(photo_path)
 
     # Get the label data from the request
-    source = flask.request.args['source']
-    version = flask.request.args['version']
+    source = flask.request.args["source"]
+    version = flask.request.args["version"]
     labels = flask.request.json
-    
+
     # Create the labels
     label_path = photo.add_labels(labels, source=source, version=version)
 
@@ -71,15 +71,16 @@ def create():
     return flask.jsonify(dict(label_path=str(label_path))), HTTPStatus.CREATED
 
 
-@blueprint.route('/delete')
+@blueprint.route("/delete", methods=["DELETE"])
 def delete():
     """
     Delete the labels on a photo
     """
     # Load the selected image
-    photo_path = flask.request.args['path']
+
+    photo_path = flask.request.args["path"]
     photo = Photo(photo_path)
+    source = flask.request.args["source"]
+    photo.delete_labels(source)
 
-    photo.delete_labels()
-
-    return HTTPStatus.OK
+    return flask.jsonify(dict(label_path=str(label_path))), HTTPStatus.OK

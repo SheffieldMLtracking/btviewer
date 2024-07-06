@@ -3,15 +3,22 @@ import "./Image.css";
 import { useState, useRef, useEffect } from "react";
 import DrawExistingMarkers from "./DrawingExistingMarkers.jsx";
 
-import Forward10Icon from '@mui/icons-material/Forward10';
-import Replay10Icon from '@mui/icons-material/Replay10';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import Popover from '@mui/material/Popover';
+import Forward10Icon from "@mui/icons-material/Forward10";
+import Replay10Icon from "@mui/icons-material/Replay10";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
+import Popover from "@mui/material/Popover";
 
-import { SaveMarkers } from "./utils.js";
+import { DeleteAllMarkers, SaveMarkers } from "./utils.js";
 
-function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handleNextPhoto }) {
+function Image({
+  image,
+  dimension,
+  label,
+  photoPath,
+  handlePreviousPhoto,
+  handleNextPhoto,
+}) {
   //Ref for image
   const imgRef = useRef(null);
 
@@ -19,27 +26,26 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
   let existingLabel = label.length > 0 ? label : [];
   //let imageWidth = label.length > 0 ? 2048 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   //let imageHeight = label.length > 0 ? 1536 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
-  let imageWidth = dimension.width
-  let imageHeight = dimension.height
-  console.log(dimension.width)
-  console.log(label)
+  let imageWidth = dimension.width;
+  let imageHeight = dimension.height;
+  console.log(dimension.width);
+  console.log(label);
   //TODO Get original image size from backend instead !!
 
   const [annotateCoordinate, setAnnotateCoordinate] = useState({
     x: -99,
     y: -99,
-    annotation: ''
+    annotation: "",
   });
 
   const [anchor, setAnchor] = useState({
     x: -99,
     y: -99,
   });
-  
 
-  const [popupOpen, setPopupOpen] = useState(false)
+  const [popupOpen, setPopupOpen] = useState(false);
 
-  const [popupID, setPopupID] = useState(undefined)
+  const [popupID, setPopupID] = useState(undefined);
   //state for photoPath for savingMarkers
   const [currentPhotoPath, setCurrentPhotoPath] = useState("");
 
@@ -74,8 +80,8 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
     top: 0,
   });
 
-
-  useEffect(() => { // We need this to detect every change of the labels
+  useEffect(() => {
+    // We need this to detect every change of the labels
     setMarkerList(existingLabel);
 
     setImageSize({
@@ -95,42 +101,41 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
       top: 0,
     });
   }, [label]);
- 
-  useEffect(() => { //short cut keey
+
+  useEffect(() => {
+    //short cut keey
 
     const handleKeyDown = (e) => {
-      if (e.key === 'a' && e.ctrlKey) {
-        e.preventDefault()
-        handlePreviousPhoto()
-      } else if (e.key == 'q' && e.ctrlKey) {
-        e.preventDefault()
-        handlePreviousPhoto()
-      } else if (e.key == 'w' && e.ctrlKey) {
-        e.preventDefault()
-        handleNextPhoto()
-      } else if (e.key === 's' && e.ctrlKey) {
-        e.preventDefault()
-        handleNextPhoto()
-      } else if (e.key === 'z' && e.ctrlKey) {
-        e.preventDefault()
-        ResetImage()
-      } else if (e.key === 'd' && e.ctrlKey) {
-        e.preventDefault()
-        deleteHandler()
-      } else if (e.key === 'r' && e.ctrlKey) {
-        e.preventDefault()
-        RetrodetectController() //BUG: the keyboard shortcut does not work when retrodetect is 1
-
+      if (e.key === "a" && e.ctrlKey) {
+        e.preventDefault();
+        handlePreviousPhoto();
+      } else if (e.key == "q" && e.ctrlKey) {
+        e.preventDefault();
+        handlePreviousPhoto();
+      } else if (e.key == "w" && e.ctrlKey) {
+        e.preventDefault();
+        handleNextPhoto();
+      } else if (e.key === "s" && e.ctrlKey) {
+        e.preventDefault();
+        handleNextPhoto();
+      } else if (e.key === "z" && e.ctrlKey) {
+        e.preventDefault();
+        ResetImage();
+      } else if (e.key === "d" && e.ctrlKey) {
+        e.preventDefault();
+        deleteHandler();
+      } else if (e.key === "r" && e.ctrlKey) {
+        e.preventDefault();
+        RetrodetectController(); //BUG: the keyboard shortcut does not work when retrodetect is 1
       }
-
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [])
+  }, []);
 
-
-  useEffect(() => {// when there is a window resize
+  useEffect(() => {
+    // when there is a window resize
     const handleResize = () => {
       const imageCurrent = imgRef.current; //so that it will still work when clickHandler has not been called
 
@@ -143,7 +148,6 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
       let viewWidth = Math.round(imageRect.width);
       let viewHeight = Math.round(imageRect.height);
 
-
       setImageSize({
         originalWidth: originalWidth,
         originalHeight: originalHeight,
@@ -155,7 +159,6 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  
   //All the functions
   function clickHandler(e) {
     // determining the coordinates of the click and draw the marker
@@ -183,8 +186,6 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
         (originalHeight / viewHeight) * currentOffsetY
       );
 
-
-
       setImageSize({
         originalWidth: originalWidth,
         originalHeight: originalHeight,
@@ -203,13 +204,18 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
         });
         setMarkerList([
           ...markerList,
-          { x: originalPixelX, y: originalPixelY, confidence: false, mode: 'manual' },
+          {
+            x: originalPixelX,
+            y: originalPixelY,
+            confidence: false,
+            mode: "manual",
+          },
         ]);
         console.log(markerList);
-        SaveMarkers([{x: originalPixelX,
-                            y: originalPixelY,
-                            confidence: false,}],
-                    photoPath)
+        SaveMarkers(
+          [{ x: originalPixelX, y: originalPixelY, confidence: false }],
+          photoPath
+        );
       } else if (e.ctrlKey) {
         //TODO where we can send to backend for saving.
         console.log("control is pressed");
@@ -220,13 +226,18 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
         });
         setMarkerList([
           ...markerList,
-          { x: originalPixelX, y: originalPixelY, confidence: true, mode: 'manual' },
+          {
+            x: originalPixelX,
+            y: originalPixelY,
+            confidence: true,
+            mode: "manual",
+          },
         ]);
         console.log(markerList);
-        SaveMarkers([{x: originalPixelX,
-          y: originalPixelY,
-          confidence: true,}],
-        photoPath)
+        SaveMarkers(
+          [{ x: originalPixelX, y: originalPixelY, confidence: true }],
+          photoPath
+        );
       }
     } else if (e.altKey || e.metaKey) {
       //for zooming in and out
@@ -239,7 +250,6 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
       let updatedRectTop = imageRect.top + window.scrollY;
       let updatedRectLeft = imageRect.left + window.scrollX;
 
-     
       let transformCoordinateX =
         (e.pageX - updatedRectLeft) * scale + updatedRectLeft; // new.e.pageX when the image is enlarged
       let transformCoordinateY =
@@ -273,7 +283,7 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
 
   //Separated from the function above. to control whether to show the ML markers
   function RetrodetectController() {
-    console.log(showRetrodetect)
+    console.log(showRetrodetect);
     if (showRetrodetect === 0) {
       setShowRetrodetect(1);
 
@@ -295,7 +305,7 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
         viewHeight: viewHeight,
       });
     } else if (showRetrodetect === 1) {
-      console.log('i did go through this part')
+      console.log("i did go through this part");
       setShowRetrodetect(0);
     }
   }
@@ -354,12 +364,13 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
 
   function deleteHandler() {
     setMarkerList([]);
+    DeleteAllMarkers(photoPath);
   }
 
   function rightClickHandler(e) {
-    e.preventDefault()
-    setPopupOpen(true)
-    setPopupID('simple-popover')
+    e.preventDefault();
+    setPopupOpen(true);
+    setPopupID("simple-popover");
 
     const clientX = e.pageX;
     const clientY = e.pageY;
@@ -369,70 +380,60 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
     const adjustedX = clientX - scrollX;
     const adjustedY = clientY - scrollY;
 
-    setAnchor({...anchor,
-              x: adjustedX,
-              y: adjustedY});
+    setAnchor({ ...anchor, x: adjustedX, y: adjustedY });
 
-     // determining the coordinates of the click and draw the marker
-     const imageCurrent = imgRef.current;
-     // Get the original width and height of the image
-     let originalWidth = imageCurrent.naturalWidth;
-     let originalHeight = imageCurrent.naturalHeight;
-     let imageRect = imageCurrent.getBoundingClientRect();
-   // Get the height/width of the image container
-       let viewWidth = Math.round(imageRect.width);
-       let viewHeight = Math.round(imageRect.height);
- 
-       // Get the coordinates of the clicking based its offset from the image container
-       let currentOffsetX = e.nativeEvent.offsetX;
-       let currentOffsetY = e.nativeEvent.offsetY;
- 
-       // Calculation for the coordinates of the clicking on the original image pixel
-       let originalPixelX = Math.round(
-         (originalWidth / viewWidth) * currentOffsetX
-       );
-       let originalPixelY = Math.round(
-         (originalHeight / viewHeight) * currentOffsetY
-       );
- 
- 
- 
-     setAnnotateCoordinate({
-           x: originalPixelX,
-           y: originalPixelY,
-         });
-     
-      ///trial ends
-          
+    // determining the coordinates of the click and draw the marker
+    const imageCurrent = imgRef.current;
+    // Get the original width and height of the image
+    let originalWidth = imageCurrent.naturalWidth;
+    let originalHeight = imageCurrent.naturalHeight;
+    let imageRect = imageCurrent.getBoundingClientRect();
+    // Get the height/width of the image container
+    let viewWidth = Math.round(imageRect.width);
+    let viewHeight = Math.round(imageRect.height);
 
-    console.log('rightclick')
-    console.log('x' + adjustedX)
-    console.log('y' + adjustedY)
+    // Get the coordinates of the clicking based its offset from the image container
+    let currentOffsetX = e.nativeEvent.offsetX;
+    let currentOffsetY = e.nativeEvent.offsetY;
 
+    // Calculation for the coordinates of the clicking on the original image pixel
+    let originalPixelX = Math.round(
+      (originalWidth / viewWidth) * currentOffsetX
+    );
+    let originalPixelY = Math.round(
+      (originalHeight / viewHeight) * currentOffsetY
+    );
+
+    setAnnotateCoordinate({
+      x: originalPixelX,
+      y: originalPixelY,
+    });
+
+    ///trial ends
+
+    console.log("rightclick");
+    console.log("x" + adjustedX);
+    console.log("y" + adjustedY);
   }
-
 
   function handleClose(e) {
-    setPopupOpen(false)
-    setPopupID(undefined)
+    setPopupOpen(false);
+    setPopupID(undefined);
     //Fetch before erase anchor
-    console.log('anchor ' + anchor.x + ' ' + anchor.y)
-    console.log('AnnotateCoordinate' + annotateCoordinate.x + ' ' + annotateCoordinate.y)
-    console.log('coordinate' + coordinate.x + ' ' + coordinate.y)  
-    setAnchor({x:-99,
-               y:-99,
-              });
-    setAnnotateCoordinate({x:-99,
-                y:-99,
-                annotation:''
-               });
-  };
-
-  function enterHandler(e){
-    if (e.key === 'Enter') {
-      console.log('xxx')
-      handleClose()
+    console.log("anchor " + anchor.x + " " + anchor.y);
+    console.log(
+      "AnnotateCoordinate" + annotateCoordinate.x + " " + annotateCoordinate.y
+    );
+    console.log("coordinate" + coordinate.x + " " + coordinate.y);
+    setAnchor({ x: -99, y: -99 });
+    setAnnotateCoordinate({ x: -99, y: -99, annotation: "" });
   }
+
+  function enterHandler(e) {
+    if (e.key === "Enter") {
+      console.log("xxx");
+      handleClose();
+    }
   }
   return (
     <>
@@ -442,12 +443,19 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
       <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
       <h2>retrodetect controller {showRetrodetect}</h2>
       <button onClick={deleteHandler}>Delete All</button>
-      <button onClick={RetrodetectController}>Show/Hide Retrodetect labels</button>
+      <button onClick={RetrodetectController}>
+        Show/Hide Retrodetect labels
+      </button>
       <button onClick={ResetImage}>Reset Zoom</button>
       <div className="ImageOutsideContainer">
-        <NavigateBeforeIcon id='previousArrow' onClick={handlePreviousPhoto}></NavigateBeforeIcon>
-        <Replay10Icon id='previous10Arrow' onClick={handlePreviousPhoto}></Replay10Icon>
-
+        <NavigateBeforeIcon
+          id="previousArrow"
+          onClick={handlePreviousPhoto}
+        ></NavigateBeforeIcon>
+        <Replay10Icon
+          id="previous10Arrow"
+          onClick={handlePreviousPhoto}
+        ></Replay10Icon>
 
         <div className="ImageContainer">
           <img
@@ -470,20 +478,23 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
             open={popupOpen}
             onClose={handleClose}
             anchorReference="anchorPosition"
-            anchorPosition={{ top: anchor.y-10, left: anchor.x+10 }}
-
+            anchorPosition={{ top: anchor.y - 10, left: anchor.x + 10 }}
           >
             <input
-             id='annotation'
-             type="text"
-             placeholder="Annotation"
-             autoFocus
-             onKeyDown={enterHandler}
-             value={annotateCoordinate.annotation}
-             onChange ={(e) => setAnnotateCoordinate({...annotateCoordinate,
-              annotation: e.target.value})}
-             ></input>
-            </Popover>
+              id="annotation"
+              type="text"
+              placeholder="Annotation"
+              autoFocus
+              onKeyDown={enterHandler}
+              value={annotateCoordinate.annotation}
+              onChange={(e) =>
+                setAnnotateCoordinate({
+                  ...annotateCoordinate,
+                  annotation: e.target.value,
+                })
+              }
+            ></input>
+          </Popover>
 
           <DrawExistingMarkers
             showRetrodetect={showRetrodetect}
@@ -492,13 +503,15 @@ function Image({ image, dimension, label, photoPath, handlePreviousPhoto, handle
             imagePosition={imageNewPosition}
           />
         </div>
-        <NavigateNextIcon id='nextArrow' onClick={handleNextPhoto}></NavigateNextIcon>
-        <Forward10Icon id='next10Arrow' onClick={handleNextPhoto}></Forward10Icon>
-
-
-
+        <NavigateNextIcon
+          id="nextArrow"
+          onClick={handleNextPhoto}
+        ></NavigateNextIcon>
+        <Forward10Icon
+          id="next10Arrow"
+          onClick={handleNextPhoto}
+        ></Forward10Icon>
       </div>
-
     </>
   );
 }

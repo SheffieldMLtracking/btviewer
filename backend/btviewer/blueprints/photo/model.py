@@ -190,7 +190,7 @@ class Photo:
         """
         # Set data type for array values
         dtype = numpy.dtype(dtype)
-        maximum_value = numpy.iinfo(dtype).max
+        maximum_value = numpy.iinfo(dtype).max #machine limits for integer type
 
         # Load image data
         array: numpy.ndarray = self.data['img']
@@ -294,22 +294,25 @@ class Photo:
         # Get the label file
         label_path = self.make_label_path(source=source)
 
+        label_path.unlink(missing_ok=True)
+        app.logger.info("Deleted '%s'", label_path)
+
         # No specific label specified
-        if not x:
-            # Delete all labels from that source
-            label_path.unlink(missing_ok=True)
-            app.logger.info("Deleted '%s'", label_path)
+        # if not x:
+        #     # Delete all labels from that source
+        #     label_path.unlink(missing_ok=True)
+        #     app.logger.info("Deleted '%s'", label_path)
 
         # Delete a specific label
-        else:
-            # Filter by label
-            with label_path.open() as file:
-                labels = json.load(file)
+        # else:
+        #     # Filter by label
+        #     with label_path.open() as file:
+        #         labels = json.load(file)
 
-            # Filter by coordinates
-            labels = [label for label in labels if label['x'] != x & label['y'] != y]
+        #     # Filter by coordinates
+        #     labels = [label for label in labels if label['x'] != x & label['y'] != y]
 
-            # Save changes to disk
-            with label_path.open('w') as file:
-                json.dump(labels, file, indent=indent)
-                app.logger.info("Deleted label at %s, %s from '%s'", x, y, file.name)
+        #     # Save changes to disk
+        #     with label_path.open('w') as file:
+        #         json.dump(labels, file, indent=indent)
+        #         app.logger.info("Deleted label at %s, %s from '%s'", x, y, file.name)
