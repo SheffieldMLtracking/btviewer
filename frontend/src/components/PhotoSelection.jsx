@@ -5,8 +5,8 @@ import Image from "./Image";
 Display a drop-down list of photos to be shown.
 */
 function PhotoSelection({ photoFilenames }) {
-  const [currentPhoto, setCurrentPhoto] = useState("");
-  const [photoPath, setPhotoPath] = useState("");
+  const [currentPhoto, setCurrentPhoto] = useState(""); //the path of the photo
+  const [photoPath, setPhotoPath] = useState(""); //the selected value from the dropdownlist
   const [label, setLabel] = useState([]);
   const [imageDimension, setImageDimension] = useState({'width':0, 
                                                         'height':0})
@@ -55,6 +55,8 @@ function PhotoSelection({ photoFilenames }) {
   }
 
   function handleNextPhoto() {
+    
+
     setPhotoPath(
       "2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.np"
     );
