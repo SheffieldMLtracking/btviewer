@@ -16,8 +16,7 @@ function Image({
   dimension,
   label,
   photoPath,
-  handlePreviousPhoto,
-  handleNextPhoto,
+  handleNextPrevPhoto,
 }) {
   //Ref for image
   const imgRef = useRef(null);
@@ -28,7 +27,6 @@ function Image({
   //let imageHeight = label.length > 0 ? 1536 : 0; //not ideal solution as I am hardcoding it but this is to make it work but may be able to get backend to send the dimension, as first render for detecting image original size does not work here
   let imageWidth = dimension.width;
   let imageHeight = dimension.height;
-  console.log(dimension.width);
   console.log(label);
   //TODO Get original image size from backend instead !!
 
@@ -449,11 +447,11 @@ function Image({
       <div className="ImageOutsideContainer">
         <NavigateBeforeIcon
           id="previousArrow"
-          onClick={handlePreviousPhoto}
+          onClick={() => handleNextPrevPhoto(photoPath,-1)}
         ></NavigateBeforeIcon>
         <Replay10Icon
           id="previous10Arrow"
-          onClick={handlePreviousPhoto}
+          onClick={() => handleNextPrevPhoto(photoPath,-10)}
         ></Replay10Icon>
 
         <div className="ImageContainer">
@@ -504,11 +502,11 @@ function Image({
         </div>
         <NavigateNextIcon
           id="nextArrow"
-          onClick={() => handleNextPhoto(photoPath)}
+          onClick={() => handleNextPrevPhoto(photoPath,1)}
         ></NavigateNextIcon>
         <Forward10Icon
           id="next10Arrow"
-          onClick={handleNextPhoto}
+          onClick={() => handleNextPrevPhoto(photoPath,10)}
         ></Forward10Icon>
       </div>
     </>

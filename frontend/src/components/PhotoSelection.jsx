@@ -60,9 +60,9 @@ function PhotoSelection({ photoFilenames }) {
       });
   }
 
-  function handleNextPhoto(current_path) {
+  function handleNextPrevPhoto(current_path, skipnumber) {
     const currentPath = current_path;
-    const skip = 1;
+    const skip = skipnumber;
     let url = `/api/photos/next?path=${currentPath}&skip=${skip}`;
     console.log("urlcurret photo in next");
     console.log(url);
@@ -70,18 +70,30 @@ function PhotoSelection({ photoFilenames }) {
     fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        setNextPhoto(data);
+        setPhotoPath(data);
         let urlJpeg = "/api/photos/" + data.replace("np", "jpeg");
         setCurrentPhoto(urlJpeg);
 
+        let urlDimension = "/api/photos/dimension?path=" + data;
+        fetch(urlDimension)
+            .then((response) => response.json())
+            .then((data)=>{
+              setImageDimension({
+              width: data.width,
+              height: data.height,
+             });
+        })
+
+        let urlLabel = "/api/labels/detail?path=" + data;
+        fetch(urlLabel)
+        .then((response) => response.json())
+        .then((data) => {
+          setLabel(data);
+        });
+
       })
-    
-      
   }
 
-  function handlePreviousPhoto() {
-    console.log(photoPath);
-  }
 
   return (
     <>
@@ -97,8 +109,7 @@ function PhotoSelection({ photoFilenames }) {
         dimension={imageDimension}
         label={label}
         photoPath={photoPath}
-        handleNextPhoto={handleNextPhoto}
-        handlePreviousPhoto={handlePreviousPhoto}
+        handleNextPrevPhoto={handleNextPrevPhoto}
       />
       {/* pass function (nextPhoto & previsouPhoto that handles navigation of photo to image */}
     </>

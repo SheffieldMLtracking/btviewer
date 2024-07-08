@@ -75,6 +75,8 @@ def next_():
     photo = Photo(path)
     next_photo_path = str(photo.next(skip=skip))
     filename = os.path.split(next_photo_path)[1]
-    file_path = os.path.split(next_photo_path)[0].split(os.sep)[8:12]  #to get rid of local C:\Users\cs1sch\PycharmProjects\btviewer\backend\tests\data\
+    dir_num = (len(os.path.split(next_photo_path)[0].split(os.sep)))
+    starting_dir = int(dir_num - 4)
+    file_path = os.path.split(next_photo_path)[0].split(os.sep)[starting_dir:dir_num]  #to get rid of local C:\Users\cs1sch\PycharmProjects\btviewer\backend\tests\data\
     next_photo = os.path.join(*file_path, filename)
     return flask.jsonify(str(next_photo))
