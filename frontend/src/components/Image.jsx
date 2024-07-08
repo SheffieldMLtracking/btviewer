@@ -46,8 +46,7 @@ function Image({
   const [popupOpen, setPopupOpen] = useState(false);
 
   const [popupID, setPopupID] = useState(undefined);
-  //state for photoPath for savingMarkers
-  const [currentPhotoPath, setCurrentPhotoPath] = useState("");
+
 
   //State for x, y coordinates based on the original image
   const [coordinate, setCoordinate] = useState({
@@ -505,7 +504,7 @@ function Image({
         </div>
         <NavigateNextIcon
           id="nextArrow"
-          onClick={handleNextPhoto}
+          onClick={() => handleNextPhoto(photoPath)}
         ></NavigateNextIcon>
         <Forward10Icon
           id="next10Arrow"

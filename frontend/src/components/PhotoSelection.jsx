@@ -8,8 +8,10 @@ function PhotoSelection({ photoFilenames }) {
   const [currentPhoto, setCurrentPhoto] = useState(""); //the path of the photo
   const [photoPath, setPhotoPath] = useState(""); //the selected value from the dropdownlist
   const [label, setLabel] = useState([]);
+  //get the image original dimension
   const [imageDimension, setImageDimension] = useState({'width':0, 
                                                         'height':0})
+  const [nextPhoto, setNextPhoto] =useState("");
   /*
     List the photos for users to choose from
     */
@@ -21,6 +23,10 @@ function PhotoSelection({ photoFilenames }) {
 
   /*
     When the user selects a photo, retrieve it to send to image component
+    The photoFetcher send 3 things:
+    1. the image
+    2. the image dimension
+    3. the json of label if exists
     */
   function photoFetcher(e) {
     let selectedPhoto = e.target.value;
@@ -54,22 +60,23 @@ function PhotoSelection({ photoFilenames }) {
       });
   }
 
-  function handleNextPhoto() {
-    
+  function handleNextPhoto(current_path) {
+    const currentPath = current_path;
+    const skip = 1;
+    let url = `/api/photos/next?path=${currentPath}&skip=${skip}`;
+    console.log("urlcurret photo in next");
+    console.log(url);
 
-    setPhotoPath(
-      "2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.np"
-    );
-    let urlJpeg =
-      "/api/photos/2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.jpeg";
-    setCurrentPhoto(urlJpeg);
-    let urlLabel =
-      "/api/labels/detail?path=2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000002.np";
-    fetch(urlLabel)
+    fetch(url)
       .then((response) => response.json())
       .then((data) => {
-        setLabel(data);
-      });
+        setNextPhoto(data);
+        let urlJpeg = "/api/photos/" + data.replace("np", "jpeg");
+        setCurrentPhoto(urlJpeg);
+
+      })
+    
+      
   }
 
   function handlePreviousPhoto() {
@@ -84,6 +91,7 @@ function PhotoSelection({ photoFilenames }) {
       </select>
       <p>image source {currentPhoto}</p>
       <p>{photoPath}</p>
+      <p>Next Photo{nextPhoto}</p>
       <Image
         image={currentPhoto}
         dimension={imageDimension}

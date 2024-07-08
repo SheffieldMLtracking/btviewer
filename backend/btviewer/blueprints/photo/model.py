@@ -293,7 +293,7 @@ class Photo:
 
         # Get the label file
         label_path = self.make_label_path(source=source)
-
+        # Delete all labels from that source   
         label_path.unlink(missing_ok=True)
         app.logger.info("Deleted '%s'", label_path)
 
