@@ -71,10 +71,10 @@ def create():
     return flask.jsonify(dict(label_path=str(label_path))), HTTPStatus.CREATED
 
 
-@blueprint.route("/delete", methods=["DELETE"])
+@blueprint.route("/delete", methods=["DELETE"]) # we have to use DELETE method rather than POST
 def delete():
     """
-    Delete the labels on a photo
+    Delete all the labels on a photo by deleting the file
     """
     # Load the selected image
 
@@ -83,4 +83,21 @@ def delete():
     source = flask.request.args["source"]
     photo.delete_labels(source)
 
-    return flask.jsonify(dict(label_path=str(label_path))), HTTPStatus.OK
+    return flask.jsonify('successfully deleted'), HTTPStatus.OK
+
+
+@blueprint.route("/modify", methods=["POST"]) #the modify route is for deleting single label as the methods used is post, not delete compared to the delete all.
+def modify():
+    """
+    Delete single label on a photo
+    """ 
+    # Load the selected image
+
+    photo_path = flask.request.args["path"]
+    photo = Photo(photo_path)
+    source = flask.request.args["source"]
+    x = flask.request.args["x"]
+    y = flask.request.args["y"]
+
+    photo.delete_labels(source, x, y)
+    return flask.jsonify('successfully deleted'), HTTPStatus.OK

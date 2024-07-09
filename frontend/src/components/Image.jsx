@@ -9,7 +9,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import Popover from "@mui/material/Popover";
 
-import { CompareCoordinates, DeleteAllMarkers, SaveMarkers } from "./utils.js";
+import { CompareCoordinates, DeleteAllMarkers, DeleteSingleMarker, SaveMarkers } from "./utils.js";
 
 function Image({
   image,
@@ -456,10 +456,17 @@ function Image({
     let originalPixelY = Math.round(
         (originalHeight / viewHeight) * currentOffsetY
       );
+
+    //Examine if the point clicked is within the range of an existing label
     const foundExistingCoordinates = CompareCoordinates(originalPixelX,originalPixelY,markerList)
+
+    // if there are, we will use delete the foundExistingCoordinates.
     if (foundExistingCoordinates !== undefined) {
-      console.log('doubleClick' + originalPixelX)
+      console.log('doubleClick oriX' + originalPixelX)
+      console.log('doubleClick found' + foundExistingCoordinates.x)
+      DeleteSingleMarker(photoPath,foundExistingCoordinates.x, foundExistingCoordinates.y)
       
+      //This is to update the markerList temporarily in the current rendering so as to make the deleted tag transparent before the markerList got updated from the backend for the next rendering
       const updatedList = markerList.map((item) => {
         if (item.x === foundExistingCoordinates.x && item.y === foundExistingCoordinates.y) {
           // Update the value property for the matching item
@@ -469,8 +476,6 @@ function Image({
           return item;
         }
       });
-      console.log('updatedList')
-      console.log(updatedList)
       setMarkerList(updatedList);
 
     }

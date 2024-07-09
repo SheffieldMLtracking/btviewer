@@ -20,7 +20,6 @@ export function SaveMarkers(point, photoPath) { //JS for  utilities functoin
   }
   
 export function DeleteAllMarkers(photoPath){
-    console.log('delete')
     const photo_path = photoPath;
     const source = "btviewer";
     const version = "0.0.0";
@@ -38,7 +37,8 @@ export function DeleteAllMarkers(photoPath){
       });
 }
 
-export function CompareCoordinates(targetX, targetY, list, range=100){
+//Return the first existing label found within the range of 25 pixel of the clicked point in x and y in terms of original pixel of the photo
+export function CompareCoordinates(targetX, targetY, list, range=25){ 
   for (const item of list) {
     // Check if the item has "x" and "y" keys
     if (item.hasOwnProperty('x') && item.hasOwnProperty('y')) {
@@ -57,3 +57,23 @@ export function CompareCoordinates(targetX, targetY, list, range=100){
   return undefined;
 }
 
+export function DeleteSingleMarker(photoPath, coordinateX, coordinateY){
+  const photo_path = photoPath;
+  const source = "btviewer";
+  const version = "0.0.0";
+  const x = coordinateX;
+  const y = coordinateY;
+  const url = `/api/labels/modify?path=${photo_path}&source=${source}&version=${version}&x=${x}&y=${y}`;
+  console.log(url)
+
+  fetch(url, {
+    method: "post",
+    headers: { "Content-type": "application/json" },
+  })
+    .then((response) => {
+      console.log(JSON.stringify(response.json()));
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+    });
+}

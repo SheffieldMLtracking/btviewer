@@ -290,29 +290,27 @@ class Photo:
         :param y: The vertical pixel coordinate
         :param indent: JSON formatting option
         """
-
+        # No specific label specified
         # Get the label file
         label_path = self.make_label_path(source=source)
-        # Delete all labels from that source   
-        label_path.unlink(missing_ok=True)
-        app.logger.info("Deleted '%s'", label_path)
+        # Delete all labels from that source
+        if not x:
 
-        # No specific label specified
-        # if not x:
-        #     # Delete all labels from that source
-        #     label_path.unlink(missing_ok=True)
-        #     app.logger.info("Deleted '%s'", label_path)
+            label_path.unlink(missing_ok=True)
+            app.logger.info("Deleted '%s'", label_path)
 
+
+     
         # Delete a specific label
-        # else:
-        #     # Filter by label
-        #     with label_path.open() as file:
-        #         labels = json.load(file)
+        else:
+             with label_path.open() as file:
+                 labels = json.load(file)
 
         #     # Filter by coordinates
-        #     labels = [label for label in labels if label['x'] != x & label['y'] != y]
+             labels = [label for label in labels if int(label['x']) != int(x) and int(label['y']) != int(y)]
 
-        #     # Save changes to disk
-        #     with label_path.open('w') as file:
-        #         json.dump(labels, file, indent=indent)
-        #         app.logger.info("Deleted label at %s, %s from '%s'", x, y, file.name)
+
+        # Save changes to disk
+             with label_path.open('w') as file:
+                 json.dump(labels, file, indent=indent)
+                 app.logger.info("Deleted label at %s, %s from '%s'", x, y, file.name)

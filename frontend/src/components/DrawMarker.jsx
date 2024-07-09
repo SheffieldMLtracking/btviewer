@@ -20,6 +20,9 @@ function DrawMarker(props) {
       circleColour = "transparent";
       reticuleColour = "yellow";
 
+    } else if (props.mode==='deleted'){ //to make the current deleted tag transparent, before the next render after the label list in backend is updated
+      circleColour = "transparent";
+      reticuleColour = "transparent";
     }
 
 
