@@ -77,3 +77,25 @@ export function DeleteSingleMarker(photoPath, coordinateX, coordinateY){
       console.log(err.response.data);
     });
 }
+
+export function SaveAnnotation(photoPath, annotation, coordinateX, coordinateY, ){
+  const photo_path = photoPath;
+  const source = "btviewer";
+  const version = "0.0.0";
+  const x = coordinateX;
+  const y = coordinateY;
+  const annotationText = annotation
+  const url = `/api/labels/annotate?path=${photo_path}&source=${source}&version=${version}&x=${x}&y=${y}&annotation=${annotationText}`;
+  console.log(url)
+
+  fetch(url, {
+    method: "post",
+    headers: { "Content-type": "application/json" },
+  })
+    .then((response) => {
+      console.log(JSON.stringify(response.json()));
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+    });
+}

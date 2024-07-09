@@ -101,3 +101,21 @@ def modify():
 
     photo.delete_labels(source, x, y)
     return flask.jsonify('successfully deleted'), HTTPStatus.OK
+
+
+@blueprint.route("/annotate", methods=["POST"]) #the annotate route is for annotate existing single label
+def annotate():
+    """
+    annotate an existing label on a photo
+    """ 
+    # Load the selected image
+
+    photo_path = flask.request.args["path"]
+    photo = Photo(photo_path)
+    source = flask.request.args["source"]
+    x = flask.request.args["x"]
+    y = flask.request.args["y"]
+    annotation = flask.request.args["annotation"]
+
+    photo.annotate_labels(source, annotation, x, y )
+    return flask.jsonify('successfully annotation'), HTTPStatus.OK

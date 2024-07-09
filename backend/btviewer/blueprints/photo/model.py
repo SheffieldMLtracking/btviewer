@@ -98,7 +98,8 @@ class Photo:
         metadata = {
             "source": source,
             "version": version,
-            "mode": "manual"
+            "mode": "manual",
+            "annotation": ""
         }
         for label in labels:
             label.update(metadata)
@@ -290,27 +291,52 @@ class Photo:
         :param y: The vertical pixel coordinate
         :param indent: JSON formatting option
         """
-        # No specific label specified
+
         # Get the label file
         label_path = self.make_label_path(source=source)
-        # Delete all labels from that source
+
+        # Delete all labels from that source when no specific label specified
         if not x:
 
             label_path.unlink(missing_ok=True)
             app.logger.info("Deleted '%s'", label_path)
-
-
      
         # Delete a specific label
         else:
              with label_path.open() as file:
                  labels = json.load(file)
 
-        #     # Filter by coordinates
+        # Exclude the coordinates to be deleted
              labels = [label for label in labels if int(label['x']) != int(x) and int(label['y']) != int(y)]
-
 
         # Save changes to disk
              with label_path.open('w') as file:
                  json.dump(labels, file, indent=indent)
                  app.logger.info("Deleted label at %s, %s from '%s'", x, y, file.name)
+
+    def annotate_labels(self, source: str, annotation_text: str, x: int, y: int, indent: int = 2, ):
+        """
+        Add annotation to existing labels associated with this photo.
+
+        :param source: The app that created the label e.g. "btviewer"
+        :param x: The horizontal pixel coordinate
+        :param y: The vertical pixel coordinate
+        :param indent: JSON formatting option
+        :param annotation_text: annotation text
+        """
+        # Get the label file
+        label_path = self.make_label_path(source=source)
+        with label_path.open() as file:
+             labels = json.load(file)
+
+        # find the label corresponding to the clicked point to add the annotation
+        # Note it will replace existing annotation
+        for label in labels:
+            if int(label['x']) == int(x) and int(label['y']) == int(y):
+                label.update({"annotation": annotation_text})
+
+        
+        # Save changes to disk
+        with label_path.open('w') as file:
+                 json.dump(labels, file, indent=indent)
+                 app.logger.info("annotate label at %s, %s from '%s'", x, y, file.name)

@@ -9,7 +9,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import Popover from "@mui/material/Popover";
 
-import { CompareCoordinates, DeleteAllMarkers, DeleteSingleMarker, SaveMarkers } from "./utils.js";
+import { CompareCoordinates, DeleteAllMarkers, DeleteSingleMarker, SaveMarkers, SaveAnnotation } from "./utils.js";
 
 function Image({
   image,
@@ -367,21 +367,11 @@ function Image({
   }
 
   function rightClickHandler(e) {
+    //To annotate existing tag
+
     e.preventDefault();
-    setPopupOpen(true);
-    setPopupID("simple-popover");
 
-    const clientX = e.pageX;
-    const clientY = e.pageY;
-    const scrollX = window.scrollX;
-    const scrollY = window.scrollY;
-
-    const adjustedX = clientX - scrollX;
-    const adjustedY = clientY - scrollY;
-
-    setAnchor({ ...anchor, x: adjustedX, y: adjustedY });
-
-    // determining the coordinates of the click and draw the marker
+    // determining the coordinates of the click to see if it corresponds to an existing tag
     const imageCurrent = imgRef.current;
     // Get the original width and height of the image
     let originalWidth = imageCurrent.naturalWidth;
@@ -402,41 +392,57 @@ function Image({
     let originalPixelY = Math.round(
       (originalHeight / viewHeight) * currentOffsetY
     );
+    
+    //Examine if the point clicked is within the range of an existing label
+    const foundExistingCoordinates = CompareCoordinates(originalPixelX,originalPixelY,markerList)
 
-    setAnnotateCoordinate({
-      x: originalPixelX,
-      y: originalPixelY,
-    });
+    // if there are, we will show the popup, else no popup will show
+    if (foundExistingCoordinates !== undefined) {
+      console.log('foundExistingCoordinates ' + foundExistingCoordinates.x + '  ' + foundExistingCoordinates.y)
+      setPopupOpen(true);
+      setPopupID("simple-popover");
 
-    ///trial ends
+      const clientX = e.pageX;
+      const clientY = e.pageY;
+      const scrollX = window.scrollX;
+      const scrollY = window.scrollY;
 
-    console.log("rightclick");
-    console.log("x" + adjustedX);
-    console.log("y" + adjustedY);
+      const adjustedX = clientX - scrollX;
+      const adjustedY = clientY - scrollY;
+
+      //where the popup should be shown
+      setAnchor({ ...anchor, x: adjustedX, y: adjustedY });
+      
+      setAnnotateCoordinate({
+        x: foundExistingCoordinates.x,
+        y: foundExistingCoordinates.y,
+        annotation: ""
+      });
+    }
+ 
   }
 
-  function handleClose(e) {
+  function handleClose() {
     setPopupOpen(false);
     setPopupID(undefined);
     //Fetch before erase anchor
-    console.log("anchor " + anchor.x + " " + anchor.y);
-    console.log(
-      "AnnotateCoordinate" + annotateCoordinate.x + " " + annotateCoordinate.y
-    );
-    console.log("coordinate" + coordinate.x + " " + coordinate.y);
+    //Sending the annotation to the backend
+    console.log("AnnotateText" + annotateCoordinate.annotation);
+    console.log("coordinate" + annotateCoordinate.x + " " + annotateCoordinate.y);
+    SaveAnnotation(photoPath, annotateCoordinate.annotation, annotateCoordinate.x, annotateCoordinate.y)
     setAnchor({ x: -99, y: -99 });
     setAnnotateCoordinate({ x: -99, y: -99, annotation: "" });
   }
 
   function enterHandler(e) {
     if (e.key === "Enter") {
-      console.log("xxx");
       handleClose();
     }
   }
 
   function doubleClickHandler(e) {
-    console.log("doubleclick");
+    //To delete a tag: The function first transform the coordinates to the coordinates on the original photo,
+    //then find if the coordinate is within range of the existing label
     const imageCurrent = imgRef.current;
     // Get the original width and height of the image
     let originalWidth = imageCurrent.naturalWidth;
