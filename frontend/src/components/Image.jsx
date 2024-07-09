@@ -9,7 +9,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import Popover from "@mui/material/Popover";
 
-import { DeleteAllMarkers, SaveMarkers } from "./utils.js";
+import { CompareCoordinates, DeleteAllMarkers, SaveMarkers } from "./utils.js";
 
 function Image({
   image,
@@ -276,6 +276,8 @@ function Image({
 
       setImageNewPosition({ top: y, left: x });
     }
+      
+
   }
 
   //Separated from the function above. to control whether to show the ML markers
@@ -432,6 +434,50 @@ function Image({
       handleClose();
     }
   }
+
+  function doubleClickHandler(e) {
+    console.log("doubleclick");
+    const imageCurrent = imgRef.current;
+    // Get the original width and height of the image
+    let originalWidth = imageCurrent.naturalWidth;
+    let originalHeight = imageCurrent.naturalHeight;
+    let imageRect = imageCurrent.getBoundingClientRect();
+    let viewWidth = Math.round(imageRect.width);
+    let viewHeight = Math.round(imageRect.height);
+
+    // Get the coordinates of the clicking based its offset from the image container
+    let currentOffsetX = e.nativeEvent.offsetX;
+    let currentOffsetY = e.nativeEvent.offsetY;
+
+    // Calculation for the coordinates of the clicking on the original image pixel
+    let originalPixelX = Math.round(
+        (originalWidth / viewWidth) * currentOffsetX
+      );
+    let originalPixelY = Math.round(
+        (originalHeight / viewHeight) * currentOffsetY
+      );
+    const foundExistingCoordinates = CompareCoordinates(originalPixelX,originalPixelY,markerList)
+    if (foundExistingCoordinates !== undefined) {
+      console.log('doubleClick' + originalPixelX)
+      
+      const updatedList = markerList.map((item) => {
+        if (item.x === foundExistingCoordinates.x && item.y === foundExistingCoordinates.y) {
+          // Update the value property for the matching item
+          return { ...item, mode: 'deleted' };
+        } else {
+          // Return the original item for non-matching items
+          return item;
+        }
+      });
+      console.log('updatedList')
+      console.log(updatedList)
+      setMarkerList(updatedList);
+
+    }
+    
+
+  }
+
   return (
     <>
       <h2>
@@ -460,6 +506,7 @@ function Image({
             ref={imgRef}
             src={image}
             onClick={clickHandler}
+            onDoubleClick={doubleClickHandler}
             onContextMenu={rightClickHandler}
             alt=""
             style={{

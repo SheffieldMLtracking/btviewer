@@ -101,9 +101,7 @@ function PhotoSelection({ photoFilenames }) {
         <option />
         {listDisplayed}
       </select>
-      <p>image source {currentPhoto}</p>
       <p>{photoPath}</p>
-      <p>Next Photo{nextPhoto}</p>
       <Image
         image={currentPhoto}
         dimension={imageDimension}
@@ -111,7 +109,7 @@ function PhotoSelection({ photoFilenames }) {
         photoPath={photoPath}
         handleNextPrevPhoto={handleNextPrevPhoto}
       />
-      {/* pass function (nextPhoto & previsouPhoto that handles navigation of photo to image */}
+      {/* pass function (nextPrevPhoto that handles navigation of photo to image */}
     </>
   );
 }

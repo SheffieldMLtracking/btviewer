@@ -37,3 +37,23 @@ export function DeleteAllMarkers(photoPath){
         console.log(err.response.data);
       });
 }
+
+export function CompareCoordinates(targetX, targetY, list, range=100){
+  for (const item of list) {
+    // Check if the item has "x" and "y" keys
+    if (item.hasOwnProperty('x') && item.hasOwnProperty('y')) {
+      // Calculate absolute distance for both coordinates
+      const distanceX = Math.abs(item.x - targetX);
+      const distanceY = Math.abs(item.y - targetY);
+
+      // Check if both distances are within the range
+      if (distanceX <= range && distanceY <= range) {
+        return item;  // Return the item if both conditions met
+      }
+    }
+  }
+
+  // If no item is found, return undefined
+  return undefined;
+}
+
