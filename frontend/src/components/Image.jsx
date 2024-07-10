@@ -67,6 +67,9 @@ function Image({
   //State to determine if ML marker to be shown
   const [showRetrodetect, setShowRetrodetect] = useState(0);
 
+  //State to determine if ML marker to be shown
+  const [showAnnotation, setShowAnnotation] = useState(0);
+
   // for zooming
   let scale = 1;
   let scaleZoomIn = 1.2;
@@ -93,6 +96,7 @@ function Image({
       confidence: true,
     });
     setShowRetrodetect(0);
+    setShowAnnotation(0)
     setImageNewPosition({
       left: 0,
       top: 0,
@@ -124,6 +128,9 @@ function Image({
       } else if (e.key === "r" && e.ctrlKey) {
         e.preventDefault();
         RetrodetectController(); //BUG: the keyboard shortcut does not work when retrodetect is 1
+      } else if (e.key === "e" && e.ctrlKey) {
+        e.preventDefault();
+        ShowAnnotationController(); //BUG: the keyboard shortcut does not work when retrodetect is 1
       }
     };
 
@@ -309,6 +316,33 @@ function Image({
     }
   }
 
+  function ShowAnnotationController() {
+    if (showAnnotation === 0) {
+      setShowAnnotation(1);
+
+      const imageCurrent = imgRef.current; //so that it will still work when clickHandler has not been called
+
+      // Get the original width and height of the image
+      let originalWidth = imageCurrent.naturalWidth;
+      let originalHeight = imageCurrent.naturalHeight;
+
+      // Get the height/width of the image container
+      let imageRect = imageCurrent.getBoundingClientRect();
+      let viewWidth = Math.round(imageRect.width);
+      let viewHeight = Math.round(imageRect.height);
+
+      setImageSize({
+        originalWidth: originalWidth,
+        originalHeight: originalHeight,
+        viewWidth: viewWidth,
+        viewHeight: viewHeight,
+      });
+    } else if (showAnnotation === 1) {
+      console.log("i did go through this part");
+      setShowAnnotation(0);
+    }
+  }
+
   function ResetImage() {
     setImageSize({
       ...imageSize,
@@ -491,14 +525,17 @@ function Image({
 
   return (
     <>
-      <p>
+      {/* <p>
         {coordinate.x}, {coordinate.y}
       </p>
       <p>Confidence boolean {`${coordinate.confidence}`}</p>
-      <p>retrodetect controller {showRetrodetect}</p>
+      <p>retrodetect controller {showRetrodetect}</p> */}
       <button onClick={deleteHandler}>Delete All</button>
       <button onClick={RetrodetectController}>
         Show/Hide Retrodetect labels
+      </button>
+      <button onClick={ShowAnnotationController}>
+        Show/Hide Annotation
       </button>
       <button onClick={ResetImage}>Reset Zoom</button>
       <div className="ImageOutsideContainer">
@@ -556,6 +593,7 @@ function Image({
             markerList={markerList}
             imageSize={imageSize}
             imagePosition={imageNewPosition}
+            showAnnotation={showAnnotation}
           />
         </div>
         <NavigateNextIcon

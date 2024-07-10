@@ -10,7 +10,7 @@ function App() {
     <div className="App">
       <Container>
         <Row>
-          <Col sm={3}>
+          <Col sm={4}>
             <Instructions />
           </Col>
           <Col sm={8}>

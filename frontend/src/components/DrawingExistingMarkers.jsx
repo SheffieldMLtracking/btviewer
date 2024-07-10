@@ -1,14 +1,16 @@
 import DrawMarker from "./DrawMarker.jsx";
 
-function DrawExistingMarkers({ showRetrodetect, markerList, imageSize, imagePosition }) {
+function DrawExistingMarkers({ showRetrodetect, markerList, imageSize, imagePosition, showAnnotation }) {
   //imageSize and markerList
   let currentOffsetX;
   let currentOffsetY;
   let currentConfidence;
-  let currentMode; //Options 'retrodetect' or 'manual'
+  let currentMode; //Options 'retrodetect' or 'manual' or 'deleted'(only in the frontend)
+  let currentAnnotation;
   let processList = markerList
 
-  if (showRetrodetect === 0) {
+  //determine if retrodetect needs to be shown
+  if (showRetrodetect === 0) { 
     processList = processList.filter(item => item['mode'] !== 'retrodetect');
   }
  
@@ -21,7 +23,13 @@ function DrawExistingMarkers({ showRetrodetect, markerList, imageSize, imagePosi
       imagePosition.top;
     currentConfidence = item.confidence;
     currentMode = item.mode;
-    return { currentOffsetX, currentOffsetY, currentConfidence, currentMode };
+    if (showAnnotation===1) {
+      currentAnnotation = item.annotation
+    } else if (showAnnotation===0) {
+      currentAnnotation = ''
+    }
+
+    return { currentOffsetX, currentOffsetY, currentConfidence, currentMode, currentAnnotation };
   });
   
 
@@ -37,6 +45,7 @@ function DrawExistingMarkers({ showRetrodetect, markerList, imageSize, imagePosi
           confidence={item.currentConfidence}
           mode={item.currentMode}
           pointer="none"
+          annotation={item.currentAnnotation}
         />
       ))}
     </>

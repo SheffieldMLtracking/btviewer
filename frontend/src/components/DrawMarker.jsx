@@ -1,3 +1,4 @@
+
 function DrawMarker(props) {
   // current x and y based on the current view
   let circleColour;
@@ -97,6 +98,16 @@ function DrawMarker(props) {
             pointerEvents: `${props.pointer}`,
           }}
         />
+       <div style={{
+            //right horizontal line
+            position: "absolute",
+            backgroundColor: 'white',
+            color: 'black',
+            transform: `translate(${props.x}px, ${props.y}px)`,
+            left: 15,
+            top: 0,
+            pointerEvents: `${props.pointer}`,
+          }}>{props.annotation}</div>
       </>
     );
   }
