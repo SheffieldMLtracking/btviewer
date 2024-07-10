@@ -491,11 +491,11 @@ function Image({
 
   return (
     <>
-      <h2>
+      <p>
         {coordinate.x}, {coordinate.y}
-      </h2>
-      <h2>Confidence boolean {`${coordinate.confidence}`}</h2>
-      <h2>retrodetect controller {showRetrodetect}</h2>
+      </p>
+      <p>Confidence boolean {`${coordinate.confidence}`}</p>
+      <p>retrodetect controller {showRetrodetect}</p>
       <button onClick={deleteHandler}>Delete All</button>
       <button onClick={RetrodetectController}>
         Show/Hide Retrodetect labels

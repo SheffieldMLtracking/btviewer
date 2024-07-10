@@ -5,8 +5,9 @@ function Instructions() {
       <h4>Tagging</h4>
       <p>Confident tag: mouseclick + ctrl</p>
       <p>Unconfident tag: mouseclick + shift</p>
-      <p>Annotate: right click for input popup and enter to save/close</p>
+      <p>Annotate tag: After tagging, right click for input popup and enter to save/close. It will replace existing annotation if there is any.</p>
       <p>Delete ALL tags: ctrl + d </p>
+      <p>Delete single tags: double left mouseclick around the tag</p>
       <p>Show/Hide Retrodetect: ctrl + r</p>
       <h4>Zoom</h4>
       <p>Zoom In: mouseclick + alt</p>
