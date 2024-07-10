@@ -109,16 +109,17 @@ function Image({
     const handleKeyDown = (e) => {
       if (e.key === "a" && e.ctrlKey) {
         e.preventDefault();
-        handlePreviousPhoto();
+        handleNextPrevPhoto(photoPath,-1)
+        console.log('a')
       } else if (e.key == "q" && e.ctrlKey) {
         e.preventDefault();
-        handlePreviousPhoto();
+        handleNextPrevPhoto(photoPath,-10)
       } else if (e.key == "w" && e.ctrlKey) {
         e.preventDefault();
-        handleNextPhoto();
+        handleNextPrevPhoto(photoPath,1)
       } else if (e.key === "s" && e.ctrlKey) {
         e.preventDefault();
-        handleNextPhoto();
+        handleNextPrevPhoto(photoPath,10)
       } else if (e.key === "z" && e.ctrlKey) {
         e.preventDefault();
         ResetImage();
