@@ -421,23 +421,29 @@ function Image({
     console.log("AnnotateText" + annotateCoordinate.annotation);
     console.log("coordinate" + annotateCoordinate.x + " " + annotateCoordinate.y);
     SaveAnnotation(photoPath, annotateCoordinate.annotation, annotateCoordinate.x, annotateCoordinate.y)
-    
-    
-    //This is to update the markerList temporarily in the current rendering so as to make the deleted tag transparent before the markerList got updated from the backend for the next rendering
-    const updatedList = markerList.map((item) => {
-            if (item.x === annotateCoordinate.x  && item.y === annotateCoordinate.y ) {
-              // Update the value property for the matching item
-              return { ...item, annotate: annotateCoordinate.annotation };
-            } else {
-              // Return the original item for non-matching items
-              return item;
-            }
-          });
-          console.log('close')
-          console.log(updatedList)
-          setMarkerList(updatedList);
-          setAnchor({ x: -99, y: -99 });
-          setAnnotateCoordinate({ x: -99, y: -99, annotation: "" });
+     
+    console.log('close')
+    //to retrieve the confidence of the tag
+    const itemAnnotated = markerList.filter((item) => {
+      if (item.x === annotateCoordinate.x && item.y === annotateCoordinate.y) {
+        // Update the value property for the matching item
+        return { ...item, annotation: annotateCoordinate.annotation };
+      }});
+    console.log(itemAnnotated[0])
+
+    //To temporarily record the annotated item to be shown on the photo
+    setMarkerList([
+      ...markerList,
+      {
+        x: annotateCoordinate.x,
+        y: annotateCoordinate.y,
+        confidence: itemAnnotated[0].confidence,
+        mode: "manual",
+        annotation:  annotateCoordinate.annotation
+      },
+    ]);
+    setAnchor({ x: -99, y: -99 });
+    setAnnotateCoordinate({ x: -99, y: -99, annotation: "" });
 
   }
 
