@@ -109,16 +109,16 @@ function Image({
       if (e.key === "a" && e.ctrlKey) {
         e.preventDefault();
         handleNextPrevPhoto(photoPath,-1)
-      } else if (e.key == "q" && e.ctrlKey) {
+      } else if (e.key == "z" && e.ctrlKey) {
         e.preventDefault();
         handleNextPrevPhoto(photoPath,-10)
-      } else if (e.key == "w" && e.ctrlKey) {
+      } else if (e.key == "s" && e.ctrlKey) {
         e.preventDefault();
         handleNextPrevPhoto(photoPath,1)
-      } else if (e.key === "s" && e.ctrlKey) {
+      } else if (e.key === "x" && e.ctrlKey) {
         e.preventDefault();
         handleNextPrevPhoto(photoPath,10)
-      } else if (e.key === "z" && e.ctrlKey) {
+      } else if (e.key === "q" && e.ctrlKey) {
         e.preventDefault();
         ResetImage();
       } else if (e.key === "d" && e.ctrlKey) {
@@ -431,7 +431,7 @@ function Image({
       }});
     console.log(itemAnnotated[0])
 
-    //To temporarily record the annotated item to be shown on the photo
+    //To temporarily record the annotated item to be shown on the photo immediately if showAnnotation is on
     setMarkerList([
       ...markerList,
       {

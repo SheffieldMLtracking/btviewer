@@ -13,16 +13,16 @@ function Instructions() {
       <h4>Zoom</h4>
       <p>Zoom In: mouseclick + alt</p>
       <p>Zoom Out: mouseclick + windows/cmd</p>
-      <p>Reset Zoom: ctrl + z </p>
+      <p>Reset Zoom: ctrl + q </p>
       <p>
         You can drag the image after zooming in by moving the mouse pointer
         while keeping left-click
       </p>
       <h4>Photo Navigation</h4>
       <p>Previous Photo: ctrl + a</p>
-      <p>Skip to the previous 10th Photo: ctrl + q </p>
+      <p>Skip to the previous 10th Photo: ctrl + z </p>
       <p>Next Photo: ctrl + s</p>
-      <p>Skip to the next 10th Photo: ctrl + w </p>
+      <p>Skip to the next 10th Photo: ctrl + x </p>
 
   
     </>
