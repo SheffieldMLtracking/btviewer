@@ -78,7 +78,7 @@ export function DeleteSingleMarker(photoPath, coordinateX, coordinateY){
     });
 }
 
-export function SaveAnnotation(photoPath, annotation, coordinateX, coordinateY, ){
+export function SaveAnnotation(photoPath, annotation, coordinateX, coordinateY){
   const photo_path = photoPath;
   const source = "btviewer";
   const version = "0.0.0";

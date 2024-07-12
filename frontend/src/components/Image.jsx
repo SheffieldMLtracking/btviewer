@@ -28,7 +28,6 @@ function Image({
   let imageWidth = dimension.width;
   let imageHeight = dimension.height;
   console.log(label);
-  //TODO Get original image size from backend instead !!
 
   const [annotateCoordinate, setAnnotateCoordinate] = useState({
     x: -99,
@@ -104,13 +103,12 @@ function Image({
   }, [label]);
 
   useEffect(() => {
-    //short cut keey
+    //short cut key
 
     const handleKeyDown = (e) => {
       if (e.key === "a" && e.ctrlKey) {
         e.preventDefault();
         handleNextPrevPhoto(photoPath,-1)
-        console.log('a')
       } else if (e.key == "q" && e.ctrlKey) {
         e.preventDefault();
         handleNextPrevPhoto(photoPath,-10)
@@ -129,6 +127,7 @@ function Image({
       } else if (e.key === "r" && e.ctrlKey) {
         e.preventDefault();
         RetrodetectController(); //BUG: the keyboard shortcut does not work when retrodetect is 1
+        console.log('retrodetect')
       } else if (e.key === "e" && e.ctrlKey) {
         e.preventDefault();
         ShowAnnotationController(); //BUG: the keyboard shortcut does not work when retrodetect is 1
@@ -143,21 +142,13 @@ function Image({
     // when there is a window resize
     const handleResize = () => {
       const imageCurrent = imgRef.current; //so that it will still work when clickHandler has not been called
-
-      // Get the original width and height of the image
-      let originalWidth = imageCurrent.naturalWidth;
-      let originalHeight = imageCurrent.naturalHeight;
-
-      // Get the height/width of the image container
       let imageRect = imageCurrent.getBoundingClientRect();
-      let viewWidth = Math.round(imageRect.width);
-      let viewHeight = Math.round(imageRect.height);
 
       setImageSize({
-        originalWidth: originalWidth,
-        originalHeight: originalHeight,
-        viewWidth: viewWidth,
-        viewHeight: viewHeight,
+        originalWidth: imageCurrent.naturalWidth,
+        originalHeight: imageCurrent.naturalHeight,
+        viewWidth: Math.round(imageRect.width),
+        viewHeight: Math.round(imageRect.height),
       });
     };
     window.addEventListener("resize", handleResize);
@@ -222,7 +213,6 @@ function Image({
           photoPath
         );
       } else if (e.ctrlKey) {
-        //TODO where we can send to backend for saving.
         console.log("control is pressed");
         setCoordinate({
           x: originalPixelX,
@@ -293,24 +283,7 @@ function Image({
     console.log(showRetrodetect);
     if (showRetrodetect === 0) {
       setShowRetrodetect(1);
-
-      const imageCurrent = imgRef.current; //so that it will still work when clickHandler has not been called
-
-      // Get the original width and height of the image
-      let originalWidth = imageCurrent.naturalWidth;
-      let originalHeight = imageCurrent.naturalHeight;
-
-      // Get the height/width of the image container
-      let imageRect = imageCurrent.getBoundingClientRect();
-      let viewWidth = Math.round(imageRect.width);
-      let viewHeight = Math.round(imageRect.height);
-
-      setImageSize({
-        originalWidth: originalWidth,
-        originalHeight: originalHeight,
-        viewWidth: viewWidth,
-        viewHeight: viewHeight,
-      });
+      
     } else if (showRetrodetect === 1) {
       console.log("i did go through this part");
       setShowRetrodetect(0);
@@ -320,24 +293,7 @@ function Image({
   function ShowAnnotationController() {
     if (showAnnotation === 0) {
       setShowAnnotation(1);
-
-      const imageCurrent = imgRef.current; //so that it will still work when clickHandler has not been called
-
-      // Get the original width and height of the image
-      let originalWidth = imageCurrent.naturalWidth;
-      let originalHeight = imageCurrent.naturalHeight;
-
-      // Get the height/width of the image container
-      let imageRect = imageCurrent.getBoundingClientRect();
-      let viewWidth = Math.round(imageRect.width);
-      let viewHeight = Math.round(imageRect.height);
-
-      setImageSize({
-        originalWidth: originalWidth,
-        originalHeight: originalHeight,
-        viewWidth: viewWidth,
-        viewHeight: viewHeight,
-      });
+     
     } else if (showAnnotation === 1) {
       console.log("i did go through this part");
       setShowAnnotation(0);
@@ -356,7 +312,9 @@ function Image({
       top: 0,
     });
   }
-  useEffect(() => {
+
+  //For dragging photos
+  useEffect(() => { 
     let isDragging = false;
     let prevPosition = { x: 0, y: 0 };
     //Dragging function
@@ -380,10 +338,6 @@ function Image({
         top: imageNewPosition.top + deltaY,
       }));
     };
-    // Add event listeners
-    //imageCurrent?.addEventListener("pointerdown", handlePointerDown);
-    //imageCurrent?.addEventListener("pointermove", handlePointerMove);
-    //imageCurrent?.addEventListener("pointerup", handlePointerUp);
     window.addEventListener("pointerdown", handlePointerDown);
     window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("pointerup", handlePointerUp);
@@ -396,13 +350,14 @@ function Image({
     };
   }, [imgRef]);
 
+  //To delete all markers
   function deleteHandler() {
     setMarkerList([]);
     DeleteAllMarkers(photoPath);
   }
 
+  //To annotate existing tag
   function rightClickHandler(e) {
-    //To annotate existing tag
 
     e.preventDefault();
 
@@ -457,6 +412,7 @@ function Image({
  
   }
 
+  //Once the popup for annotation is closed
   function handleClose() {
     setPopupOpen(false);
     setPopupID(undefined);
@@ -465,8 +421,24 @@ function Image({
     console.log("AnnotateText" + annotateCoordinate.annotation);
     console.log("coordinate" + annotateCoordinate.x + " " + annotateCoordinate.y);
     SaveAnnotation(photoPath, annotateCoordinate.annotation, annotateCoordinate.x, annotateCoordinate.y)
-    setAnchor({ x: -99, y: -99 });
-    setAnnotateCoordinate({ x: -99, y: -99, annotation: "" });
+    
+    
+    //This is to update the markerList temporarily in the current rendering so as to make the deleted tag transparent before the markerList got updated from the backend for the next rendering
+    const updatedList = markerList.map((item) => {
+            if (item.x === annotateCoordinate.x  && item.y === annotateCoordinate.y ) {
+              // Update the value property for the matching item
+              return { ...item, annotate: annotateCoordinate.annotation };
+            } else {
+              // Return the original item for non-matching items
+              return item;
+            }
+          });
+          console.log('close')
+          console.log(updatedList)
+          setMarkerList(updatedList);
+          setAnchor({ x: -99, y: -99 });
+          setAnnotateCoordinate({ x: -99, y: -99, annotation: "" });
+
   }
 
   function enterHandler(e) {
@@ -526,9 +498,10 @@ function Image({
 
   return (
     <>
-      {/* <p>
+       <p>
         {coordinate.x}, {coordinate.y}
-      </p>
+       </p>
+       {/*
       <p>Confidence boolean {`${coordinate.confidence}`}</p>
       <p>retrodetect controller {showRetrodetect}</p> */}
       <button onClick={deleteHandler}>Delete All</button>
@@ -579,7 +552,6 @@ function Image({
               placeholder="Annotation"
               autoFocus
               onKeyDown={enterHandler}
-              value={annotateCoordinate.annotation}
               onChange={(e) =>
                 setAnnotateCoordinate({
                   ...annotateCoordinate,

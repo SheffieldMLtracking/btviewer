@@ -2,28 +2,41 @@
 function DrawMarker(props) {
   // current x and y based on the current view
   let circleColour;
-  let reticuleColour; // reticule is only shown when it is manual
+  let reticuleColour;
+  let annotateBackground;
+  let annotateColor; 
+
   
   if (typeof props !== "undefined" && props !== null) {
     if (props.confidence === true && props.mode==='manual') {
       circleColour = "red";
       reticuleColour = "red";
+      annotateBackground = "white";
+      annotateColor = "black";
 
     } else if (props.confidence === false && props.mode==='manual') {
       circleColour = "blue";
       reticuleColour = "blue";
+      annotateBackground = "white";
+      annotateColor = "black";
 
     } else if (props.confidence === false && props.mode==='retrodetect'){
       circleColour = "yellow";
       reticuleColour = "transparent";
+      annotateBackground = "white";
+      annotateColor = "black";
 
     } else if (props.confidence === true && props.mode==='retrodetect'){
       circleColour = "transparent";
       reticuleColour = "yellow";
+      annotateBackground = "white";
+      annotateColor = "black";
 
     } else if (props.mode==='deleted'){ //to make the current deleted tag transparent, before the next render after the label list in backend is updated
       circleColour = "transparent";
       reticuleColour = "transparent";
+      annotateBackground = "transparent";
+      annotateColor = "transparent";
     }
 
 
@@ -99,10 +112,10 @@ function DrawMarker(props) {
           }}
         />
        <div style={{
-            //right horizontal line
+            //annotation
             position: "absolute",
-            backgroundColor: 'white',
-            color: 'black',
+            backgroundColor: `${annotateBackground}`,
+            color: `${annotateColor}`,
             transform: `translate(${props.x}px, ${props.y}px)`,
             left: 15,
             top: 0,
