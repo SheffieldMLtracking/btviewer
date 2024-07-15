@@ -64,10 +64,10 @@ function Image({
   });
 
   //State to determine if ML marker to be shown
-  const [showRetrodetect, setShowRetrodetect] = useState(0);
+  const [showRetrodetect, setShowRetrodetect] = useState(false);
 
   //State to determine if ML marker to be shown
-  const [showAnnotation, setShowAnnotation] = useState(0);
+  const [showAnnotation, setShowAnnotation] = useState(false);
 
   // for zooming
   let scale = 1;
@@ -94,8 +94,8 @@ function Image({
       y: -99,
       confidence: true,
     });
-    setShowRetrodetect(0);
-    setShowAnnotation(0)
+    setShowRetrodetect(false);
+    setShowAnnotation(false)
     setImageNewPosition({
       left: 0,
       top: 0,
@@ -105,7 +105,7 @@ function Image({
   useEffect(() => {
     //short cut key
 
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e) => { //Have to do e.preventDefault individually because we also need the e for typing in popup
       if (e.key === "a" && e.ctrlKey) {
         e.preventDefault();
         handleNextPrevPhoto(photoPath,-1)
@@ -126,17 +126,16 @@ function Image({
         deleteHandler();
       } else if (e.key === "r" && e.ctrlKey) {
         e.preventDefault();
-        RetrodetectController(); //BUG: the keyboard shortcut does not work when retrodetect is 1
-        console.log('retrodetect')
+        RetrodetectController(); 
       } else if (e.key === "e" && e.ctrlKey) {
         e.preventDefault();
-        ShowAnnotationController(); //BUG: the keyboard shortcut does not work when retrodetect is 1
+        ShowAnnotationController(); 
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [showAnnotation, showRetrodetect,imageSize]);
 
   useEffect(() => {
     // when there is a window resize
@@ -281,22 +280,23 @@ function Image({
   //Separated from the function above. to control whether to show the ML markers
   function RetrodetectController() {
     console.log(showRetrodetect);
-    if (showRetrodetect === 0) {
-      setShowRetrodetect(1);
+    if (showRetrodetect === false) {
+      setShowRetrodetect(true);
       
-    } else if (showRetrodetect === 1) {
+    } else if (showRetrodetect === true) {
       console.log("i did go through this part");
-      setShowRetrodetect(0);
+      setShowRetrodetect(false);
     }
   }
 
   function ShowAnnotationController() {
-    if (showAnnotation === 0) {
-      setShowAnnotation(1);
+    if (showAnnotation === false) {
+      console.log("setting annotation to 1")
+      setShowAnnotation(true);
      
-    } else if (showAnnotation === 1) {
+    } else if (showAnnotation === true) {
       console.log("i did go through this part");
-      setShowAnnotation(0);
+      setShowAnnotation(false);
     }
   }
 
@@ -515,7 +515,7 @@ function Image({
         Show/Hide Retrodetect labels
       </button>
       <button onClick={ShowAnnotationController}>
-        Show/Hide Annotation
+        {showAnnotation === true ? "Hide" : "Show"} Annotation
       </button>
       <button onClick={ResetImage}>Reset Zoom</button>
       <div className="ImageOutsideContainer">

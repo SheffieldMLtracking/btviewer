@@ -10,7 +10,7 @@ function DrawExistingMarkers({ showRetrodetect, markerList, imageSize, imagePosi
   let processList = markerList
 
   //determine if retrodetect needs to be shown
-  if (showRetrodetect === 0) { 
+  if (showRetrodetect === false) { 
     processList = processList.filter(item => item['mode'] !== 'retrodetect');
   }
  
@@ -23,9 +23,9 @@ function DrawExistingMarkers({ showRetrodetect, markerList, imageSize, imagePosi
       imagePosition.top;
     currentConfidence = item.confidence;
     currentMode = item.mode;
-    if (showAnnotation===1) {
+    if (showAnnotation===true) {
       currentAnnotation = item.annotation
-    } else if (showAnnotation===0) {
+    } else if (showAnnotation===false) {
       currentAnnotation = ''
     }
 
