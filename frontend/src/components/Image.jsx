@@ -352,7 +352,13 @@ function Image({
 
   //To delete all markers
   function deleteHandler() {
-    setMarkerList([]);
+    //keep the retrodetect tags in the markerList
+    const itemRetrodetect = markerList.filter((item) => {
+      if (item.mode === 'retrodetect') {
+        // Update the value property for the matching item
+        return item;
+      }});
+    setMarkerList(itemRetrodetect);
     DeleteAllMarkers(photoPath);
   }
 
