@@ -5,7 +5,6 @@ Display a drop-down list of sessions for navigation.
 */
 function ShowList({ data }) {
   // Store the selected session name
-  let [currentSession, setCurrentSession] = useState("");
   let listDisplayed = data.map((item) => (
     <option key={item.id} value={item}>
       {item}
@@ -20,8 +19,7 @@ function ShowList({ data }) {
     */
   function changeHandler(e) {
     let selectedSession = e.target.value;
-    setCurrentSession(selectedSession);
-    console.log(selectedSession);
+ 
 
     // Update the list of photo filenames available in that session
     let url = `/api/sessions/${selectedSession}`;
