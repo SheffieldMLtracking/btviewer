@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import ShowList from "./ShowList";
-
+import DummyList from "./DummyList";
 /*
 The list of bee tracking photo data capture sessions.
 */
 function Sessions() {
   // TODO use global variable for backend URL
-  const url = "/api/sessions/_all_cameras";
+  const url = "/api/sessions/list";
 
   // Define the list of sessions
   const [sessions, setSessions] = useState([]);
@@ -29,7 +29,8 @@ function Sessions() {
   // Render a drop-down list of session names
   return (
     <>
-      <ShowList data={sessions} />
+      {/* <ShowList data={sessions} /> */}
+      <DummyList data={sessions} />
     </>
   );
 }
