@@ -53,8 +53,17 @@ def list_path(relative_path: str):
     List directory contents of _any_ data subdirectory
 
     <root_directory>/<session>/<set>/<device id>/<camera id>/<timestamp>_<photo id>.np
+
+    This endpoint returns a list of strings, each is the path of that directory or photo file.
+
+    Example: GET /sessions/2020-01-01/set_A/device_1
+    [
+      "2020-01-01/set_A/device_1/camera_1",
+      "2020-01-01/set_A/device_1/camera_2"
+    ]
     """
 
+    # Get the specified directory
     root_directory = Session.root_directory()
     relative_path = Path(relative_path)
     path: Path = root_directory.joinpath(relative_path)
@@ -63,12 +72,11 @@ def list_path(relative_path: str):
     # (i.e. Are we at least four subdirectories deep in the file structure?)
     if len(relative_path.parents) >= 4:
         # Get photo files
-        file_paths = path.glob("*.np")
-        file_names = tuple(str(path.relative_to(root_directory).as_posix()) for path in file_paths)
-        return flask.jsonify(file_names)
-
+        paths = path.glob("*.np")
     else:
         # Get subdirectory names
-        subdir_paths = (path for path in path.iterdir() if path.is_dir())
-        subdir_names = tuple(str(path.relative_to(root_directory).as_posix()) for path in subdir_paths)
-        return flask.jsonify(subdir_names)
+        paths = (_path for _path in path.iterdir() if _path.is_dir())
+
+    # Get the full path relative to the root directory
+    full_paths = tuple(str(path.relative_to(root_directory).as_posix()) for path in paths)
+    return flask.jsonify(full_paths)
