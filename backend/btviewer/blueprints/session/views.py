@@ -25,7 +25,7 @@ def list_all_cameras():
     return flask.jsonify(camera_directories)
 
 
-@blueprint.route("/")
+@blueprint.route("/list")
 def list_():
     """
     This an API endpoint to list all sessions.
