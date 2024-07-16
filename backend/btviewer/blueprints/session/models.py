@@ -9,6 +9,7 @@ from btviewer.mixins import StructureMixin
 
 app = flask.current_app
 
+#Declare a generic type variable
 Session = TypeVar('Session')
 
 
