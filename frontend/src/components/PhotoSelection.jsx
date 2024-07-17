@@ -110,7 +110,7 @@ function PhotoSelection({ photoFilenames, subdirectory }) {
 
   return (
     <>
-      <h5>Photo</h5>
+      <label>Photo</label>
       <select name="photo" id="photo" onChange={photoFetcher}>
         <option />
         {listDisplayed}

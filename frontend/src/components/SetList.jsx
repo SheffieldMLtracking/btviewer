@@ -43,7 +43,7 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
 
   return (
     <>
-      <h5>Set</h5>
+      <label>Set</label>
       <select name="set" id="set" onChange={changeHandler}>
         <option />
         {listDisplayed}

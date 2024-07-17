@@ -34,7 +34,7 @@ function SessionList({ data }) {
 
   return (
     <>
-      <h5>Session</h5>
+      <label>Session</label>
       <select name="session" id="session" onChange={changeHandler}>
         <option />
         {listDisplayed}
