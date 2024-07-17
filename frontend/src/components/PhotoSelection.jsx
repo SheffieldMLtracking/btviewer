@@ -1,11 +1,11 @@
 import { useState } from "react";
 import Image from "./Image";
-
+import { GetCurrentSubdirectory } from "./utils";
 /*
 Display a drop-down list of photos to be shown.
 */
-function PhotoSelection({ photoFilenames }) {
-  console.log('photoSelection')
+function PhotoSelection({ photoFilenames, subdirectory }) {
+  console.log('photoFilenames')
   console.log(photoFilenames)
   const [currentPhoto, setCurrentPhoto] = useState(""); //the path of the photo
   const [photoPath, setPhotoPath] = useState(""); //the selected value from the dropdownlist
@@ -13,16 +13,25 @@ function PhotoSelection({ photoFilenames }) {
   //get the image original dimension
   const [imageDimension, setImageDimension] = useState({'width':0, 
                                                         'height':0})
-  const [nextPhoto, setNextPhoto] =useState("");
   /*
     List the photos for users to choose from
     */
-  let listDisplayed = photoFilenames.map((item) => (
+  let listDisplayed
+  if (typeof(photoFilenames)==="string"){ //when there is nth in the data, especially when the app is first booted out
+    listDisplayed=(
+      <option>
+        No item
+      </option>
+    )
+  } else if (photoFilenames.length>0){
+    const PhotoNames = photoFilenames.map(GetCurrentSubdirectory);
+
+    listDisplayed = PhotoNames.map((item) => (
     <option key={item.id} value={item}>
       {item}
     </option>
   ));
-
+  }
   /*
     When the user selects a photo, retrieve it to send to image component
     The photoFetcher send 3 things:
@@ -32,17 +41,17 @@ function PhotoSelection({ photoFilenames }) {
     */
   function photoFetcher(e) {
     let selectedPhoto = e.target.value;
-    setPhotoPath(selectedPhoto);
-    console.log('selectedPhoto')
-    console.log(selectedPhoto)
-
+    const subdirectoryJoined = `${subdirectory}/${selectedPhoto}`
+    setPhotoPath(subdirectoryJoined);
+    console.log('subdirectoryJoined')
+    console.log(subdirectoryJoined)
     //SC:Did we fetch photo, it does not seems so, and I only submit the image source to the image.jsx
-    let urlJpeg = "/api/photos/" + selectedPhoto.replace("np", "jpeg");
+    let urlJpeg = "/api/photos/" + subdirectoryJoined.replace("np", "jpeg");
     setCurrentPhoto(urlJpeg);
     console.log('urlJpeg' + urlJpeg);
 
     //Get photo dimension
-    let urlDimension = "/api/photos/dimension?path=" + selectedPhoto;
+    let urlDimension = "/api/photos/dimension?path=" + subdirectoryJoined;
     fetch(urlDimension)
       .then((response) => response.json())
       .then((data)=>{
@@ -54,7 +63,7 @@ function PhotoSelection({ photoFilenames }) {
       })
 
     // Get the json for the human/retrodetect label coordinates if it exists
-    let urlLabel = "/api/labels/detail?path=" + selectedPhoto;
+    let urlLabel = "/api/labels/detail?path=" + subdirectoryJoined;
     console.log("urlLabel");
     console.log(urlLabel);
     fetch(urlLabel)
@@ -101,6 +110,7 @@ function PhotoSelection({ photoFilenames }) {
 
   return (
     <>
+      <h5>Photo</h5>
       <select name="photo" id="photo" onChange={photoFetcher}>
         <option />
         {listDisplayed}

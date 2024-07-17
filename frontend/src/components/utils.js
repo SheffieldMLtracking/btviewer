@@ -99,3 +99,10 @@ export function SaveAnnotation(photoPath, annotation, coordinateX, coordinateY){
       console.log(err.response.data);
     });
 }
+
+export function GetCurrentSubdirectory(filename){
+  const parts = filename.split('/');
+  // Assuming the name required is always the last part (adjust if needed)
+  return parts[parts.length - 1];
+
+}
