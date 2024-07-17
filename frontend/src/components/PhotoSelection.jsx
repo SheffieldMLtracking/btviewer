@@ -33,6 +33,8 @@ function PhotoSelection({ photoFilenames }) {
   function photoFetcher(e) {
     let selectedPhoto = e.target.value;
     setPhotoPath(selectedPhoto);
+    console.log('selectedPhoto')
+    console.log(selectedPhoto)
 
     //SC:Did we fetch photo, it does not seems so, and I only submit the image source to the image.jsx
     let urlJpeg = "/api/photos/" + selectedPhoto.replace("np", "jpeg");
