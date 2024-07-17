@@ -46,7 +46,7 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
         <option />
         {listDisplayed}
       </select>
-      <p>{currentPhoto}</p>
+      {/* <p>{currentPhoto}</p> */}
       <p>{selectedSubdirectory}</p>
 
     </>
