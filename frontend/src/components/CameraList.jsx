@@ -50,8 +50,8 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
         {listDisplayed}
       </select>
 
-      <PhotoList data={currentCamera} subdirectory={selectedSubdirectory}/>
-
+      {/* <PhotoList data={currentCamera} subdirectory={selectedSubdirectory}/> */}
+      <PhotoSelection photoFilenames={currentCamera} subdirectory={selectedSubdirectory}/>
     </>
   );
 }

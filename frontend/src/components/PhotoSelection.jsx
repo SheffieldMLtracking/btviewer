@@ -1,10 +1,10 @@
 import { useState } from "react";
 import Image from "./Image";
-
+import { GetCurrentSubdirectory } from "./utils";
 /*
 Display a drop-down list of photos to be shown.
 */
-function PhotoSelection({ photoFilenames }) {
+function PhotoSelection({ photoFilenames, subdirectory }) {
   console.log('photoFilenames')
   console.log(photoFilenames)
   const [currentPhoto, setCurrentPhoto] = useState(""); //the path of the photo
@@ -25,7 +25,9 @@ function PhotoSelection({ photoFilenames }) {
       </option>
     )
   } else if (photoFilenames.length>0){
-    listDisplayed = photoFilenames.map((item) => (
+    const PhotoNames = photoFilenames.map(GetCurrentSubdirectory);
+
+    listDisplayed = PhotoNames.map((item) => (
     <option key={item.id} value={item}>
       {item}
     </option>
@@ -40,8 +42,10 @@ function PhotoSelection({ photoFilenames }) {
     */
   function photoFetcher(e) {
     let selectedPhoto = e.target.value;
-    setPhotoPath(selectedPhoto);
-
+    const subdirectoryJoined = `${subdirectory}/${selectedPhoto}`
+    setPhotoPath(subdirectoryJoined);
+    console.log('subdirectoryJoined')
+    console.log(subdirectoryJoined)
     //SC:Did we fetch photo, it does not seems so, and I only submit the image source to the image.jsx
     let urlJpeg = "/api/photos/" + selectedPhoto.replace("np", "jpeg");
     setCurrentPhoto(urlJpeg);
@@ -107,6 +111,7 @@ function PhotoSelection({ photoFilenames }) {
 
   return (
     <>
+      <h5>Photo</h5>
       <select name="photo" id="photo" onChange={photoFetcher}>
         <option />
         {listDisplayed}
