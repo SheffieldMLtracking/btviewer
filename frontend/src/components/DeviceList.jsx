@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { GetCurrentSubdirectory } from "./utils";
-import DeviceList from "./DeviceList";
+import CameraList from "./CameraList";
 /*
 Display a drop-down list of sessions for navigation.
 */
-function SetList({ data, subdirectory }) {
-  let [currentSet, setCurrentSet] = useState("");
+function DeviceList({ data, subdirectory }) {
+  let [currentDevice, setCurrentDevice] = useState("");
   let [selectedSubdirectory, setSelectedSubdirectory] = useState("")
   let listDisplayed
 
@@ -16,9 +16,9 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
       </option>
     )
 } else if (data.length>0){
-  const setNames = data.map(GetCurrentSubdirectory);
+  const DeviceNames = data.map(GetCurrentSubdirectory);
 
-  listDisplayed = setNames.map((item) => (
+  listDisplayed = DeviceNames.map((item) => (
     <option key={item.id} value={item}>
       {item}
     </option>
@@ -28,30 +28,30 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
 //     When the user selects a session, save it.
 //     */
   function changeHandler(e) {
-    let selectedSet = e.target.value;
-    console.log(selectedSet)
+    let selectedDevice = e.target.value;
+    console.log(selectedDevice)
     // Update the list of photo filenames available in that session
-    let url = `/api/sessions/${subdirectory}/${selectedSet}`;
+    let url = `/api/sessions/${subdirectory}/${selectedDevice}`;
     console.log(url)
     fetch(url)
       .then((response) => response.json())
-      .then((data) => setCurrentSet(data));
+      .then((data) => setCurrentDevice(data));
     console.log(data)
-    const subdirectoryJoined = `${subdirectory}/${selectedSet}`
+    const subdirectoryJoined = `${subdirectory}/${selectedDevice}`
     setSelectedSubdirectory(subdirectoryJoined)
   }
 
   return (
     <>
-      <h5>Set</h5>
-      <select name="set" id="set" onChange={changeHandler}>
+      <h5>Device</h5>
+      <select name="device" id="device" onChange={changeHandler}>
         <option />
         {listDisplayed}
       </select>
-  
-      <DeviceList data={currentSet} subdirectory={selectedSubdirectory}/>
+      <CameraList data={currentDevice} subdirectory={selectedSubdirectory}/>
+
     </>
   );
 }
 
-export default SetList;
+export default DeviceList;
