@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import ShowList from "./ShowList";
-import DummyList from "./DummyList";
+import SessionList from "./SessionList";
 /*
 The list of bee tracking photo data capture sessions.
 */
@@ -30,7 +29,7 @@ function Sessions() {
   return (
     <>
       {/* <ShowList data={sessions} /> */}
-      <DummyList data={sessions} />
+      <SessionList data={sessions} />
     </>
   );
 }

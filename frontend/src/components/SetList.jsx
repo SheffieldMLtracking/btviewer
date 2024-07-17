@@ -4,6 +4,8 @@ import { GetCurrentSubdirectory } from "./utils";
 Display a drop-down list of sessions for navigation.
 */
 function SetList({ data, subdirectory }) {
+  let [currentSet, setCurrentSet] = useState("");
+  let [selectedSubdirectory, setSelectedSubdirectory] = useState("")
   let listDisplayed
 
 if (typeof(data)==="string"){ //when there is nth in the data, especially when the app is first booted out
@@ -26,21 +28,27 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
 //     */
   function changeHandler(e) {
     let selectedSet = e.target.value;
-   
-//     // Update the list of photo filenames available in that session
-//     let url = `/api/sessions/sets/${selectedSet}`;
-//     fetch(url)
-//       .then((response) => response.json())
-//       .then((data) => setCurrentSet(data));
+    console.log(selectedSet)
+    // Update the list of photo filenames available in that session
+    let url = `/api/sessions/${subdirectory}/${selectedSet}`;
+    console.log(url)
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => setCurrentSet(data));
+    console.log(data)
+    const subdirectoryJoined = `${subdirectory}/${selectedSet}`
+    setSelectedSubdirectory(subdirectoryJoined)
   }
 
   return (
     <>
       <h1>Set</h1>
-      <select name="session" id="session" onChange={changeHandler}>
+      <select name="set" id="set" onChange={changeHandler}>
         <option />
         {listDisplayed}
       </select>
+      <p>{currentSet}</p>
+      <p>{selectedSubdirectory}</p>
     </>
   );
 }

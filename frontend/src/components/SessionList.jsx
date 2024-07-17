@@ -4,10 +4,10 @@ import SetList from "./SetList";
 /*
 Display a drop-down list of sessions for navigation.
 */
-function DummyList({ data }) {
+function SessionList({ data }) {
   // Store the selected session name
   let [currentSession, setCurrentSession] = useState("");
-  let [selectedSession, setSelectedSession] = useState("")
+  let [selectedSubdirectory, setSelectedSubdirectory] = useState("")
   console.log('dummy')
   console.log(data)
   console.log(typeof(data))
@@ -23,7 +23,7 @@ function DummyList({ data }) {
     */
   function changeHandler(e) {
     let selected = e.target.value;
-    setSelectedSession(selected)
+    setSelectedSubdirectory(selected)
    
     // Update the list of photo filenames available in that session
     let url = `/api/sessions/${selected}`;
@@ -39,11 +39,9 @@ function DummyList({ data }) {
         <option />
         {listDisplayed}
       </select>
-      <p>{selectedSession}</p>
-      <p>{currentSession}</p>
-      <SetList data={currentSession} subdirectory={selectedSession}/>
+      <SetList data={currentSession} subdirectory={selectedSubdirectory}/>
     </>
   );
 }
 
-export default DummyList;
+export default SessionList;
