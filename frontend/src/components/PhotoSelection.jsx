@@ -13,7 +13,6 @@ function PhotoSelection({ photoFilenames, subdirectory }) {
   //get the image original dimension
   const [imageDimension, setImageDimension] = useState({'width':0, 
                                                         'height':0})
-  const [nextPhoto, setNextPhoto] =useState("");
   /*
     List the photos for users to choose from
     */

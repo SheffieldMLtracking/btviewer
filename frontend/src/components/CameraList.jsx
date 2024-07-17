@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { GetCurrentSubdirectory } from "./utils";
-import PhotoList from "./PhotoList";
 import PhotoSelection from "./PhotoSelection";
 
 /*
@@ -49,8 +48,6 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
         <option />
         {listDisplayed}
       </select>
-
-      {/* <PhotoList data={currentCamera} subdirectory={selectedSubdirectory}/> */}
       <PhotoSelection photoFilenames={currentCamera} subdirectory={selectedSubdirectory}/>
     </>
   );

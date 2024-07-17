@@ -48,7 +48,6 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
         <option />
         {listDisplayed}
       </select>
-  
       <DeviceList data={currentSet} subdirectory={selectedSubdirectory}/>
     </>
   );
