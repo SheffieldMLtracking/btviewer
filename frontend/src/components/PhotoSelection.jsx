@@ -47,12 +47,12 @@ function PhotoSelection({ photoFilenames, subdirectory }) {
     console.log('subdirectoryJoined')
     console.log(subdirectoryJoined)
     //SC:Did we fetch photo, it does not seems so, and I only submit the image source to the image.jsx
-    let urlJpeg = "/api/photos/" + selectedPhoto.replace("np", "jpeg");
+    let urlJpeg = "/api/photos/" + subdirectoryJoined.replace("np", "jpeg");
     setCurrentPhoto(urlJpeg);
     console.log('urlJpeg' + urlJpeg);
 
     //Get photo dimension
-    let urlDimension = "/api/photos/dimension?path=" + selectedPhoto;
+    let urlDimension = "/api/photos/dimension?path=" + subdirectoryJoined;
     fetch(urlDimension)
       .then((response) => response.json())
       .then((data)=>{
@@ -64,7 +64,7 @@ function PhotoSelection({ photoFilenames, subdirectory }) {
       })
 
     // Get the json for the human/retrodetect label coordinates if it exists
-    let urlLabel = "/api/labels/detail?path=" + selectedPhoto;
+    let urlLabel = "/api/labels/detail?path=" + subdirectoryJoined;
     console.log("urlLabel");
     console.log(urlLabel);
     fetch(urlLabel)
