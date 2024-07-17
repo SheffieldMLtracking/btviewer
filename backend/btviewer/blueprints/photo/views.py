@@ -30,8 +30,9 @@ def image_png(path: str):
     # Return the image as a PNG file
     return flask.send_file(photo.to_png(), mimetype='image/png', as_attachment=False)
 
+
 @blueprint.route('/dimension', methods=['GET'])
-def image_dimension(): #to get the width and height of the image for initialisation of imageSize in the Image.jsx
+def image_dimension():  # to get the width and height of the image for initialisation of imageSize in the Image.jsx
     photo_path = flask.request.args['path']
     photo = Photo(photo_path)
     return flask.jsonify(photo.dimension)
@@ -77,6 +78,7 @@ def next_():
     filename = os.path.split(next_photo_path)[1]
     dir_num = (len(os.path.split(next_photo_path)[0].split(os.sep)))
     starting_dir = int(dir_num - 4)
-    file_path = os.path.split(next_photo_path)[0].split(os.sep)[starting_dir:dir_num]  #to get rid of local C:\Users\cs1sch\PycharmProjects\btviewer\backend\tests\data\
+    file_path = os.path.split(next_photo_path)[0].split(os.sep)[
+                starting_dir:dir_num]  # to get rid of local C:\Users\cs1sch\PycharmProjects\btviewer\backend\tests\data\
     next_photo = os.path.join(*file_path, filename)
     return flask.jsonify(str(next_photo))

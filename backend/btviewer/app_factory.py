@@ -3,21 +3,23 @@ Flask application factory
 """
 import os
 from pathlib import Path
+from typing import Union
 
 import flask
 
 
-def create_app(root_directory: Path = None, **kwargs) -> flask.Flask:
+def create_app(root_directory: Union[Path, str] = None, **kwargs) -> flask.Flask:
     """
     Build the Flask app instance
 
     This function is a Flask application factory
     https://flask.palletsprojects.com/en/3.0.x/patterns/appfactories/
 
+    :param root_directory: The base directory for image capture session data.
     :param kwargs: keyword arguments for the Flask app
     """
     app = flask.Flask(__name__, **kwargs)
-    root_directory = Path(root_directory or os.getenv('ROOT_DIRECTORY'))
+    root_directory = Path(root_directory or os.getenv('ROOT_DIRECTORY', '.')).absolute()
     app.config.update(dict(
         ROOT_DIRECTORY=str(root_directory),
     ))

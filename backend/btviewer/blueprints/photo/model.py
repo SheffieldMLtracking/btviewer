@@ -11,6 +11,9 @@ import numpy
 
 app: flask.Flask = flask.current_app
 
+Coordinate = tuple[int, int]
+"x, y position in a 2D image pixel grid"
+
 
 class Photo:
     """
@@ -20,7 +23,7 @@ class Photo:
     def __init__(self, path: Union[Path, str]):
         self.path = Path(app.config['ROOT_DIRECTORY']).joinpath(path).absolute()
 
-    @classmethod #not used, to be deleted
+    @classmethod  # not used, to be deleted
     def validate_filename(cls, filename: str):
         """
         Validate a filename <timestamp>_<photo_id>.np
@@ -35,7 +38,7 @@ class Photo:
         photo_id = int(photo_id)
         cls.parse_timestamp(timestamp)
 
-    @classmethod #only used in validate_filename, to be deleted.
+    @classmethod  # only used in validate_filename, to be deleted.
     def parse_timestamp(cls, timestamp: str) -> datetime.datetime:
         """
         Parse the `timestamp` part of a photo filename.
@@ -48,11 +51,11 @@ class Photo:
         dt.replace(tzinfo=datetime.timezone.utc)
         return dt
 
-    @property #not used
+    @property  # not used
     def timestamp_string(self) -> str:
         raise NotImplementedError
 
-    @property #not used
+    @property  # not used
     def filename(self) -> str:
         return f"{self.timestamp_string}_{self.photo_id}.np"
 
@@ -70,7 +73,7 @@ class Photo:
         app.logger.info("Loaded '%s'", self.path)
         return data
 
-    def add_label(self, label: dict, **kwargs): #Not used
+    def add_label(self, label: dict, **kwargs):  # Not used
         """
         Add a label to the image.
 
@@ -93,7 +96,6 @@ class Photo:
         except FileNotFoundError:
             pass
 
-
         # Append the metadata to each new label
         metadata = {
             "source": source,
@@ -103,7 +105,7 @@ class Photo:
         }
         for label in labels:
             label.update(metadata)
-        
+
         # Include the newly-added labels
         document.extend(labels)
 
@@ -131,7 +133,7 @@ class Photo:
         # ~/photos/2020-01-01T09+40+43_00123.np
         # the label directory for btviewer is
         # ~/photos/btviewer/2020-01-01T09+40+43_00123.json
-        
+
         # Make a subdirectory for this source
         label_dir = self.path.parent.joinpath(source)
         label_dir.mkdir(exist_ok=True)
@@ -156,7 +158,7 @@ class Photo:
         image = self.data['img']
         width = len(image[0])
         height = len(image)
-        return {'width': width, 'height':height}
+        return {'width': width, 'height': height}
 
     def to_tiff(self):
         """
@@ -191,7 +193,7 @@ class Photo:
         """
         # Set data type for array values
         dtype = numpy.dtype(dtype)
-        maximum_value = numpy.iinfo(dtype).max #machine limits for integer type
+        maximum_value = numpy.iinfo(dtype).max  # machine limits for integer type
 
         # Load image data
         array: numpy.ndarray = self.data['img']
@@ -231,8 +233,6 @@ class Photo:
         """
         return self.to_bytes(format='PNG')
 
-
-
     def iter_labels(self) -> Generator[Mapping, None, None]:
         """
         Iterate over label documents for this image.
@@ -242,14 +242,14 @@ class Photo:
         for path in self.path.parent.iterdir():
             # Subdirectories only, for example btviewer folder and retrodetect
             if path.is_dir():
-                label_path = path.joinpath(self.label_filename) #btviewer/photofilename.json
+                label_path = path.joinpath(self.label_filename)  # btviewer/photofilename.json
                 try:
                     # Load JSON data
                     with label_path.open() as file:
                         doc = json.load(file)
                         app.logger.info("Loaded '%s'", file.name)
                     # Get list of tags
-                    yield from doc #https://www.geeksforgeeks.org/use-yield-keyword-instead-return-keyword-python/
+                    yield from doc  # https://www.geeksforgeeks.org/use-yield-keyword-instead-return-keyword-python/
                 except FileNotFoundError:
                     continue
 
@@ -300,19 +300,19 @@ class Photo:
 
             label_path.unlink(missing_ok=True)
             app.logger.info("Deleted '%s'", label_path)
-     
+
         # Delete a specific label
         else:
-             with label_path.open() as file:
-                 labels = json.load(file)
+            with label_path.open() as file:
+                labels = json.load(file)
 
-        # Exclude the coordinates to be deleted
-             labels = [label for label in labels if int(label['x']) != int(x) and int(label['y']) != int(y)]
+            # Exclude the coordinates to be deleted
+            labels = [label for label in labels if int(label['x']) != int(x) and int(label['y']) != int(y)]
 
-        # Save changes to disk
-             with label_path.open('w') as file:
-                 json.dump(labels, file, indent=indent)
-                 app.logger.info("Deleted label at %s, %s from '%s'", x, y, file.name)
+            # Save changes to disk
+            with label_path.open('w') as file:
+                json.dump(labels, file, indent=indent)
+                app.logger.info("Deleted label at %s, %s from '%s'", x, y, file.name)
 
     def annotate_labels(self, source: str, annotation_text: str, x: int, y: int, indent: int = 2, ):
         """
@@ -327,7 +327,7 @@ class Photo:
         # Get the label file
         label_path = self.make_label_path(source=source)
         with label_path.open() as file:
-             labels = json.load(file)
+            labels = json.load(file)
 
         # find the label corresponding to the clicked point to add the annotation
         # Note it will replace existing annotation
@@ -335,8 +335,55 @@ class Photo:
             if int(label['x']) == int(x) and int(label['y']) == int(y):
                 label.update({"annotation": annotation_text})
 
-        
         # Save changes to disk
         with label_path.open('w') as file:
-                 json.dump(labels, file, indent=indent)
-                 app.logger.info("annotate label at %s, %s from '%s'", x, y, file.name)
+            json.dump(labels, file, indent=indent)
+            app.logger.info("annotate label at %s, %s from '%s'", x, y, file.name)
+
+    def select_region_of_interest(self, box: tuple[Coordinate, Coordinate]) -> numpy.ndarray:
+        """
+        Select an area within the 2D pixel array of the photo image.
+
+        :param box: The coordinates of the top-left and bottom-right pixel of the selected 2D region of interest.
+
+        top_left, ...
+        ..., bottom_right
+        """
+
+        # Load the image data
+        array = self.array
+
+        # Get the two corner coordinates
+        top_left, bottom_right = box
+
+        # Get the pixel values inside the bounding box only
+        region_of_interest = array[top_left[0]: bottom_right[0], top_left[1]: bottom_right[1]]
+
+        return region_of_interest
+
+    def find_brightest_pixel(self, box: tuple[Coordinate, Coordinate] = None) -> Coordinate:
+        """
+        Get the coordinate of the brightest pixel in the specified bounding area.
+
+        :param box: The coordinates of the top-left and bottom-right pixel of the selected 2D region of interest.
+        """
+
+        # Default to entire image
+        if box is None:
+            box = ((0, 0), array.shape)
+
+        region_of_interest = self.select_region_of_interest(box=box)
+
+        # Get the position of the  brightest pixel (using a flat index)
+        flat_max_index = numpy.argmax(region_of_interest)
+
+        # Get the relative coordinates of that brightest pixel (inside the ROI)
+        x, y = numpy.unravel_index(flat_max_index, region_of_interest.shape)
+
+        # Get the absolute coordinates (relative to the entire image)
+        top_left_coordinate = box[0]
+        x += top_left_coordinate[0]
+        y += top_left_coordinate[1]
+
+        # Cast from numpy.int64 to integer
+        return int(x), int(y)
