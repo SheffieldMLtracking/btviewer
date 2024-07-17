@@ -17,12 +17,20 @@ function PhotoSelection({ photoFilenames }) {
   /*
     List the photos for users to choose from
     */
-  let listDisplayed = photoFilenames.map((item) => (
+  let listDisplayed
+  if (typeof(photoFilenames)==="string"){ //when there is nth in the data, especially when the app is first booted out
+    listDisplayed=(
+      <option>
+        No item
+      </option>
+    )
+  } else if (photoFilenames.length>0){
+    listDisplayed = photoFilenames.map((item) => (
     <option key={item.id} value={item}>
       {item}
     </option>
   ));
-
+  }
   /*
     When the user selects a photo, retrieve it to send to image component
     The photoFetcher send 3 things:

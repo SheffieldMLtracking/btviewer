@@ -4,6 +4,8 @@ import { GetCurrentSubdirectory } from "./utils";
 Display a drop-down list of sessions for navigation.
 */
 function PhotoList({ data, subdirectory }) {
+  console.log('in photo list')
+  console.log(data)
   let [currentPhoto, setCurrentPhoto] = useState("");
   let [selectedSubdirectory, setSelectedSubdirectory] = useState("")
   let listDisplayed

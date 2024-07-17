@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { GetCurrentSubdirectory } from "./utils";
 import PhotoList from "./PhotoList";
+import PhotoSelection from "./PhotoSelection";
+
 /*
 Display a drop-down list of sessions for navigation.
 */
@@ -47,7 +49,6 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
         <option />
         {listDisplayed}
       </select>
-      <p>camera {selectedSubdirectory}</p>
 
       <PhotoList data={currentCamera} subdirectory={selectedSubdirectory}/>
 
