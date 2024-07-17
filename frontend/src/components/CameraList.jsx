@@ -47,6 +47,7 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
         <option />
         {listDisplayed}
       </select>
+      <p>camera {selectedSubdirectory}</p>
 
       <PhotoList data={currentCamera} subdirectory={selectedSubdirectory}/>
 

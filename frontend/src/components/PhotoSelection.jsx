@@ -5,6 +5,8 @@ import Image from "./Image";
 Display a drop-down list of photos to be shown.
 */
 function PhotoSelection({ photoFilenames }) {
+  console.log('photoFilenames')
+  console.log(photoFilenames)
   const [currentPhoto, setCurrentPhoto] = useState(""); //the path of the photo
   const [photoPath, setPhotoPath] = useState(""); //the selected value from the dropdownlist
   const [label, setLabel] = useState([]);
