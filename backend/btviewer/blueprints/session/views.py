@@ -9,46 +9,9 @@ app: flask.Flask = flask.current_app
 blueprint = flask.Blueprint('session', __name__, url_prefix='/sessions')
 
 
-@blueprint.route('/_all_cameras')
-def list_all_cameras():
-    """
-    DEVELOPMENT ONLY - THIS WILL BE REMOVED
-
-    List all data subdirectories
-    """
-
-    root_directory = Path(app.config['ROOT_DIRECTORY'])
-    # Get camera data subdirectories (nested four deep)
-    camera_directories = (path for path in root_directory.glob("*/*/*/*") if path.is_dir())
-    # Convert paths to strings
-    camera_directories = tuple(str(path.relative_to(root_directory).as_posix()) for path in camera_directories)
-    return flask.jsonify(camera_directories)
-
-
-@blueprint.route("/list")
-def list_():
-    """
-    This an API endpoint to list all sessions.
-    It lists all available session folders in the root directory.
-
-    btviewer ~/my_data/<session>
-    where the root directory is ~/my_data/
-
-    :returns: JSON list of session identifiers
-    [
-        "my_session_1",
-        "my_session_2",
-        "my_session_3"
-    ]
-    """
-    sessions = tuple((str(session) for session in Session.iter_sessions()))
-
-    # Return JSON response to browser
-    return flask.jsonify(sessions)
-
-
+@blueprint.route("/")
 @blueprint.route("/<path:relative_path>")
-def list_path(relative_path: str):
+def list_(relative_path: str = None):
     """
     List directory contents of _any_ data subdirectory
 
@@ -65,7 +28,7 @@ def list_path(relative_path: str):
 
     # Get the specified directory
     root_directory = Session.root_directory()
-    relative_path = Path(relative_path)
+    relative_path = Path(relative_path or '')
     path: Path = root_directory.joinpath(relative_path)
 
     # Are we in a camera directory that contains photos?
