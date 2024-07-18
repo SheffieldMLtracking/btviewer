@@ -9,9 +9,10 @@ from pathlib import Path
 import btviewer.app_factory
 import waitress
 
-DESCRIPTION = "This is a browser-based app for viewing and human labelling of tracking images."
-
-USAGE = "btviewer ~/my_data/"
+DESCRIPTION = """
+This is a browser-based app for viewing and human labelling of tracking images.
+Example usage: btviewer ~/path/to/data/
+"""
 
 
 def get_args() -> argparse.Namespace:
@@ -19,7 +20,7 @@ def get_args() -> argparse.Namespace:
     Configure command-line arguments.
     """
 
-    parser = argparse.ArgumentParser(description=DESCRIPTION, usage=USAGE)
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
 
     # Actions
     # https://docs.python.org/dev/library/argparse.html#action
