@@ -49,7 +49,7 @@ def main():
 
     # Get URI of backend
     uri = f"http://{args.host}:{args.port}"
-    logging.info(f'Running backend with {args.threads}')
+    logging.info(f'Running backend with {args.threads} threads')
 
     # Open frontend in web browser
     static_uri = uri + '/static/index.html'
