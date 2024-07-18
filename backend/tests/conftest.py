@@ -13,7 +13,7 @@ ROOT_DIRECTORY = Path(__file__).parent.joinpath('data').absolute()
 "Test sample data directory"
 
 
-@pytest.fixture()
+@pytest.fixture
 def app():
     app = btviewer.app_factory.create_app(root_directory=ROOT_DIRECTORY)
     app.config.update({
@@ -25,11 +25,17 @@ def app():
     yield app
 
 
-@pytest.fixture()
+@pytest.fixture
 def client(app):
     return app.test_client()
 
 
-@pytest.fixture()
+@pytest.fixture
 def runner(app):
     return app.test_cli_runner()
+
+
+@pytest.fixture
+def app_context(app):
+    with app.app_context() as app_context:
+        yield app_context

@@ -23,8 +23,7 @@ def detail():
       {"confidence": "Unsure", "x": 456, "y": 789}
     ]
     """
-    photo_path = flask.request.args["path"]
-    photo = Photo(photo_path)
+    photo = Photo(flask.request.args["path"])
     return flask.jsonify(photo.labels)
 
 
@@ -71,51 +70,54 @@ def create():
     return flask.jsonify(dict(label_path=str(label_path))), HTTPStatus.CREATED
 
 
-@blueprint.route("/delete", methods=["DELETE"]) # we have to use DELETE method rather than POST
+@blueprint.route("/delete", methods=["DELETE"])
 def delete():
     """
     Delete all the labels on a photo by deleting the file
     """
-    # Load the selected image
 
+    # Load the selected image
     photo_path = flask.request.args["path"]
     photo = Photo(photo_path)
+
+    # Delete all photos from this course
     source = flask.request.args["source"]
     photo.delete_labels(source)
 
-    return flask.jsonify('successfully deleted'), HTTPStatus.OK
+    return HTTPStatus.NO_CONTENT
 
 
-@blueprint.route("/modify", methods=["POST"]) #the modify route is for deleting single label as the methods used is post, not delete compared to the delete all.
+# the modify route is for deleting single label as the methods used is post, not delete compared to the delete all.
+@blueprint.route("/modify", methods=["POST"])
 def modify():
     """
     Delete single label on a photo
-    """ 
-    # Load the selected image
+    """
 
-    photo_path = flask.request.args["path"]
-    photo = Photo(photo_path)
+    # Load the selected image
+    photo = Photo(flask.request.args["path"])
     source = flask.request.args["source"]
-    x = flask.request.args["x"]
-    y = flask.request.args["y"]
+    x = int(flask.request.args["x"])
+    y = int(flask.request.args["y"])
 
     photo.delete_labels(source, x, y)
-    return flask.jsonify('successfully deleted'), HTTPStatus.OK
+
+    return HTTPStatus.NO_CONTENT
 
 
-@blueprint.route("/annotate", methods=["POST"]) #the annotate route is for annotate existing single label
+@blueprint.route("/annotate", methods=["POST"])  # the annotate route is for annotate existing single label
 def annotate():
     """
     annotate an existing label on a photo
-    """ 
-    # Load the selected image
+    """
 
-    photo_path = flask.request.args["path"]
-    photo = Photo(photo_path)
+    # Load the selected image
+    photo = Photo(flask.request.args["path"])
     source = flask.request.args["source"]
-    x = flask.request.args["x"]
-    y = flask.request.args["y"]
+    x = int(flask.request.args["x"])
+    y = int(flask.request.args["y"])
     annotation = flask.request.args["annotation"]
 
-    photo.annotate_labels(source, annotation, x, y )
-    return flask.jsonify('successfully annotation'), HTTPStatus.OK
+    photo.annotate_labels(source, annotation, x, y)
+
+    return HTTPStatus.NO_CONTENT

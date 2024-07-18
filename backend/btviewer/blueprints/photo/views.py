@@ -30,8 +30,9 @@ def image_png(path: str):
     # Return the image as a PNG file
     return flask.send_file(photo.to_png(), mimetype='image/png', as_attachment=False)
 
+
 @blueprint.route('/dimension', methods=['GET'])
-def image_dimension(): #to get the width and height of the image for initialisation of imageSize in the Image.jsx
+def image_dimension():  # to get the width and height of the image for initialisation of imageSize in the Image.jsx
     photo_path = flask.request.args['path']
     photo = Photo(photo_path)
     return flask.jsonify(photo.dimension)
