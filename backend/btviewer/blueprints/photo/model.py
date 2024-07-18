@@ -364,16 +364,12 @@ class Photo:
 
         return region_of_interest
 
-    def find_brightest_pixel(self, box: tuple[Coordinate, Coordinate] = None) -> Coordinate:
+    def find_brightest_pixel(self, box: tuple[Coordinate, Coordinate]) -> Coordinate:
         """
         Get the coordinate of the brightest pixel in the specified bounding area.
 
         :param box: The coordinates of the top-left and bottom-right pixel of the selected 2D region of interest.
         """
-
-        # Default to entire image
-        if box is None:
-            box = ((0, 0), array.shape)
 
         region_of_interest = self.select_region_of_interest(box=box)
 
