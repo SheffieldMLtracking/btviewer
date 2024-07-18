@@ -5,7 +5,7 @@ The list of bee tracking photo data capture sessions.
 */
 function Sessions() {
   // TODO use global variable for backend URL
-  const url = "/api/sessions/list";
+  const url = "/api/sessions";
 
   // Define the list of sessions
   const [sessions, setSessions] = useState([]);
