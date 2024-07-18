@@ -9,7 +9,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "btviewer"
-version = "0.0.1rc8"
+version = "0.0.1rc9"
 dependencies = [
     "flask==3.*",
     "waitress==3.*",
@@ -44,7 +44,7 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://pypi.org/project/btbiewer"
+Homepage = "https://pypi.org/project/btviewer"
 Bug_Tracker = "https://github.com/SheffieldMLtracking/btviewer/issues"
 Documentation = "https://github.com/SheffieldMLtracking/btviewer/blob/main/README.md"
 Repository = "https://github.com/SheffieldMLtracking/btviewer"
