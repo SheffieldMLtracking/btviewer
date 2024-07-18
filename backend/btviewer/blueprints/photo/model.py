@@ -1,7 +1,6 @@
 import datetime
 import io
 import json
-import tempfile
 from pathlib import Path
 from typing import Iterable, Mapping, Union, Generator
 
@@ -55,7 +54,7 @@ class Photo:
     def root_directory(cls) -> Path:
         return Path(app.config['ROOT_DIRECTORY']).absolute()
 
-    @property #not used
+    @property  # not used
     def timestamp_string(self) -> str:
         raise NotImplementedError
 
