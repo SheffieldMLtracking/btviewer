@@ -120,4 +120,4 @@ def annotate():
 
     photo.annotate_labels(source, annotation, x, y)
 
-    return '', HTTPStatus.NO_CONTENT
+    return '',HTTPStatus.NO_CONTENT
