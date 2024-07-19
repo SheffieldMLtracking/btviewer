@@ -10,7 +10,7 @@ blueprint = flask.Blueprint('session', __name__, url_prefix='/sessions')
 
 @blueprint.route("/list/")
 @blueprint.route("/list/<path:relative_path>")
-def list_():
+def list_(relative_path: str = None):
     """
     List directory contents of _any_ data subdirectory
 
