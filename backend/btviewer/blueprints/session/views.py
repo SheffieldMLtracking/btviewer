@@ -9,9 +9,8 @@ app: flask.Flask = flask.current_app
 blueprint = flask.Blueprint('session', __name__, url_prefix='/sessions')
 
 
-@blueprint.route("/")
-@blueprint.route("/<path:relative_path>")
-def list_(relative_path: str = None):
+@blueprint.route("/list/")
+def list_():
     """
     List directory contents of _any_ data subdirectory
 
@@ -25,10 +24,11 @@ def list_(relative_path: str = None):
       "2020-01-01/set_A/device_1/camera_2"
     ]
     """
+    relative_path = flask.request.args.get('path', '')
 
     # Get the specified directory
     root_directory = Session.root_directory()
-    relative_path = Path(relative_path or '')
+    relative_path = Path(relative_path)
     path: Path = root_directory.joinpath(relative_path)
 
     # Are we in a camera directory that contains photos?
