@@ -31,7 +31,9 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
     let selectedSet = e.target.value;
     console.log(selectedSet)
     // Update the list of photo filenames available in that session
-    let url = `/api/sessions/${subdirectory}/${selectedSet}`;
+    let url = `/api/sessions/list/${subdirectory}/${selectedSet}`;
+    console.log('set')
+    console.log(url)
     console.log(url)
     fetch(url)
       .then((response) => response.json())

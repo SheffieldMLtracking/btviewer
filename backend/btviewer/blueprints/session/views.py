@@ -25,11 +25,15 @@ def list_():
     ]
     """
     relative_path = flask.request.args.get('path', '')
+    print('relative_path')
+    print(relative_path)
 
     # Get the specified directory
     root_directory = Session.root_directory()
     relative_path = Path(relative_path)
     path: Path = root_directory.joinpath(relative_path)
+
+
 
     # Are we in a camera directory that contains photos?
     # (i.e. Are we at least four subdirectories deep in the file structure?)
@@ -42,4 +46,6 @@ def list_():
 
     # Get the full path relative to the root directory
     full_paths = tuple(str(path.relative_to(root_directory).as_posix()) for path in paths)
+    print('full_paths')
+    print(full_paths)
     return flask.jsonify(full_paths)
