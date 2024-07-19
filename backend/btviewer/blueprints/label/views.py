@@ -84,7 +84,7 @@ def delete():
     source = flask.request.args["source"]
     photo.delete_labels(source)
 
-    return HTTPStatus.NO_CONTENT
+    return '', HTTPStatus.NO_CONTENT
 
 
 # the modify route is for deleting single label as the methods used is post, not delete compared to the delete all.
@@ -102,7 +102,7 @@ def modify():
 
     photo.delete_labels(source, x, y)
 
-    return HTTPStatus.NO_CONTENT
+    return '', HTTPStatus.NO_CONTENT
 
 
 @blueprint.route("/annotate", methods=["POST"])  # the annotate route is for annotate existing single label
@@ -120,4 +120,4 @@ def annotate():
 
     photo.annotate_labels(source, annotation, x, y)
 
-    return HTTPStatus.NO_CONTENT
+    return '',HTTPStatus.NO_CONTENT
