@@ -8,8 +8,8 @@ app: flask.Flask = flask.current_app
 
 blueprint = flask.Blueprint('session', __name__, url_prefix='/sessions')
 
-
 @blueprint.route("/list/")
+@blueprint.route("/list/<path:relative_path>")
 def list_():
     """
     List directory contents of _any_ data subdirectory
@@ -25,8 +25,7 @@ def list_():
     ]
     """
     relative_path = flask.request.args.get('path', '')
-    print('relative_path')
-    print(relative_path)
+
 
     # Get the specified directory
     root_directory = Session.root_directory()
