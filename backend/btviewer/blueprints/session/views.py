@@ -8,9 +8,9 @@ app: flask.Flask = flask.current_app
 
 blueprint = flask.Blueprint('session', __name__, url_prefix='/sessions')
 
+
 @blueprint.route("/list/")
-@blueprint.route("/list/<path:relative_path>")
-def list_(relative_path: str = None):
+def list_():
     """
     List directory contents of _any_ data subdirectory
 
@@ -18,21 +18,16 @@ def list_(relative_path: str = None):
 
     This endpoint returns a list of strings, each is the path of that directory or photo file.
 
-    Example: GET /sessions/2020-01-01/set_A/device_1
+    Example: GET /sessions/list/?path=2020-01-01/set_A/device_1
     [
       "2020-01-01/set_A/device_1/camera_1",
       "2020-01-01/set_A/device_1/camera_2"
     ]
     """
-    relative_path = flask.request.args.get('path', '')
-
-
     # Get the specified directory
+    relative_path = Path(flask.request.args.get('path', ''))
     root_directory = Session.root_directory()
-    relative_path = Path(relative_path)
     path: Path = root_directory.joinpath(relative_path)
-
-
 
     # Are we in a camera directory that contains photos?
     # (i.e. Are we at least four subdirectories deep in the file structure?)
@@ -45,6 +40,5 @@ def list_(relative_path: str = None):
 
     # Get the full path relative to the root directory
     full_paths = tuple(str(path.relative_to(root_directory).as_posix()) for path in paths)
-    print('full_paths')
-    print(full_paths)
+
     return flask.jsonify(full_paths)
