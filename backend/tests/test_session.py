@@ -5,11 +5,11 @@ import pytest
 # Test data URLs
 URLS = {
     '/sessions/list/',
-    '/sessions/list/2020-01-01/',
-    '/sessions/list/2020-01-01/set_A',
-    '/sessions/list/2020-01-01/set_A/device_1',
-    '/sessions/list/2020-01-01/set_A/device_1/camera_1',
-    '/sessions/list/2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000001.np',
+    '/sessions/list/?path=2020-01-01/',
+    '/sessions/list/?path=2020-01-01/set_A',
+    '/sessions/list/?path=2020-01-01/set_A/device_1',
+    '/sessions/list/?path=2020-01-01/set_A/device_1/camera_1',
+    '/sessions/list/?path=2020-01-01/set_A/device_1/camera_1/20200101_094359.123456_000001.np',
 }
 
 
