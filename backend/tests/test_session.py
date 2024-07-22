@@ -14,7 +14,7 @@ URLS = {
 
 
 @pytest.mark.parametrize('url', URLS)
-def test_session(client, url):
+def test_session_list(client, url):
     # Run the HTTP request
     response = client.get(url)
     assert response.status_code == HTTPStatus.OK
