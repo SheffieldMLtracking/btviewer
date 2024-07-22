@@ -9,9 +9,10 @@ from pathlib import Path
 import btviewer.app_factory
 import waitress
 
-DESCRIPTION = "This is a browser-based app for viewing and human labelling of tracking images."
-
-USAGE = "btviewer ~/my_data/"
+DESCRIPTION = """
+This is a browser-based app for viewing and human labelling of tracking images.
+Example usage: btviewer ~/path/to/data/
+"""
 
 
 def get_args() -> argparse.Namespace:
@@ -19,7 +20,7 @@ def get_args() -> argparse.Namespace:
     Configure command-line arguments.
     """
 
-    parser = argparse.ArgumentParser(description=DESCRIPTION, usage=USAGE)
+    parser = argparse.ArgumentParser(description=DESCRIPTION)
 
     # Actions
     # https://docs.python.org/dev/library/argparse.html#action
@@ -40,15 +41,16 @@ def get_args() -> argparse.Namespace:
 
 def main():
     args = get_args()
+    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
 
     # Create WSGI app
     app = btviewer.app_factory.create_app(root_directory=args.root_directory)
 
-    print("Data root directory:", app.config['ROOT_DIRECTORY'])
+    logging.info("Data root directory: %s", app.config['ROOT_DIRECTORY'])
 
     # Get URI of backend
     uri = f"http://{args.host}:{args.port}"
-    print(f'Running backend with {args.threads} threads at {uri}')
+    logging.info(f'Running backend with {args.threads} threads')
 
     # Open frontend in web browser
     static_uri = uri + '/static/index.html'
