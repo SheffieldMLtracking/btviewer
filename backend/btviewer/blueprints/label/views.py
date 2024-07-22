@@ -62,9 +62,24 @@ def create():
     source = flask.request.args["source"]
     version = flask.request.args["version"]
     labels = flask.request.json
+  
+    # create the box around the point clicked by 10 pixel
+    top_left = (labels[0]['x'] - 10, labels[0]['y']-10)
+    bottom_right = (labels[0]['x'] + 10, labels[0]['y'] + 10)
+    # put it into a tuple
+    tuple_coordinate = (top_left, bottom_right)
+    brightest_spot = photo.find_brightest_pixel(tuple_coordinate)
+
+    # create the label with the brightest spot along with the confidence label
+    brightest_label = [
+        {'x':brightest_spot[0],
+         'y':brightest_spot[1],
+         'confidence': labels[0]['confidence']
+         }]
+
 
     # Create the labels
-    label_path = photo.add_labels(labels, source=source, version=version)
+    label_path = photo.add_labels(brightest_label, source=source, version=version)
 
     # Return a success response
     return flask.jsonify(dict(label_path=str(label_path))), HTTPStatus.CREATED
