@@ -26,7 +26,7 @@ function SessionList({ data }) {
     setSelectedSubdirectory(selected)
    
     // Update the list of photo filenames available in that session
-    let url = `/api/sessions/list/${selected}`;
+    let url = `/api/sessions/list/?path=${selected}`;
     console.log('sessionslist')
     console.log(url)
     fetch(url)

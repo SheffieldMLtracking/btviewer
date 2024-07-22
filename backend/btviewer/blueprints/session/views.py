@@ -45,6 +45,5 @@ def list_(relative_path: str = None):
 
     # Get the full path relative to the root directory
     full_paths = tuple(str(path.relative_to(root_directory).as_posix()) for path in paths)
-    print('full_paths')
-    print(full_paths)
+
     return flask.jsonify(full_paths)
