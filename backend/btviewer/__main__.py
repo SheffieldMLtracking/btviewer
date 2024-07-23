@@ -6,6 +6,7 @@ import os
 import webbrowser
 from pathlib import Path
 
+import flask
 import btviewer.app_factory
 import waitress
 
@@ -55,6 +56,9 @@ def main():
     # Open frontend in web browser
     static_uri = uri + '/static/index.html'
     webbrowser.open(static_uri)
+
+    print('flask where')
+    print(flask.url_for('static', filename='index.html'))
 
     # Run web server
     # https://docs.pylonsproject.org/projects/waitress/en/latest/arguments.html
