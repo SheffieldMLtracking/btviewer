@@ -57,9 +57,6 @@ def main():
     static_uri = uri + '/static/index.html'
     webbrowser.open(static_uri)
 
-    print('flask where')
-    print(flask.url_for('static', filename='index.html'))
-
     # Run web server
     # https://docs.pylonsproject.org/projects/waitress/en/latest/arguments.html
     waitress.serve(app, host=args.host, port=args.port, threads=args.threads)
