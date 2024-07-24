@@ -47,6 +47,19 @@ flask --app backend.btviewer.app --debug run
 
 To run the frontend user interface in development mode, see the [frontend contribution guide](../frontend/CONTRIBUTING.md).
 
+## Deployment
+
+The Python package is built and published by a GitHub Actions workflow.
+
+To test the installation of the package in a separate environment, you can install it directly from GitHub using the [VCS support](https://pip.pypa.io/en/stable/topics/vcs-support/) feature of `pip install`. For example:
+
+```bash
+branch="my_name"
+pip install git+https://github.com/SheffieldMLtracking/btviewer@$branch#subdirectory=backend
+```
+
+
+
 ## Further reading
 
 - Flask [Project Layout](https://flask.palletsprojects.com/en/2.3.x/tutorial/layout/) and [tutorial example](https://github.com/pallets/flask/tree/3.0.2/examples/tutorial)

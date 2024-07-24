@@ -40,9 +40,18 @@ def get_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def configure_logging(log_level):
+    # https://flask.palletsprojects.com/en/2.3.x/logging/
+    # https://docs.pylonsproject.org/projects/waitress/en/stable/logging.html
+    logging.basicConfig(level=log_level)
+
+    for name in {'waitress', 'werkzeug'}:
+        logging.getLogger(name).setLevel(log_level)
+
+
 def main():
     args = get_args()
-    logging.basicConfig(level=logging.DEBUG if args.verbose else logging.INFO)
+    configure_logging(logging.DEBUG if args.verbose else logging.INFO)
 
     # Create WSGI app
     app = btviewer.app_factory.create_app(root_directory=args.root_directory)
@@ -55,10 +64,8 @@ def main():
 
     # Open frontend in web browser
     static_uri = uri + '/static/index.html'
+    logging.info('Front end %s', static_uri)
     webbrowser.open(static_uri)
-
-    print('flask where')
-    print(flask.url_for('static', filename='index.html'))
 
     # Run web server
     # https://docs.pylonsproject.org/projects/waitress/en/latest/arguments.html
