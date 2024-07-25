@@ -386,3 +386,25 @@ class Photo:
 
         # Cast from numpy.int64 to integer
         return int(x), int(y)
+    
+    def make_brightest_label(self, original_label: dict, box_dimension: int = 10) -> list:
+        """
+        create the label by replacing the point with the brightest pixel in the dictionary then put into a list
+        :original_label: The dictionary that contains x, y and confidence rating of the point when users click
+        :param box_dimension: The range around the point clicked to look for the brightest pixel.
+        """
+        # create the box around the point clicked by 10 pixel
+        top_left = (original_label['x'] - box_dimension, original_label['y'] - box_dimension)
+        bottom_right = (original_label['x'] + box_dimension, original_label['y'] + box_dimension)
+        # put the dimension into a tuple to be a box 
+        tuple_coordinate = (top_left, bottom_right)
+        # call the method to find the brightest spot
+        brightest_spot = self.find_brightest_pixel(tuple_coordinate)
+
+        # create the label with the brightest spot along with the original confidence label
+        brightest_label = [
+            {'x':brightest_spot[0],
+            'y':brightest_spot[1],
+            'confidence': original_label['confidence']
+             }]
+        return brightest_label
