@@ -2,7 +2,7 @@ export function SaveMarkers(point, photoPath) { //JS for  utilities functoin
     const photo_path = photoPath;
     const source = "btviewer";
     const version = "0.0.0";
-    const url = `/api/labels/create?path=${photo_path}&source=${source}&version=${version}`;
+    const url = `/labels/create?path=${photo_path}&source=${source}&version=${version}`;
     //http://localhost:5000/labels/create?path=1970-01-01/set_A/device_1234/camera_1/20200101_094359.123456_000002.np
 
     console.log('photopath' + photo_path)
@@ -23,7 +23,7 @@ export function DeleteAllMarkers(photoPath){
     const photo_path = photoPath;
     const source = "btviewer";
     const version = "0.0.0";
-    const url = `/api/labels/delete?path=${photo_path}&source=${source}&version=${version}`;
+    const url = `/labels/delete?path=${photo_path}&source=${source}&version=${version}`;
 
     fetch(url, {
       method: "delete",
@@ -63,7 +63,7 @@ export function DeleteSingleMarker(photoPath, coordinateX, coordinateY){
   const version = "0.0.0";
   const x = coordinateX;
   const y = coordinateY;
-  const url = `/api/labels/modify?path=${photo_path}&source=${source}&version=${version}&x=${x}&y=${y}`;
+  const url = `/labels/modify?path=${photo_path}&source=${source}&version=${version}&x=${x}&y=${y}`;
   console.log(url)
 
   fetch(url, {
@@ -85,7 +85,7 @@ export function SaveAnnotation(photoPath, annotation, coordinateX, coordinateY){
   const x = coordinateX;
   const y = coordinateY;
   const annotationText = annotation
-  const url = `/api/labels/annotate?path=${photo_path}&source=${source}&version=${version}&x=${x}&y=${y}&annotation=${annotationText}`;
+  const url = `/labels/annotate?path=${photo_path}&source=${source}&version=${version}&x=${x}&y=${y}&annotation=${annotationText}`;
   console.log(url)
 
   fetch(url, {
