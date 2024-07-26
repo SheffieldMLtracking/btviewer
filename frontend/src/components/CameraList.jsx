@@ -31,7 +31,7 @@ if (typeof(data)==="string"){ //when there is nth in the data, especially when t
   function changeHandler(e) {
     let selectedCamera = e.target.value;
     // Update the list of photo filenames available in that session
-    let url = '/sessions/list/?path=${subdirectory}/${selectedCamera}';
+    let url = `/sessions/list/?path=${subdirectory}/${selectedCamera}`;
     console.log(url)
     fetch(url)
       .then((response) => response.json())
