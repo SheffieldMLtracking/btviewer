@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Union
 
 import flask
+from werkzeug.middleware.dispatcher import DispatcherMiddleware
 
 
 def create_app(root_directory: Union[Path, str] = None, **kwargs) -> flask.Flask:

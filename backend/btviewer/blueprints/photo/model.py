@@ -2,7 +2,7 @@ import datetime
 import io
 import json
 from pathlib import Path
-from typing import Iterable, Mapping, Union, Generator
+from typing import Iterable, Mapping, Union, Generator, Tuple
 
 import PIL.Image
 import flask
@@ -10,7 +10,7 @@ import numpy
 
 app: flask.Flask = flask.current_app
 
-Coordinate = tuple[int, int]
+Coordinate = Tuple[int, int]
 "x, y position in a 2D image pixel grid"
 
 

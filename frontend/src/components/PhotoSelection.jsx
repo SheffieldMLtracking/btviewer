@@ -46,12 +46,12 @@ function PhotoSelection({ photoFilenames, subdirectory }) {
     console.log('subdirectoryJoined')
     console.log(subdirectoryJoined)
     //SC:Did we fetch photo, it does not seems so, and I only submit the image source to the image.jsx
-    let urlJpeg = "/api/photos/" + subdirectoryJoined.replace("np", "jpeg");
+    let urlJpeg = "/photos/" + subdirectoryJoined.replace("np", "jpeg");
     setCurrentPhoto(urlJpeg);
     console.log('urlJpeg' + urlJpeg);
 
     //Get photo dimension
-    let urlDimension = "/api/photos/dimension?path=" + subdirectoryJoined;
+    let urlDimension = "/photos/dimension?path=" + subdirectoryJoined;
     fetch(urlDimension)
       .then((response) => response.json())
       .then((data)=>{
@@ -63,7 +63,7 @@ function PhotoSelection({ photoFilenames, subdirectory }) {
       })
 
     // Get the json for the human/retrodetect label coordinates if it exists
-    let urlLabel = "/api/labels/detail?path=" + subdirectoryJoined;
+    let urlLabel = "/labels/detail?path=" + subdirectoryJoined;
     console.log("urlLabel");
     console.log(urlLabel);
     fetch(urlLabel)
@@ -76,7 +76,7 @@ function PhotoSelection({ photoFilenames, subdirectory }) {
   function handleNextPrevPhoto(current_path, skipnumber) {
     const currentPath = current_path;
     const skip = skipnumber;
-    let url = `/api/photos/next?path=${currentPath}&skip=${skip}`;
+    let url = `/photos/next?path=${currentPath}&skip=${skip}`;
     console.log("urlcurret photo in next");
     console.log(url);
 
@@ -84,10 +84,10 @@ function PhotoSelection({ photoFilenames, subdirectory }) {
       .then((response) => response.json())
       .then((data) => {
         setPhotoPath(data);
-        let urlJpeg = "/api/photos/" + data.replace("np", "jpeg");
+        let urlJpeg = "/photos/" + data.replace("np", "jpeg");
         setCurrentPhoto(urlJpeg);
 
-        let urlDimension = "/api/photos/dimension?path=" + data;
+        let urlDimension = "/photos/dimension?path=" + data;
         fetch(urlDimension)
             .then((response) => response.json())
             .then((data)=>{
@@ -97,7 +97,7 @@ function PhotoSelection({ photoFilenames, subdirectory }) {
              });
         })
 
-        let urlLabel = "/api/labels/detail?path=" + data;
+        let urlLabel = "/labels/detail?path=" + data;
         fetch(urlLabel)
         .then((response) => response.json())
         .then((data) => {

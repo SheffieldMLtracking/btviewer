@@ -42,8 +42,10 @@ pip install --editable ./backend
 To run the app in development mode:
 
 ```bash
-flask --app backend.btviewer.app --debug run
+flask --app backend.btviewer.app --debug run --port 5000
 ```
+
+We must always use port 5000 because the front-end is configured to use that port.
 
 To run the frontend user interface in development mode, see the [frontend contribution guide](../frontend/CONTRIBUTING.md).
 

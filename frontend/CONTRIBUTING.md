@@ -31,13 +31,12 @@ npm install
 The development environment is defined by the `dev` configuration in `package.json` and uses the [Vite](https://vitejs.dev/guide/#index-html-and-project-root) tool.
 
 ```
-
 # Run the development environment
 npm run dev
 ```
 
-
-
 ## Vite
 
-[Vite](https://vitejs.dev/) provides Hot Module Replacement (HMR) and some code analysis using ESLint rules. It uses `index.html` as the [home page](https://vitejs.dev/guide/#index-html-and-project-root).
+[Vite](https://vitejs.dev/) provides automatic code reloading using Hot Module Replacement (HMR) and some code analysis using ESLint rules. It uses `index.html` as the [home page](https://vitejs.dev/guide/#index-html-and-project-root).
+
+There is a configuration file for Vite at `frontend/vite.config.js` that specifies some proxy settings so that we can access the backend via the frontend testing app (which defaults to port 5173.)

@@ -11,10 +11,17 @@ export default defineConfig({
     server: {
         // Create a proxy endpoint to the backend to avoid cross-origin (CORS) issues
         proxy: {
-            '/api': {
+            '/sessions': {
                 target: 'http://localhost:5000',
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, ''),
+                changeOrigin: true
+            },
+            '/photos': {
+                target: 'http://localhost:5000',
+                changeOrigin: true
+            },
+            '/labels': {
+                target: 'http://localhost:5000',
+                changeOrigin: true
             },
         },
     },
